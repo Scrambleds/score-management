@@ -1,0 +1,20 @@
+<ag-grid-angular
+  style="width: 500px; height: 500px;"
+  class="ag-theme-quartz"
+  [rowData]="rowData"
+  [columnDefs]="columnDefs">
+</ag-grid-angular>
+
+<swal
+  #deleteSwal
+  title="Delete?"
+  text="This cannot be undone"
+  icon="question"
+  [timer]="2000"
+  [showConfirmButton]="false"
+  (confirm)="true">
+</swal>
+
+<button [swal]="deleteSwal">
+    Do it!
+  </button>
