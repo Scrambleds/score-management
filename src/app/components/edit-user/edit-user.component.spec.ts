@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AgGridComponent } from './ag-grid.component';
+import { EditUserComponent } from './edit-user.component';
 
-describe('AgGridComponent', () => {
-  let component: AgGridComponent;
-  let fixture: ComponentFixture<AgGridComponent>;
+describe('EditUserComponent', () => {
+  let component: EditUserComponent;
+  let fixture: ComponentFixture<EditUserComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [AgGridComponent]
+      declarations: [EditUserComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(AgGridComponent);
+    fixture = TestBed.createComponent(EditUserComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

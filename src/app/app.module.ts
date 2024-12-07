@@ -6,14 +6,19 @@ import { AppComponent } from './app.component';
 import { AgGridModule } from 'ag-grid-angular';
 import { AgGridAngular } from 'ag-grid-angular'; // Angular Data Grid Component
 import { CommonModule } from '@angular/common';
-import { AgGridComponent } from './components/ag-grid/ag-grid.component';
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
+import { ReactiveFormsModule } from '@angular/forms';
+import { NgIf } from '@angular/common';
+import { FormsModule  } from '@angular/forms';
+import { EditUserComponent } from './components/edit-user/edit-user.component';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { NgLabelTemplateDirective, NgOptionTemplateDirective, NgSelectComponent } from '@ng-select/ng-select';
+import {MatSelectModule} from '@angular/material/select';
 
 @NgModule({
   declarations: [
     AppComponent,
-    AgGridComponent,
-    
+    EditUserComponent,
   ],
   imports: [
     BrowserModule,
@@ -21,7 +26,15 @@ import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
     AgGridModule,
     AgGridAngular,
     CommonModule,
-    SweetAlert2Module.forRoot()
+    ReactiveFormsModule,
+    SweetAlert2Module.forRoot(),
+    NgIf,
+    FormsModule,
+    NgSelectModule, 
+    NgLabelTemplateDirective, 
+    NgOptionTemplateDirective, 
+    NgSelectComponent,
+    MatSelectModule
   ],
   providers: [
     provideClientHydration(withEventReplay())
