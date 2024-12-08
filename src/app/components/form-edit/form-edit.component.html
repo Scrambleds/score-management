@@ -14,32 +14,32 @@
       (ngSubmit)="onSubmit()"
       class="d-flex justify-content-between align-items-center mb-3 ms-2 px-4"
     >
-      <p class="text-title fw-bold mb-0">รายการบัญชีผู้ใช้งาน</p>
+      <p class="text-title fw-bold mb-0">{{ "menu_usermanage_account" | translate }}</p>
       <button type="submit" class="btn btn-primary">
         <i class="bi bi-person-fill-add"></i>
         เพิ่มบัญชีผู้ใช้
       </button>
     </form>
 
-    <div *ngFor="let value of data" class="card custom-card mb-2 p-2">
+    <div *ngFor="let value of data" class="card custom-card mb-4 p-3">
       <div class="container">
-        <div class="row justify-content-around align-items-center">
+        <div class="row">
           <div class="col-12 col-md-5">
             <div class="row">
-              <div class="col-12 col-sm-5">{{ value.citizenId }}</div>
-              <div class="col-12 col-sm-7">{{ value.prospectFullName }}</div>
+              <div class="col-12 col-sm-5 text-start ps-4">{{ value.citizenId }}</div>
+              <div class="col-12 col-sm-7 text-start ps-4">{{ value.prospectFullName }}</div>
             </div>
           </div>
           <div class="col-12 col-md-4">
             <div class="row">
-              <div class="col-12 col-sm-7">{{ value.corpStatus }}</div>
-              <div class="col-12 col-sm-5">{{ value.saleType }}</div>
+              <div class="col-12 col-sm-7 text-start ps-4">{{ value.corpStatus }}</div>
+              <div class="col-12 col-sm-5 text-center">{{ value.saleType }}</div>
             </div>
           </div>
           <div class="col-12 col-md-3">
             <div class="row">
-              <div class="col-12 col-sm-6">{{ value.createDate }}</div>
-              <div class="col-12 col-sm-6 d-flex justify-content-end">
+              <div class="col-12 col-sm-6 text-end">{{ value.createDate }}</div>
+              <div class="col-12 col-sm-6 d-flex justify-content-end align-items-center">
                 <a [routerLink]="['#', value.prospectId]">
                   <button
                     type="button"
