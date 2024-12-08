@@ -3,8 +3,16 @@
   style="background-color: var(--green-color)"
 >
   <div class="container-fluid">
-    <div class="burger-icon">
+    <div class="burger-icon" [ngClass]="{ 'd-none': isOpen }">
       <i class="bi bi-list" (click)="toggleNav()"></i>
+    </div>
+    <!-- title menu -->
+    <div
+      class="title-menu"
+      [ngClass]="{ 'nav-opened': isOpen }"
+      style="color: white"
+    >
+      {{ currentTitle | translate }}
     </div>
     <div class="d-flex ms-auto">
       <!-- switch language -->
@@ -21,12 +29,18 @@
         </a>
         <ul class="dropdown-menu" aria-labelledby="languageMenu">
           <li>
-            <a class="dropdown-item" href="#" (click)="changeLanguage('en')"
+            <a
+              class="dropdown-item d-flex justify-content-center"
+              href="#"
+              (click)="changeLanguage($event, 'en')"
               >English</a
             >
           </li>
           <li>
-            <a class="dropdown-item" href="#" (click)="changeLanguage('th')"
+            <a
+              class="dropdown-item d-flex justify-content-center"
+              href="#"
+              (click)="changeLanguage($event, 'th')"
               >ไทย</a
             >
           </li>

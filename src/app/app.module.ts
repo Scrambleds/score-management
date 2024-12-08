@@ -34,8 +34,7 @@ import { ScoreAnnouncementComponent } from './route/score-announcement/score-ann
 import { DashboardComponent } from './route/dashboard/dashboard.component';
 
 // LanguageInterceptor
-import { HTTP_INTERCEPTORS, provideHttpClient } from '@angular/common/http';
-import { LanguageInterceptor } from './core/interceptors/language.interceptor';
+import { provideHttpClient } from '@angular/common/http';
 import { TranslatePipe } from './shared/pipes/translate.pipe';
 
 @NgModule({

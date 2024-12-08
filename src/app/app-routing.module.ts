@@ -10,13 +10,43 @@ import { SearchScoreComponent } from './route/search-score/search-score.componen
 import { DashboardComponent } from './route/dashboard/dashboard.component';
 
 const routes: Routes = [
-  { path: '', component: ScoreAnnouncementComponent },
-  { path: 'MasterData', component: MasterDataComponent },
-  { path: 'UserManagement', component: UserManageComponent },
-  { path: 'UploadScore', component: UploadScoreComponent },
-  { path: 'SearchScore', component: SearchScoreComponent },
-  { path: 'ScoreAnnouncement', component: ScoreAnnouncementComponent },
-  { path: 'Dashboard', component: DashboardComponent },
+  {
+    path: '',
+    // component: ScoreAnnouncementComponent,
+    // data: { messageKey: 'menu_scoreannounce' },
+    redirectTo: '/ScoreAnnouncement', // กำหนดให้เปลี่ยนเส้นทางไปที่ ScoreAnnouncement
+    pathMatch: 'full',
+  },
+  {
+    path: 'MasterData',
+    component: MasterDataComponent,
+    data: { messageKey: 'menu_masterdata' },
+  },
+  {
+    path: 'UserManagement',
+    component: UserManageComponent,
+    data: { messageKey: 'menu_usermanage' },
+  },
+  {
+    path: 'UploadScore',
+    component: UploadScoreComponent,
+    data: { messageKey: 'menu_uploadscore' },
+  },
+  {
+    path: 'SearchScore',
+    component: SearchScoreComponent,
+    data: { messageKey: 'menu_searchscore' },
+  },
+  {
+    path: 'ScoreAnnouncement',
+    component: ScoreAnnouncementComponent,
+    data: { messageKey: 'menu_scoreannounce' },
+  },
+  {
+    path: 'Dashboard',
+    component: DashboardComponent,
+    data: { messageKey: 'menu_dashboard' },
+  },
 ];
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

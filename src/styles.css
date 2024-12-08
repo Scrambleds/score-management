@@ -3,6 +3,7 @@
   --primary-color: #3d8bfd;
   --secondary-color: #9d9fa1;
   --green-color: #03a96b;
+  --active-color: #07bc77;
   --grey-color: #2f3337;
   --white-color: #ffffff;
   --body-color: #eef5ff;
@@ -14,19 +15,19 @@
 /* side bar */
 .sidenav {
   height: 100%;
-  width: 0;
+  width: 250px;
   position: fixed;
   z-index: 1;
   top: 0;
   left: 0;
   background-color: var(--grey-color);
   overflow-x: hidden;
+  transform: translateX(-100%); /* เลื่อนออกนอกหน้าจอ */
   transition: 0.5s;
-  /* padding-top: 60px; */
 }
 
 .sidenav a:hover {
-  color: #f1f1f1;
+  color: var(--white-color);
 }
 
 .sidenav .closebtn {
@@ -38,14 +39,14 @@
 }
 
 .sidenav-open {
-  width: 250px;
+  transform: translateX(0); /* เลื่อนกลับเข้ามา */
 }
 /* add new side bar header */
 .header-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0.625rem;
+  padding: 0.438rem 0.625rem;
 }
 
 .logo-img img {
@@ -78,30 +79,37 @@
   align-items: center;
   text-decoration: none;
   font-size: var(--font-size);
-  padding: 8px 12px;
-  border-radius: 5px;
+  padding: 0.625rem 1rem;
   transition: background-color 0.3s;
   color: var(--secondary-color);
 }
 
 .menu-container a i {
-  margin-right: 8px;
-  font-size: 20px;
+  margin-right: 0.5rem;
+  font-size: 1.25rem;
 }
 
 .menu-container a:hover {
+  color: var(--white-color);
+}
+.menu-container a.active {
   background-color: var(--green-color);
   color: var(--white-color);
 }
-
 /* body router */
 .content-with-sidenav {
-  margin-left: 250px; /* ระยะห่างเมื่อตัวเมนูเปิด */
+  margin-left: 15.625rem; /* ระยะห่างเมื่อตัวเมนูเปิด */
   transition: margin-left 0.5s; /* เพิ่มความนุ่มนวลในการเปลี่ยนแปลง */
 }
 
 .content-full-width {
   transition: margin-left 0.5s;
-  padding: 16px;
   margin-left: 0;
+}
+
+/* utility */
+.dropdown-item:not(.disabled).active,
+.dropdown-item:not(.disabled):active {
+  background-color: var(--active-color);
+  color: var(--white-color);
 }

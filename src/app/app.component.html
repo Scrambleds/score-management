@@ -1,12 +1,14 @@
-<app-top-nav (navToggle)="onNavToggle($event)"></app-top-nav>
+<!-- <app-top-nav (navToggle)="onNavToggle($event)"></app-top-nav>
 <app-side-nav
   [isOpen]="isNavOpen"
   (navToggle)="onNavToggle($event)"
-></app-side-nav>
-<div class="container-fluid" [ngClass]="{ 'sidenav-open': isNavOpen }">
+></app-side-nav> -->
+<app-top-nav [isOpen]="isOpen" (toggle)="toggleNav()"></app-top-nav>
+<app-side-nav [isOpen]="isOpen" (toggle)="toggleNav()"></app-side-nav>
+<div class="container-fluid" [ngClass]="{ 'sidenav-open': isOpen }">
   <div
-    [class.content-with-sidenav]="isNavOpen"
-    [class.content-full-width]="!isNavOpen"
+    [class.content-with-sidenav]="isOpen"
+    [class.content-full-width]="!isOpen"
   >
     <router-outlet></router-outlet>
   </div>

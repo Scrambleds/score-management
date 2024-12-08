@@ -5,51 +5,58 @@
     </div>
     <div class="header-title">Kasetsart University</div>
     <div class="burger-icon">
-      <i class="bi bi-list" (click)="toggleNav()"></i>
+      <i class="bi bi-list" (click)="closeNav()"></i>
     </div>
   </div>
-  <hr style="color: white; margin: 0" />
+  <hr style="color: white; margin: 0.313rem 0" />
   <div class="menu-container">
-    <a routerLink="/MasterData"
+    <a
+      routerLink="/MasterData"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }"
       ><i class="bi bi-gear-fill"></i>
       <!-- จัดการข้อมูลหลัก -->
       {{ "menu_masterdata" | translate }}
     </a>
-    <a routerLink="/UserManagement"
+    <a
+      routerLink="/UserManagement"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }"
       ><i class="bi bi-person-fill"></i>
       <!-- จัดการผู้ใช้งาน -->
       {{ "menu_usermanage" | translate }}
     </a>
-    <a routerLink="/UploadScore"
+    <a
+      routerLink="/UploadScore"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }"
       ><i class="bi bi-box-arrow-in-down"></i>
       <!-- อัปโหลดคะแนนนิสิต -->
       {{ "menu_uploadscore" | translate }}
     </a>
-    <a routerLink="/SearchScore"
+    <a
+      routerLink="/SearchScore"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }"
       ><i class="bi bi-clipboard-data-fill"></i>
       <!-- ค้นหาคะแนน -->
       {{ "menu_searchscore" | translate }}
     </a>
-    <a routerLink="/ScoreAnnouncement"
+    <a
+      routerLink="/ScoreAnnouncement"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }"
       ><i class="bi bi-megaphone-fill"></i>
       <!-- ประกาศคะแนน -->
       {{ "menu_scoreannounce" | translate }}
     </a>
-    <a routerLink="/Dashboard"
+    <a
+      routerLink="/Dashboard"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }"
       ><i class="bi bi-journal"></i>
       <!-- รายงาน -->
       {{ "menu_dashboard" | translate }}
     </a>
   </div>
 </div>
-
-<!-- <div id="main" [ngClass]="{ 'sidenav-open': isOpen }">
-  <h2>Sidenav Push Example</h2>
-  <p>
-    Click on the element below to open the side navigation menu, and push this
-    content to the right.
-  </p>
-  <span style="font-size: 30px; cursor: pointer" (click)="toggleNav()"
-    >&#9776; open</span
-  >
-</div> -->
