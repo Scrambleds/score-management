@@ -1,1 +1,107 @@
 /* You can add global styles to this file, and also import other style files */
+:root {
+  --primary-color: #3d8bfd;
+  --secondary-color: #9d9fa1;
+  --green-color: #03a96b;
+  --grey-color: #2f3337;
+  --white-color: #ffffff;
+  --body-color: #eef5ff;
+  --font-size: 1rem;
+  --font-color: #3c3c3c;
+  --font-menu-colo: #9d9fa1;
+}
+
+/* side bar */
+.sidenav {
+  height: 100%;
+  width: 0;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background-color: var(--grey-color);
+  overflow-x: hidden;
+  transition: 0.5s;
+  /* padding-top: 60px; */
+}
+
+.sidenav a:hover {
+  color: #f1f1f1;
+}
+
+.sidenav .closebtn {
+  position: absolute;
+  top: 0;
+  right: 25px;
+  font-size: 36px;
+  margin-left: 50px;
+}
+
+.sidenav-open {
+  width: 250px;
+}
+/* add new side bar header */
+.header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.625rem;
+}
+
+.logo-img img {
+  max-height: 3.125rem; /* กำหนดความสูงของโลโก้ */
+  width: auto; /* รักษาสัดส่วนของภาพ */
+}
+
+.header-title {
+  flex: 1; /* ให้พื้นที่ส่วนนี้ยืดตามความจำเป็น */
+  text-align: center; /* จัดข้อความให้อยู่กึ่งกลางแนวนอน */
+  font-size: var(--font-size); /* ขนาดตัวอักษร */
+  color: var(--white-color);
+}
+
+.burger-icon {
+  font-size: 24px; /* ขนาดไอคอน */
+  cursor: pointer; /* เปลี่ยน cursor เมื่อ hover */
+  color: var(--white-color);
+}
+
+/* menu */
+.menu-container {
+  display: flex;
+  flex-direction: column;
+  /* gap: 0.625rem; */
+}
+
+.menu-container a {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  font-size: var(--font-size);
+  padding: 8px 12px;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+  color: var(--secondary-color);
+}
+
+.menu-container a i {
+  margin-right: 8px;
+  font-size: 20px;
+}
+
+.menu-container a:hover {
+  background-color: var(--green-color);
+  color: var(--white-color);
+}
+
+/* body router */
+.content-with-sidenav {
+  margin-left: 250px; /* ระยะห่างเมื่อตัวเมนูเปิด */
+  transition: margin-left 0.5s; /* เพิ่มความนุ่มนวลในการเปลี่ยนแปลง */
+}
+
+.content-full-width {
+  transition: margin-left 0.5s;
+  padding: 16px;
+  margin-left: 0;
+}
