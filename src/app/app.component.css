@@ -2,3 +2,20 @@
 @import 'ag-grid-community/styles/ag-grid.css';
 /* Quartz Theme Specific CSS */
 @import 'ag-grid-community/styles/ag-theme-quartz.css';
+
+
+
+.bi {
+    vertical-align: -.125em;
+    color: gray;
+}
+
+footer.content-with-sidenav {
+    margin-left: 15.625rem; /* ระยะห่างเมื่อตัวเมนูเปิด */
+    transition: margin-left 0.5s;
+}
+
+footer {
+    margin-left: 0rem; /* ระยะห่างเมื่อตัวเมนูเปิด */
+    transition: margin-left 0.5s;
+}

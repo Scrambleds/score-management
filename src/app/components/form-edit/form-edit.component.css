@@ -4,8 +4,8 @@
     border-color: #ddd; 
     border-width: 1px;
     border-radius: 8px; */
-    border-radius: 0.75rem; 
-    box-shadow: 0 0.15rem 0.5rem rgba(0, 0, 0, 0.2); 
+    border-radius: 0.75rem;
+    box-shadow: 0 0.15rem 0.5rem rgba(0, 0, 0, 0.2);
     padding: 0.625rem;
     /* margin: 1.25rem; */
     top: 1.25rem;
