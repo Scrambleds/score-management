@@ -33,7 +33,6 @@ import { UploadScoreComponent } from './route/upload-score/upload-score.componen
 import { ScoreAnnouncementComponent } from './route/score-announcement/score-announcement.component';
 import { DashboardComponent } from './route/dashboard/dashboard.component';
 
-// LanguageInterceptor
 import { provideHttpClient } from '@angular/common/http';
 import { TranslatePipe } from './shared/pipes/translate.pipe';
 
@@ -72,11 +71,6 @@ import { TranslatePipe } from './shared/pipes/translate.pipe';
   providers: [
     provideHttpClient(),
     // provideClientHydration(withEventReplay()),
-    // {
-    //   provide: HTTP_INTERCEPTORS,
-    //   useClass: LanguageInterceptor,
-    //   multi: true,
-    // },
   ],
   bootstrap: [AppComponent],
 })
