@@ -14,7 +14,7 @@
   }
    */
 
-   /* Button styles */
+/* Button styles */
 /* .card1:hover,
 .card1:focus,
 .card:hover,
@@ -37,21 +37,20 @@
 /* @import "@ng-select/ng-select/themes/default.theme.css"; */
 /* @import "~@ng-select/ng-select/themes/material.theme.css"; */
 
-
 .custom-card {
   /* margin-bottom: 1rem;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
   border-color: #ddd; 
   border-width: 1px;
   border-radius: 8px; */
-  border-radius: 0.75rem; 
-  box-shadow: 0 0.15rem 0.5rem rgba(0, 0, 0, 0.2); 
+  border-radius: 0.75rem;
+  box-shadow: 0 0.15rem 0.5rem rgba(0, 0, 0, 0.2);
   padding: 0.625rem;
   /* margin: 1.25rem;  */
   /* bottom: 10px; */
-  top: 0.625rem;
+  /* top: 0.625rem; */ /* ter remove fix top conflict */
   min-width: 5rem;
-  border-color: #ddd; 
+  border-color: #ddd;
   /* overflow: hidden; */
   position: relative;
 }
@@ -99,14 +98,13 @@
   width: 14.5%;
 } */
 
-
 /* .btn {
     border-radius: 5px; 
     padding: 0.6rem 1.2rem; 
     font-size: 1rem; 
   } */
-  
-  /* .btn-sm {
+
+/* .btn-sm {
     padding: 0.4rem 0.8rem; 
     font-size: 0.9rem;
   }
@@ -122,7 +120,7 @@
       font-size: 0.9rem;
     }
   } */
-  
+
 /* 
 .card-header {
   border-bottom-width: 1px;

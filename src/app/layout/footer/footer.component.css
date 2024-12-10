@@ -1,36 +1,46 @@
 .bi {
-    vertical-align: -.125em;
-    color: gray;
-}
-
-footer.content-with-sidenav {
-    margin-left: 15.625rem; /* ระยะห่างเมื่อตัวเมนูเปิด */
-    transition: margin-left 0.5s;
-    padding: 0.625rem;
-    /* margin: 1.25rem; */
-    top: 1.25rem;
+  vertical-align: -0.125em;
+  color: gray;
 }
 
 .bi-facebook {
-    font-size: 1.5rem; /* เพิ่มขนาดไอคอน */
-    color: #4267B2; /* สี Facebook */
-    transition: transform 0.3s, color 0.3s; /* เพิ่มเอฟเฟกต์ */
+  font-size: 1.5rem; /* เพิ่มขนาดไอคอน */
+  color: #4267b2; /* สี Facebook */
+  transition: transform 0.3s, color 0.3s; /* เพิ่มเอฟเฟกต์ */
 }
 
 .bi-facebook:hover {
-    transform: scale(1.2); /* ขยายไอคอนเล็กน้อยเมื่อโฮเวอร์ */
-    color: #365899; /* เปลี่ยนสีเมื่อโฮเวอร์ */
+  transform: scale(1.2); /* ขยายไอคอนเล็กน้อยเมื่อโฮเวอร์ */
+  color: #365899; /* เปลี่ยนสีเมื่อโฮเวอร์ */
 }
 
-footer { 
-    min-height: 5rem;
-    height: auto;
-    display: flex;
-    justify-content: center;
-    align-items: center; 
-    background-color: #f8f9fa; 
-    padding: 1rem; 
-    width: 100%; 
-    border-top: 1px solid #dee2e6; 
-    box-shadow: 0px -2px 5px rgba(0, 0, 0, 0.1); 
-} 
+footer {
+  background-color: #f8f9fa;
+  min-height: 5rem;
+  height: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* width: 100%; */
+  padding-left: 5.875rem;
+  padding-right: 5.875rem;
+}
+footer .footer-body {
+  padding: 1rem 0 1rem;
+  width: 100%;
+  border-top: 0.8px solid #dee2e6;
+  transition: margin-left 0.5s;
+}
+
+footer .footer-body.nav-opened {
+  margin-left: 250px;
+  transition: margin-left 0.5s;
+  top: 1.25rem;
+}
+
+.social-nav {
+  display: flex;
+  justify-content: end;
+  align-items: start;
+  list-style: none;
+}

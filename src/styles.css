@@ -12,6 +12,26 @@
   --font-menu-colo: #9d9fa1;
 }
 
+/* layout */
+body,
+html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+.body-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.body-container .content {
+  flex: 1;
+  padding: 20px;
+  background-color: #f4f4f4;
+}
+
 /* side bar */
 .sidenav {
   height: 100%;

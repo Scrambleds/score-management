@@ -11,68 +11,66 @@
                 <div class="row mb-0 g-3">
                     <!-- Column 1 -->
                     <div class="col-6 col-md-2">
-                        <label for="teacher_code" class="form-label fw-bold">รหัสอาจารย์</label>
-                        <input type="text" id="teacher_code" class="form-control" placeholder="กรุณากรอก"
-                            formControlName="teacher_code"  />
-                            <div *ngIf="form.get('teacher_code')?.touched && form.get('teacher_code')?.invalid"
-                            class="text-danger ps-2">
-                            กรุณากรอกข้อมูล
-                          </div>
+                        <label for="citizenId" class="form-label fw-bold">ค้นหาทดสอบ</label>
+                        <input type="text" id="citizenId" class="form-control" placeholder="กรุณากรอก"
+                            formControlName="citizenId" maxlength="13" />
+                        <div *ngIf="form.controls['citizenId'].touched && form.controls['citizenId'].invalid"
+                            class="text-danger">
+                            {{ form.controls['citizenId'].errors?.['message'] }}
+                        </div>
                     </div>
                     <!-- Column 2 -->
                     <div class="col-6 col-md-2">
-                        <label for="firstname" class="form-label fw-bold">ชื่ออาจารย์</label>
-                        <input type="text" id="firstname" class="form-control" placeholder="กรุณากรอก"
-                            formControlName="firstname" />
-                            <div *ngIf="form.get('firstname')?.touched && form.get('firstname')?.invalid"
-                            class="text-danger ps-2">
-                            กรุณากรอกข้อมูล
-                          </div>
+                        <label for="citizenId" class="form-label fw-bold">ค้นหาทดสอบ</label>
+                        <input type="text" id="citizenId" class="form-control" placeholder="กรุณากรอก"
+                            formControlName="citizenId" maxlength="13" />
+                        <div *ngIf="form.controls['citizenId'].touched && form.controls['citizenId'].invalid"
+                            class="text-danger">
+                            {{ form.controls['citizenId'].errors?.['message'] }}
+                        </div>
                     </div>
                     <!-- Column 3 -->
                     <div class="col-6 col-md-2">
-                        <label for="email" class="form-label fw-bold">อีเมล</label>
-                        <input type="text" id="email" class="form-control" placeholder="กรุณากรอก"
-                            formControlName="email"  />
-                            <div *ngIf="form.get('email')?.touched && form.get('email')?.invalid"
-                            class="text-danger ps-2">
-                            กรุณากรอกข้อมูล
-                          </div>
+                        <label for="citizenId" class="form-label fw-bold">ค้นหาทดสอบ</label>
+                        <input type="text" id="citizenId" class="form-control" placeholder="กรุณากรอก"
+                            formControlName="citizenId" maxlength="13" />
+                        <div *ngIf="form.controls['citizenId'].touched && form.controls['citizenId'].invalid"
+                            class="text-danger">
+                            {{ form.controls['citizenId'].errors?.['message'] }}
+                        </div>
                     </div>
                     <!-- Column 4 (Select dropdown) -->
                     <div class="col-6 col-md-2">
-                        <label for="role" class="form-label fw-bold">หน้าที่</label>
+                        <label for="citizenId" class="form-label fw-bold">ค้นหาทดสอบ</label>
                         <ng-select
-                          id="role"
-                          formControlName="role"
-                          [items]="roleOption"
+                          id="citizenId"
+                          formControlName="citizenId"
+                          [items]="options"
                           bindLabel="label"
-                          bindValue="id"
+                          bindValue="value"
                           placeholder="กรุณาเลือก"
                           [clearable]="true">
                         </ng-select>
-                        <div *ngIf="form.get('role')?.touched && form.get('role')?.invalid"
-                        class="text-danger ps-2">
-                        กรุณากรอกข้อมูล
-                      </div>
+                        <div *ngIf="form.controls['citizenId'].touched && form.controls['citizenId'].invalid" class="text-danger">
+                          {{ form.controls['citizenId'].errors?.['message'] }}
+                        </div>
                     </div>
                     
                     <!-- Column 5 (Select dropdown) -->
                     <div class="col-6 col-md-2">
-                        <label for="active_status" class="form-label fw-bold">สถานะการใช้งาน</label>
+                        <label for="citizenId" class="form-label fw-bold">ค้นหาทดสอบ</label>
                         <ng-select
-                          id="active_status"
-                          formControlName="active_status"
-                          [items]="statusOption"
+                          id="citizenId"
+                          formControlName="citizenId"
+                          [items]="options"
                           bindLabel="label"
-                          bindValue="id"
+                          bindValue="value"
                           placeholder="กรุณาเลือก"
-                          [clearable]="true"> 
+                          [clearable]="true">
                         </ng-select>
-                        <div *ngIf="form.get('active_status')?.touched && form.get('active_status')?.invalid"
-                        class="text-danger ps-2">
-                        กรุณากรอกข้อมูล
-                      </div>
+                        <div *ngIf="form.controls['citizenId'].touched && form.controls['citizenId'].invalid" class="text-danger">
+                          {{ form.controls['citizenId'].errors?.['message'] }}
+                        </div>
                     </div>
                     <!-- Buttons -->
                     <div class="col-12 col-md-2 d-flex align-items-end gap-2">
