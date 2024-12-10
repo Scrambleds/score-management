@@ -16,9 +16,9 @@
         <form [formGroup]="form">
           <!-- Row 1 -->
           <div class="container">
-            <div class="row g-3 mb-3">
+            <div class="row g-2 mb-3">
               <!-- ชื่อโอกาสขาย -->
-              <div class="col-4">
+              <div class="col-6 col-md-4">
                 <label for="teacher_code" class="form-label ps-2">รหัสอาจารย์</label>
                 <input type="text" id="teacher_code" class="form-control" formControlName="teacher_code"
                   placeholder="กรุณากรอก"/>
@@ -28,7 +28,7 @@
                 </div>
               </div>
 
-              <div class="col-4">
+              <div class="col-6 col-md-4">
                 <label for="email" class="form-label ps-2">อีเมล</label>
                 <input type="text" id="email" class="form-control" formControlName="email"
                   placeholder="กรุณากรอก" />
@@ -38,14 +38,14 @@
                 </div>
               </div>
 
-              <div class="col-4">
+              <div class="col-6 col-md-4">
                 <label for="role" class="form-label ps-2">หน้าที่</label>
                 <ng-select
                 [items]="role"
                 bindLabel="title"
                 bindValue="id"
                 placeholder="กรุณาเลือก"
-                formControlName="active_status"
+                formControlName="role"
                 [searchable]="true"
               >
               </ng-select> 
@@ -56,7 +56,7 @@
 
               <!-- <div class="row"></div> -->
 
-              <div class="col-4">
+              <div class="col-6 col-md-4">
                 <label for="prefix" class="form-label ps-2">คำนำหน้าชื่อ</label>
                 <input type="text" id="prefix" class="form-control" formControlName="prefix"
                   placeholder="กรุณากรอก" />
@@ -66,7 +66,7 @@
                 </div>
               </div>
 
-              <div class="col-4">
+              <div class="col-6 col-md-4">
                 <label for="firstname" class="form-label ps-2">ชื่อ</label>
                 <input type="text" id="firstname" class="form-control" formControlName="firstname"
                   placeholder="กรุณากรอก" />
@@ -76,7 +76,7 @@
                 </div>
               </div>
 
-              <div class="col-4">
+              <div class="col-6 col-md-4">
                 <label for="lastname" class="form-label ps-2">ชื่อ</label>
                 <input type="text" id="lastname" class="form-control" formControlName="lastname"
                   placeholder="กรุณากรอก" />
@@ -95,7 +95,7 @@
 
           <div class="container">
             <div class="row g-3 mb-4">
-              <div class="col-4">
+              <div class="col-6 col-md-4">
                 <label for="password" class="form-label ps-2">รหัสผ่าน</label>
                 <input type="password" id="password" class="form-control" formControlName="password"
                   placeholder="กรุณากรอก" />
@@ -115,7 +115,7 @@
                 </div>
               </div> -->
 
-              <div *ngIf="form.contains('confirm_password')" class="col-4">
+              <div *ngIf="form.contains('confirm_password')" class="col-6 col-md-4">
                 <label for="confirm_password" class="form-label ps-2">ยืนยันรหัสผ่าน</label>
                 <input type="password" id="confirm_password" class="form-control" formControlName="confirm_password" placeholder="กรุณายืนยันรหัสผ่าน" />
                 <div *ngIf="form.get('confirm_password')?.touched && form.get('confirm_password')?.invalid" class="text-danger ps-2">
@@ -124,7 +124,7 @@
               </div>
 
 
-              <div class="col-4">
+              <div class="col-6 col-md-4">
                 <label for="active_status" class="form-label ps-2">สถานะการใช้งาน</label>
                 <ng-select
                 [items]="active_status"
@@ -143,7 +143,7 @@
           </div>
 
           <!-- Submit Button -->
-          <div class="d-flex justify-content-center">
+          <div class="d-flex justify-content-center pt-3">
             <button type="button" class="btn btn-primary" (click)="onSubmit()"><i class="bi bi-floppy-fill me-2"></i>บันทึกข้อมูล</button>
           </div>
         </form>
