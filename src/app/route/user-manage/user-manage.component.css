@@ -1,0 +1,5 @@
+.route-container {
+  display: flex;
+  flex-direction: column; /* จัดเรียงในแนวตั้ง */
+  gap: 20px; /* เว้นระยะห่างระหว่าง items ในแนวตั้ง */
+}

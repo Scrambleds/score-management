@@ -1,0 +1,12 @@
+/* Default title menu */
+.title-menu {
+  flex: 1;
+  transition: margin-left 0.5s;
+  padding: 0.625rem 0.625rem;
+}
+
+/* เมื่อ side nav เปิด */
+.title-menu.nav-opened {
+  margin-left: 15.625rem;
+  transition: margin-left 0.5s;
+}

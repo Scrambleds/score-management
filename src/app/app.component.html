@@ -1,11 +1,17 @@
-<!-- <div class="container">
-  <h1 class="text-center">Bootstrap test</h1>
-</div> -->
-<router-outlet /> 
-
-<!-- <ag-grid-angular
-  style="width: 100%; height: 500px;"
-  class="ag-theme-alpine"
-  [rowData]="rowData"
-  [columnDefs]="columnDefs">
-</ag-grid-angular> -->
+<!-- <app-top-nav (navToggle)="onNavToggle($event)"></app-top-nav>
+<app-side-nav
+  [isOpen]="isNavOpen"
+  (navToggle)="onNavToggle($event)"
+></app-side-nav> -->
+<div class="body-container" [ngClass]="{ 'sidenav-open': isOpen }">
+  <app-top-nav [isOpen]="isOpen" (toggle)="toggleNav()"></app-top-nav>
+  <app-side-nav [isOpen]="isOpen" (toggle)="toggleNav()"></app-side-nav>
+  <main
+    class="content"
+    [class.content-with-sidenav]="isOpen"
+    [class.content-full-width]="!isOpen"
+  >
+    <router-outlet></router-outlet>
+  </main>
+  <app-footer [isOpen]="isOpen"></app-footer>
+</div>

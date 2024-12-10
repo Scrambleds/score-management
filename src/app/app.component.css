@@ -1,4 +1,9 @@
 /* Core Data Grid CSS */
-@import 'ag-grid-community/styles/ag-grid.css';
+@import "ag-grid-community/styles/ag-grid.css";
 /* Quartz Theme Specific CSS */
-@import 'ag-grid-community/styles/ag-theme-quartz.css';
+@import "ag-grid-community/styles/ag-theme-quartz.css";
+
+.bi {
+  vertical-align: -0.125em;
+  color: gray;
+}

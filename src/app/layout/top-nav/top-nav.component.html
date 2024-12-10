@@ -1,0 +1,71 @@
+<nav
+  class="navbar navbar-expand-lg navbar-dark"
+  style="background-color: var(--green-color)"
+>
+  <div class="container-fluid">
+    <div class="burger-icon" [ngClass]="{ 'd-none': isOpen }">
+      <i class="bi bi-list" (click)="toggleNav()"></i>
+    </div>
+    <!-- title menu -->
+    <div
+      class="title-menu"
+      [ngClass]="{ 'nav-opened': isOpen }"
+      style="color: white"
+    >
+      {{ currentTitle | translate }}
+    </div>
+    <div class="d-flex ms-auto">
+      <!-- switch language -->
+      <div class="dropdown">
+        <a
+          class="btn btn-secondary dropdown-toggle"
+          href="#"
+          role="button"
+          id="languageMenu"
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
+        >
+          {{ "language" | translate }}
+        </a>
+        <ul class="dropdown-menu" aria-labelledby="languageMenu">
+          <li>
+            <a
+              class="dropdown-item d-flex justify-content-center"
+              href="#"
+              (click)="changeLanguage($event, 'en')"
+              >English</a
+            >
+          </li>
+          <li>
+            <a
+              class="dropdown-item d-flex justify-content-center"
+              href="#"
+              (click)="changeLanguage($event, 'th')"
+              >ไทย</a
+            >
+          </li>
+        </ul>
+      </div>
+      <!-- profile menu -->
+      <div class="dropdown">
+        <button
+          class="btn btn-secondary dropdown-toggle"
+          type="button"
+          id="dropdownMenuButton"
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
+        >
+          User Profile
+        </button>
+        <ul
+          class="dropdown-menu dropdown-menu-end"
+          aria-labelledby="dropdownMenuButton"
+        >
+          <li><a class="dropdown-item" href="#">Profile</a></li>
+          <li><a class="dropdown-item" href="#">Settings</a></li>
+          <li><a class="dropdown-item" href="#">Logout</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</nav>

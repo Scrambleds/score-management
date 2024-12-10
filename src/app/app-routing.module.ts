@@ -1,17 +1,55 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { AgGridComponent } from './components/ag-grid/ag-grid.component';
+import { EditUserComponent } from './components/edit-user/edit-user.component';
+import { FormEditComponent } from './components/form-edit/form-edit.component';
+import { MasterDataComponent } from './route/master-data/master-data.component';
+import { UserManageComponent } from './route/user-manage/user-manage.component';
+import { ScoreAnnouncementComponent } from './route/score-announcement/score-announcement.component';
+import { UploadScoreComponent } from './route/upload-score/upload-score.component';
+import { SearchScoreComponent } from './route/search-score/search-score.component';
+import { DashboardComponent } from './route/dashboard/dashboard.component';
 
 const routes: Routes = [
-  // { path: '', component: LandingComponent },
-  // { path: 'product/insert', component: InsertComponent },
-  { path: 'list', component: AgGridComponent },
-  // { path: 'chat', component: ChatComponent },
-  // { path: 'login', component: LoginComponent },
+  {
+    path: '',
+    // component: ScoreAnnouncementComponent,
+    // data: { messageKey: 'menu_scoreannounce' },
+    redirectTo: '/ScoreAnnouncement', // กำหนดให้เปลี่ยนเส้นทางไปที่ ScoreAnnouncement
+    pathMatch: 'full',
+  },
+  {
+    path: 'MasterData',
+    component: MasterDataComponent,
+    data: { messageKey: 'menu_masterdata' },
+  },
+  {
+    path: 'UserManagement',
+    component: UserManageComponent,
+    data: { messageKey: 'menu_usermanage' },
+  },
+  {
+    path: 'UploadScore',
+    component: UploadScoreComponent,
+    data: { messageKey: 'menu_uploadscore' },
+  },
+  {
+    path: 'SearchScore',
+    component: SearchScoreComponent,
+    data: { messageKey: 'menu_searchscore' },
+  },
+  {
+    path: 'ScoreAnnouncement',
+    component: ScoreAnnouncementComponent,
+    data: { messageKey: 'menu_scoreannounce' },
+  },
+  {
+    path: 'Dashboard',
+    component: DashboardComponent,
+    data: { messageKey: 'menu_dashboard' },
+  },
 ];
-
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}
