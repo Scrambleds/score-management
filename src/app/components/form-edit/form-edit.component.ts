@@ -112,7 +112,7 @@ export class FormEditComponent {
   }
 
     // Parent Component
-  roleOption = [{ id: '1', title: 'ผู้ดูแลลระบบ' }, { id: '2', title: 'อาจารย์' }];
+  roleOption = [{ id: '1', title: 'ผู้ดูแลระบบ' }, { id: '2', title: 'อาจารย์' }];
   statusOption = [{ id: '1', title: 'active' }, { id: '2', title: 'inactive' }];
 
   openModal(row: any) {
