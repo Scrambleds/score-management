@@ -35,6 +35,7 @@
                   <button
                     type="button"
                     class="btn btn-text-blue min-w-1.25rem p-0"
+                    (click)="openModal(value)"
                   >
                     <i class="bi bi-pencil-square" style="color: #0d00ff"></i>
                   </button>
@@ -46,4 +47,13 @@
       </div>
     </div>
   </div>
+
+<app-modal-edit 
+  [show] = "isModalVisible"
+  [active_status]="statusOption"
+  [role]="roleOption"
+  (hide)="handleModalClose()"
+  (submit)="handleModalSubmit($event)"
+>
+</app-modal-edit>
 <!-- </div> -->

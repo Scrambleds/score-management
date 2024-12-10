@@ -1,0 +1,21 @@
+.modal.show {
+    display: block;
+  }
+  
+  .modal-header.bg-dark-blue {
+    background-color: #03A96B;
+  }
+  
+  .modal-body.overflow-auto {
+    max-height: 70vh;
+    overflow-y: auto;
+  }
+  
+  .bg-light-green {
+    background-color: #B9ECCC;
+  }
+  
+  .text-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+  }

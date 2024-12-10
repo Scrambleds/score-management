@@ -35,6 +35,7 @@ import { DashboardComponent } from './route/dashboard/dashboard.component';
 
 import { provideHttpClient } from '@angular/common/http';
 import { TranslatePipe } from './shared/pipes/translate.pipe';
+import { ModalEditComponent } from './components/modal-edit/modal-edit.component';
 
 @NgModule({
   declarations: [
@@ -51,6 +52,7 @@ import { TranslatePipe } from './shared/pipes/translate.pipe';
     ScoreAnnouncementComponent,
     DashboardComponent,
     TranslatePipe,
+    ModalEditComponent,
   ],
   imports: [
     BrowserModule,
