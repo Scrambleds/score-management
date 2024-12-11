@@ -1,7 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { filter, map } from 'rxjs/operators';
-import { AuthService } from '../../auth/auth.service';
 import { LanguageService } from '../../core/services/language.service';
 import { TranslationService } from '../../core/services/translation.service';
 
@@ -22,7 +21,6 @@ export class TopNavComponent implements OnInit {
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private translationService: TranslationService,
-    private authService: AuthService
   ) {}
 
   ngOnInit(): void {

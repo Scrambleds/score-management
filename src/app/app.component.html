@@ -4,11 +4,16 @@
   (navToggle)="onNavToggle($event)"
 ></app-side-nav> -->
 <div class="body-container" [ngClass]="{ 'sidenav-open': isOpen }">
-  <app-top-nav [isOpen]="isOpen" (toggle)="toggleNav()"></app-top-nav>
-  <app-side-nav [isOpen]="isOpen" (toggle)="toggleNav()"></app-side-nav>
-
-  <app-top-nav *ngIf="!isLoginPage" [isOpen]="isOpen" (toggle)="toggleNav()"></app-top-nav>
-<app-side-nav *ngIf="!isLoginPage" [isOpen]="isOpen" (toggle)="toggleNav()"></app-side-nav>
+  <app-top-nav
+    *ngIf="!isLoginPage"
+    [isOpen]="isOpen"
+    (toggle)="toggleNav()"
+  ></app-top-nav>
+  <app-side-nav
+    *ngIf="!isLoginPage"
+    [isOpen]="isOpen"
+    (toggle)="toggleNav()"
+  ></app-side-nav>
   <main
     class="content"
     [class.content-with-sidenav]="isOpen"
