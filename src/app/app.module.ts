@@ -35,6 +35,8 @@ import { DashboardComponent } from './route/dashboard/dashboard.component';
 
 import { provideHttpClient } from '@angular/common/http';
 import { TranslatePipe } from './shared/pipes/translate.pipe';
+import { UploadScoreHeaderComponent } from './components/upload-score-header/upload-score-header.component';
+import { UploadExcelContainerComponent } from './components/upload-excel-container/upload-excel-container.component';
 
 @NgModule({
   declarations: [
@@ -51,6 +53,8 @@ import { TranslatePipe } from './shared/pipes/translate.pipe';
     ScoreAnnouncementComponent,
     DashboardComponent,
     TranslatePipe,
+    UploadScoreHeaderComponent,
+    UploadExcelContainerComponent,
   ],
   imports: [
     BrowserModule,

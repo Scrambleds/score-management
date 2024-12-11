@@ -9,7 +9,8 @@
   --body-color: #eef5ff;
   --font-size: 1rem;
   --font-color: #3c3c3c;
-  --font-menu-colo: #9d9fa1;
+  --font-menu-color: #9d9fa1;
+  --icon-size: 1.25rem;
 }
 
 /* layout */
@@ -29,7 +30,7 @@ html {
 .body-container .content {
   flex: 1;
   padding: 20px;
-  background-color: #f4f4f4;
+  background-color: var(--body-color);
 }
 
 /* side bar */
@@ -132,4 +133,11 @@ html {
 .dropdown-item:not(.disabled):active {
   background-color: var(--active-color);
   color: var(--white-color);
+}
+
+/* route layout */
+.route-container {
+  display: flex;
+  flex-direction: column; /* จัดเรียงในแนวตั้ง */
+  gap: 20px; /* เว้นระยะห่างระหว่าง items ในแนวตั้ง */
 }

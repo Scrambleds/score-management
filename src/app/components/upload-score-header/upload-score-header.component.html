@@ -1,0 +1,138 @@
+<div class="custom-card">
+  <div class="card-body">
+    <div class="text-center">รายละเอียด</div>
+    <div class="w-100" [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div class="row">
+        <div class="col-6 col-sm-5 col-md-2">
+          <label for="subjectNo" class="mb-2">{{
+            "subject_code" | translate
+          }}</label>
+          <div class="input-group mb-2">
+            <!-- <input
+              type="text"
+              class="form-control"
+              id="subjectNo"
+              aria-describedby="subjectNo"
+            /> -->
+            <ng-select
+              id="subjectNo"
+              formControlName="subjectNo"
+              [items]="subjectOptions"
+              bindLabel="subjectCode"
+              bindValue="subjectCode"
+              [placeholder]="'placeholder_select' | translate"
+              [clearable]="true"
+              [typeahead]="searchSubject$"
+            >
+            </ng-select>
+          </div>
+        </div>
+        <div class="col-6 col-sm-7 col-md-4">
+          <label for="subjectNo" class="mb-2">{{
+            "subject_name" | translate
+          }}</label>
+          <div class="input-group mb-2">
+            <!-- <input
+              type="text"
+              class="form-control"
+              id="subjectNo"
+              aria-describedby="subjectNo"
+            /> -->
+            <ng-select
+              id="subjectName"
+              formControlName="subjectName"
+              [items]="subjectOptions"
+              bindLabel="subjectName"
+              bindValue="subjectName"
+              [placeholder]="'placeholder_select' | translate"
+              [clearable]="true"
+              [typeahead]="searchSubject$"
+            >
+            </ng-select>
+          </div>
+        </div>
+        <div class="col-6 col-sm-4 col-md-2">
+          <label for="subjectNo" class="mb-2">{{
+            "academic_year" | translate
+          }}</label>
+          <div class="input-group mb-2">
+            <ng-select
+              id="academic_year"
+              formControlName="academic_yearCode"
+              [items]="academic_yearCodeOptions"
+              bindLabel="label"
+              bindValue="value"
+              [placeholder]="'placeholder_select' | translate"
+              [clearable]="true"
+              (change)="onSelectChange($event, 'academic_yearCode')"
+            >
+            </ng-select>
+            <div
+              *ngIf="
+                form.controls['academic_yearCode'].touched &&
+                form.controls['academic_yearCode'].invalid
+              "
+              class="text-danger"
+            >
+              {{ form.controls['academic_yearCode'].errors?.['message'] }}
+            </div>
+          </div>
+        </div>
+        <div class="col-6 col-sm-4 col-md-2">
+          <label for="subjectNo" class="mb-2">{{
+            "semester" | translate
+          }}</label>
+          <div class="input-group mb-2">
+            <ng-select
+              id="semester"
+              formControlName="semesterCode"
+              [items]="semesterCodeOptions"
+              bindLabel="label"
+              bindValue="value"
+              [placeholder]="'placeholder_select' | translate"
+              [clearable]="true"
+              (change)="onSelectChange($event, 'semesterCode')"
+            >
+            </ng-select>
+            <div
+              *ngIf="
+                form.controls['semesterCode'].touched &&
+                form.controls['semesterCode'].invalid
+              "
+              class="text-danger"
+            >
+              {{ form.controls['semesterCode'].errors?.['message'] }}
+            </div>
+          </div>
+        </div>
+        <div class="col-6 col-sm-4 col-md-2">
+          <label for="sectionId" class="mb-2">{{
+            "section" | translate
+          }}</label>
+          <div class="input-group mb-2">
+            <ng-select
+              id="sectionId"
+              formControlName="sectionId"
+              [items]="sectionIdOptions"
+              bindLabel="label"
+              bindValue="value"
+              [placeholder]="'placeholder_select' | translate"
+              [clearable]="true"
+              (change)="onSelectChange($event, 'sectionId')"
+            >
+            </ng-select>
+            <div
+              *ngIf="
+                form.controls['sectionId'].touched &&
+                form.controls['sectionId'].invalid
+              "
+              class="text-danger"
+            >
+              {{ form.controls['sectionId'].errors?.['message'] }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
