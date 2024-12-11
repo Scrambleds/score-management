@@ -1,9 +1,8 @@
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
-import { LanguageService } from '../../core/services/language.service';
-import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { filter, map } from 'rxjs/operators';
+import { LanguageService } from '../../core/services/language.service';
 import { TranslationService } from '../../core/services/translation.service';
-import e from 'express';
 
 @Component({
   selector: 'app-top-nav',
@@ -21,7 +20,7 @@ export class TopNavComponent implements OnInit {
     private languageService: LanguageService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
-    private translationService: TranslationService
+    private translationService: TranslationService,
   ) {}
 
   ngOnInit(): void {
@@ -64,4 +63,10 @@ export class TopNavComponent implements OnInit {
     this.currentLang = lang; // อัปเดตภาษาปัจจุบัน
     localStorage.setItem('language', lang); // เก็บภาษาลงใน localStorage
   }
+
+  onLogout() {
+    localStorage.clear(); // Clear token and expiration
+    this.router.navigate(['/Login']); // Redirect to login page
+  }
+
 }

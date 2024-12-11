@@ -1,0 +1,64 @@
+<div
+  class="container-fluid vh-100 d-flex align-items-center justify-content-center bg-light"
+>
+  <div class="row w-100">
+    <!-- Left Section -->
+    <div class="col-lg-6 d-none d-lg-block p-0">
+      <img
+        src="../../../assets/other/"
+        alt="Campus View"
+        class="img-fluid h-100 w-100 object-fit-cover"
+      />
+      <div
+        class="position-absolute top-50 start-50 translate-middle text-white text-center"
+      >
+        <h1 class="display-4 fw-bold">ระบบจัดการคะแนน</h1>
+      </div>
+    </div>
+    <!-- Right Section -->
+    <div class="col-lg-6 d-flex align-items-center justify-content-center">
+      <div class="card p-4 shadow-sm w-75">
+        <div class="text-center">
+          <img
+            src="../../../assets/logo/ku-logo.png"
+            alt="Kasetsart University Logo"
+            class="mb-4"
+            style="width: 80px"
+          />
+          <h4 class="fw-bold">มหาวิทยาลัยเกษตรศาสตร์</h4>
+          <p class="text-muted">Kasetsart University</p>
+        </div>
+        <form (ngSubmit)="onLogin()">
+          <div class="mb-3">
+            <label for="username" class="form-label">รหัสผู้ใช้งาน</label>
+            <input
+              type="text"
+              id="username"
+              class="form-control"
+              [(ngModel)]="username"
+              name="username"
+              required
+            />
+          </div>
+          <div class="mb-4">
+            <label for="password" class="form-label">รหัสผ่าน</label>
+            <input
+              type="password"
+              id="password"
+              class="form-control"
+              [(ngModel)]="password"
+              name="password"
+              required
+            />
+          </div>
+          <div *ngIf="errorMessage" class="error-message">
+            {{ errorMessage }}
+          </div>
+          <button type="submit" class="btn btn-success w-100">
+            เข้าสู่ระบบ
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

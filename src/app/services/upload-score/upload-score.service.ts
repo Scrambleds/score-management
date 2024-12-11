@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
-import { environment } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs/internal/Observable';
-import { of } from 'rxjs';
+import { Observable, of } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -15,21 +14,37 @@ export class UploadScoreService {
     { subjectCode: 'MATH102', subjectName: 'Calculus II' },
     { subjectCode: 'ENG101', subjectName: 'English Literature' },
   ];
-  constructor(private http: HttpClient) {}
-  // เรียก API เพื่อดึงข้อมูลทั้งหมด
-  getSubjects(): Observable<any[]> {
-    // return this.http.get<any[]>(this.apiUrl);
-    return of(this.mockSubjects); // ใช้ `of` เพื่อจำลองการส่งข้อมูลจาก API
-  }
 
-  // ค้นหาข้อมูลตามคำที่พิมพ์
-  searchSubjects(term: string): Observable<any[]> {
-    // return this.http.get<any[]>(`${this.apiUrl}?search=${term}`);
+  private apiUrl = 'https://example.com/api/subjects'; // Replace with your API endpoint
+
+  constructor(private http: HttpClient) {}
+
+  /**
+   * Search subjects by term.
+   * @param term The search term entered by the user.
+   * @returns Observable of filtered subjects.
+   */
+  searchSubjects(
+    term: string
+  ): Observable<{ subjectCode: string; subjectName: string }[]> {
+    if (!term.trim()) {
+      // If the search term is empty, return an empty array.
+      return of([]);
+    }
+
+    // Uncomment the following code if using backend API:
+    /*
+    return this.http
+      .get<{ subjectCode: string; subjectName: string }[]>(`${this.apiUrl}?search=${term}`)
+      .pipe(map((data) => data || []));
+    */
+
+    // Using mock data for demo purposes:
     const filteredSubjects = this.mockSubjects.filter(
       (subject) =>
         subject.subjectCode.toLowerCase().includes(term.toLowerCase()) ||
         subject.subjectName.toLowerCase().includes(term.toLowerCase())
     );
-    return of(filteredSubjects); // ส่งข้อมูลที่กรองตามคำค้นหา
+    return of(filteredSubjects);
   }
 }

@@ -1,22 +1,21 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UploadScoreService } from '../../services/upload-score/upload-score.service';
-import { BehaviorSubject, debounceTime, switchMap } from 'rxjs';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 @Component({
   selector: 'app-upload-score-header',
   standalone: false,
-
   templateUrl: './upload-score-header.component.html',
-  styleUrl: './upload-score-header.component.css',
+  styleUrls: ['./upload-score-header.component.css'],
 })
 export class UploadScoreHeaderComponent implements OnInit {
-  @Input() titleName: string = 'No title'; // รับค่าจาก Parent
-  @Input() buttonName: string = 'No title'; // รับค่าจาก Parent
+  @Input() titleName: string = 'No title';
+  @Input() buttonName: string = 'No title';
 
   public form: FormGroup;
-  subjectOptions: any[] = []; // ตัวแปรเก็บข้อมูลวิชาและรหัสวิชา
-  searchSubject$: BehaviorSubject<string> = new BehaviorSubject<string>(''); // ใช้ BehaviorSubject
+  filteredSubjects: { subjectCode: string; subjectName: string }[] = [];
+  isAutocompleteVisible = false;
 
   academic_yearCodeOptions = [
     { value: null, label: 'กรุณาเลือก' },
@@ -42,45 +41,57 @@ export class UploadScoreHeaderComponent implements OnInit {
     private fb: FormBuilder,
     private uploadScoreService: UploadScoreService
   ) {
-    // กำหนดโครงสร้างฟอร์มและ Validation
     this.form = this.fb.group({
       subjectNo: [''],
       subjectName: [''],
-      academic_yearCode: [null, Validators.required], // เพิ่ม dropdown ให้รองรับ reset
-      semesterCode: [null, Validators.required], // เพิ่ม dropdown ให้รองรับ reset
-      sectionId: [null, Validators.required], // เพิ่ม dropdown ให้รองรับ reset
+      academic_yearCode: [null, Validators.required],
+      semesterCode: [null, Validators.required],
+      sectionId: [null, Validators.required],
     });
   }
 
   ngOnInit() {
-    // เรียกบริการเพื่อดึงข้อมูลวิชา
-    // เมื่อพิมพ์คำค้นหาใน input field จะส่งคำไปที่ BehaviorSubject
-    this.searchSubject$
-      .pipe(
-        debounceTime(300), // หน่วงเวลา 300ms ก่อนทำการค้นหา
-        switchMap((term) => this.uploadScoreService.searchSubjects(term)) // ค้นหาข้อมูลจาก service
-      )
-      .subscribe((data) => {
-        this.subjectOptions = data; // กำหนดค่าที่ค้นหามาให้กับ subjectOptions
-      });
+    this.form
+      .get('subjectNo')!
+      .valueChanges.pipe(debounceTime(300), distinctUntilChanged())
+      .subscribe((value) => this.searchSubject(value));
   }
 
-  // ฟังก์ชันในการค้นหาวิชาตามคำที่พิมพ์
   searchSubject(term: string) {
-    this.searchSubject$.next(term); // ส่งคำที่พิมพ์ไปที่ BehaviorSubject
+    this.uploadScoreService.searchSubjects(term).subscribe((results) => {
+      this.filteredSubjects = results;
+    });
   }
 
+  selectSubject(subjectCode: string, subjectName: string) {
+    this.form.get('subjectNo')!.setValue(subjectCode, { emitEvent: false });
+    this.form.get('subjectName')!.setValue(subjectName, { emitEvent: false });
+    this.filteredSubjects = [];
+  }
+
+  onSelectChange(selectedValue: any, controlName: string): void {
+    if (selectedValue && selectedValue.value === null) {
+      this.form.get(controlName)?.reset();
+    }
+  }
+
+  //autocomplete
+  showAutocomplete(): void {
+    this.isAutocompleteVisible = true;
+  }
+
+  hideAutocomplete(): void {
+    // Delay hiding to allow click event on autocomplete items to fire
+    setTimeout(() => {
+      this.isAutocompleteVisible = false;
+    }, 100);
+  }
+  //end auto complete
   onSubmit(): void {
     if (this.form.valid) {
       console.log('Form Submitted:', this.form.value);
     } else {
       console.log('Form is invalid');
-    }
-  }
-  // ฟังก์ชันจัดการเมื่อมีการเปลี่ยนแปลงค่าใน ng-select
-  onSelectChange(selectedValue: any, controlName: string): void {
-    if (selectedValue && selectedValue.value === null) {
-      this.form.get(controlName)?.reset(); // รีเซ็ตฟอร์มตามชื่อ control
     }
   }
 }

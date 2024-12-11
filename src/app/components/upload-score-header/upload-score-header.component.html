@@ -1,138 +1,148 @@
 <div class="custom-card">
   <div class="card-body">
     <div class="text-center">รายละเอียด</div>
-    <div class="w-100" [formGroup]="form" (ngSubmit)="onSubmit()">
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="w-100">
       <div class="row">
+        <!-- Subject Code -->
         <div class="col-6 col-sm-5 col-md-2">
           <label for="subjectNo" class="mb-2">{{
             "subject_code" | translate
           }}</label>
-          <div class="input-group mb-2">
-            <!-- <input
+          <div class="input-group-autocomplete mb-2">
+            <input
               type="text"
+              formControlName="subjectNo"
               class="form-control"
               id="subjectNo"
-              aria-describedby="subjectNo"
-            /> -->
-            <ng-select
-              id="subjectNo"
-              formControlName="subjectNo"
-              [items]="subjectOptions"
-              bindLabel="subjectCode"
-              bindValue="subjectCode"
-              [placeholder]="'placeholder_select' | translate"
-              [clearable]="true"
-              [typeahead]="searchSubject$"
+              [placeholder]="'alert_enterData' | translate"
+              (input)="searchSubject(form.get('subjectNo')?.value)"
+              (focus)="showAutocomplete()"
+              (blur)="hideAutocomplete()"
+            />
+            <div
+              *ngIf="
+                isAutocompleteVisible &&
+                filteredSubjects &&
+                filteredSubjects.length > 0
+              "
+              class="autocomplete-container"
             >
-            </ng-select>
+              <div class="autocomplete-list">
+                <div
+                  *ngFor="let subject of filteredSubjects"
+                  class="autocomplete-item"
+                  (click)="
+                    selectSubject(subject.subjectCode, subject.subjectName)
+                  "
+                >
+                  {{ subject.subjectCode }} - {{ subject.subjectName }}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
+
+        <!-- Subject Name -->
         <div class="col-6 col-sm-7 col-md-4">
-          <label for="subjectNo" class="mb-2">{{
+          <label for="subjectName" class="mb-2">{{
             "subject_name" | translate
           }}</label>
           <div class="input-group mb-2">
-            <!-- <input
+            <input
               type="text"
-              class="form-control"
-              id="subjectNo"
-              aria-describedby="subjectNo"
-            /> -->
-            <ng-select
-              id="subjectName"
               formControlName="subjectName"
-              [items]="subjectOptions"
-              bindLabel="subjectName"
-              bindValue="subjectName"
-              [placeholder]="'placeholder_select' | translate"
-              [clearable]="true"
-              [typeahead]="searchSubject$"
-            >
-            </ng-select>
+              class="form-control"
+              id="subjectName"
+              [placeholder]="'alert_enterData' | translate"
+              (input)="searchSubject(form.get('subjectName')?.value)"
+            />
           </div>
         </div>
+
+        <!-- Academic Year -->
         <div class="col-6 col-sm-4 col-md-2">
-          <label for="subjectNo" class="mb-2">{{
+          <label for="academic_year" class="mb-2">{{
             "academic_year" | translate
           }}</label>
-          <div class="input-group mb-2">
-            <ng-select
-              id="academic_year"
-              formControlName="academic_yearCode"
-              [items]="academic_yearCodeOptions"
-              bindLabel="label"
-              bindValue="value"
-              [placeholder]="'placeholder_select' | translate"
-              [clearable]="true"
-              (change)="onSelectChange($event, 'academic_yearCode')"
-            >
-            </ng-select>
-            <div
-              *ngIf="
-                form.controls['academic_yearCode'].touched &&
-                form.controls['academic_yearCode'].invalid
-              "
-              class="text-danger"
-            >
-              {{ form.controls['academic_yearCode'].errors?.['message'] }}
-            </div>
+          <ng-select
+            id="academic_year"
+            formControlName="academic_yearCode"
+            [items]="academic_yearCodeOptions"
+            bindLabel="label"
+            bindValue="value"
+            [placeholder]="'placeholder_select' | translate"
+            [clearable]="true"
+            (change)="onSelectChange($event, 'academic_yearCode')"
+          >
+          </ng-select>
+          <div
+            *ngIf="
+              form.get('academic_yearCode')?.touched &&
+              form.get('academic_yearCode')?.invalid
+            "
+            class="text-danger ps-2"
+          >
+            {{ "alert_enterData" | translate }}
           </div>
         </div>
+
+        <!-- Semester -->
         <div class="col-6 col-sm-4 col-md-2">
-          <label for="subjectNo" class="mb-2">{{
+          <label for="semester" class="mb-2">{{
             "semester" | translate
           }}</label>
-          <div class="input-group mb-2">
-            <ng-select
-              id="semester"
-              formControlName="semesterCode"
-              [items]="semesterCodeOptions"
-              bindLabel="label"
-              bindValue="value"
-              [placeholder]="'placeholder_select' | translate"
-              [clearable]="true"
-              (change)="onSelectChange($event, 'semesterCode')"
-            >
-            </ng-select>
-            <div
-              *ngIf="
-                form.controls['semesterCode'].touched &&
-                form.controls['semesterCode'].invalid
-              "
-              class="text-danger"
-            >
-              {{ form.controls['semesterCode'].errors?.['message'] }}
-            </div>
+          <ng-select
+            id="semester"
+            formControlName="semesterCode"
+            [items]="semesterCodeOptions"
+            bindLabel="label"
+            bindValue="value"
+            [placeholder]="'placeholder_select' | translate"
+            [clearable]="true"
+            (change)="onSelectChange($event, 'semesterCode')"
+          >
+          </ng-select>
+          <div
+            *ngIf="
+              form.get('semesterCode')?.touched &&
+              form.get('semesterCode')?.invalid
+            "
+            class="text-danger ps-2"
+          >
+            {{ "alert_enterData" | translate }}
           </div>
         </div>
+
+        <!-- Section -->
         <div class="col-6 col-sm-4 col-md-2">
           <label for="sectionId" class="mb-2">{{
             "section" | translate
           }}</label>
-          <div class="input-group mb-2">
-            <ng-select
-              id="sectionId"
-              formControlName="sectionId"
-              [items]="sectionIdOptions"
-              bindLabel="label"
-              bindValue="value"
-              [placeholder]="'placeholder_select' | translate"
-              [clearable]="true"
-              (change)="onSelectChange($event, 'sectionId')"
-            >
-            </ng-select>
-            <div
-              *ngIf="
-                form.controls['sectionId'].touched &&
-                form.controls['sectionId'].invalid
-              "
-              class="text-danger"
-            >
-              {{ form.controls['sectionId'].errors?.['message'] }}
-            </div>
+          <ng-select
+            id="sectionId"
+            formControlName="sectionId"
+            [items]="sectionIdOptions"
+            bindLabel="label"
+            bindValue="value"
+            [placeholder]="'placeholder_select' | translate"
+            [clearable]="true"
+            (change)="onSelectChange($event, 'sectionId')"
+          >
+          </ng-select>
+          <div
+            *ngIf="
+              form.get('sectionId')?.touched && form.get('sectionId')?.invalid
+            "
+            class="text-danger ps-2"
+          >
+            {{ "alert_enterData" | translate }}
           </div>
         </div>
       </div>
-    </div>
+
+      <button type="submit" class="btn btn-primary mt-3">
+        {{ "submit" | translate }}
+      </button>
+    </form>
   </div>
 </div>
