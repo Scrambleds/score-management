@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -14,7 +15,14 @@ export class AppComponent {
   //   this.isNavOpen = isOpen; // รับสถานะเปิด/ปิดจาก EventEmitter
   // }
   isOpen: boolean = false;
+  isLoginPage: boolean  = false;
 
+  constructor(private router: Router) {
+    this.router.events.subscribe(() => {
+      // ตรวจสอบเส้นทางปัจจุบัน
+      this.isLoginPage = this.router.url === '/Login';
+    });
+  }
   toggleNav() {
     this.isOpen = !this.isOpen;
   }
