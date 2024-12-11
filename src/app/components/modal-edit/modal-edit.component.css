@@ -19,3 +19,18 @@
     font-size: 1.2rem;
     font-weight: bold;
   }
+
+  .is-valid {
+    border-color: #28a745; /* สีเขียว */
+    background-color: #d4edda;
+  }
+  
+  .is-invalid {
+    border-color: #dc3545; /* สีแดง */
+    background-color: #f8d7da;
+  }
+  
+  .text-success {
+    color: #28a745; /* สีเขียว */
+  }
+  
