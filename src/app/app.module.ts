@@ -33,12 +33,15 @@ import { UploadScoreComponent } from './route/upload-score/upload-score.componen
 import { ScoreAnnouncementComponent } from './route/score-announcement/score-announcement.component';
 import { DashboardComponent } from './route/dashboard/dashboard.component';
 
-import { HttpClientModule, provideHttpClient } from '@angular/common/http';
+import { provideHttpClient } from '@angular/common/http';
 import { TranslatePipe } from './shared/pipes/translate.pipe';
 import { UploadScoreHeaderComponent } from './components/upload-score-header/upload-score-header.component';
 import { UploadExcelContainerComponent } from './components/upload-excel-container/upload-excel-container.component';
 import { ModalEditComponent } from './components/modal-edit/modal-edit.component';
 import { LoginPageComponent } from './route/login-page/login-page.component';
+import { MainLayoutComponent } from './layout/main-layout/main-layout.component';
+import { AuthLayoutComponent } from './layout/auth-layout/auth-layout.component';
+import { AutocompleteComponent } from './components/autocomplete/autocomplete.component';
 
 @NgModule({
   declarations: [
@@ -59,6 +62,9 @@ import { LoginPageComponent } from './route/login-page/login-page.component';
     UploadExcelContainerComponent,
     ModalEditComponent,
     LoginPageComponent,
+    MainLayoutComponent,
+    AuthLayoutComponent,
+    AutocompleteComponent,
   ],
   imports: [
     BrowserModule,
@@ -75,7 +81,6 @@ import { LoginPageComponent } from './route/login-page/login-page.component';
     NgOptionTemplateDirective,
     NgSelectComponent,
     MatSelectModule,
-    HttpClientModule,
   ],
   providers: [
     provideHttpClient(),

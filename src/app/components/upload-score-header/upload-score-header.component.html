@@ -9,36 +9,18 @@
             "subject_code" | translate
           }}</label>
           <div class="input-group-autocomplete mb-2">
-            <input
-              type="text"
-              formControlName="subjectNo"
-              class="form-control"
-              id="subjectNo"
+            <app-autocomplete
               [placeholder]="'alert_enterData' | translate"
-              (input)="searchSubject(form.get('subjectNo')?.value)"
-              (focus)="showAutocomplete()"
-              (blur)="hideAutocomplete()"
-            />
-            <div
-              *ngIf="
-                isAutocompleteVisible &&
-                filteredSubjects &&
-                filteredSubjects.length > 0
-              "
-              class="autocomplete-container"
-            >
-              <div class="autocomplete-list">
-                <div
-                  *ngFor="let subject of filteredSubjects"
-                  class="autocomplete-item"
-                  (click)="
-                    selectSubject(subject.subjectCode, subject.subjectName)
-                  "
-                >
-                  {{ subject.subjectCode }} - {{ subject.subjectName }}
-                </div>
-              </div>
-            </div>
+              [suggestions]="filteredSubjects"
+              [displayKey]="'subjectCode'"
+              [displayFormat]="customFormat"
+              (search)="searchSubject($event)"
+              (select)="selectCode($event.subjectCode, $event.subjectName)"
+            ></app-autocomplete>
+
+            <ng-template #customFormat let-item>
+              {{ item.subjectCode }} - {{ item.subjectName }}
+            </ng-template>
           </div>
         </div>
 
@@ -47,16 +29,21 @@
           <label for="subjectName" class="mb-2">{{
             "subject_name" | translate
           }}</label>
-          <div class="input-group mb-2">
-            <input
-              type="text"
-              formControlName="subjectName"
-              class="form-control"
-              id="subjectName"
-              [placeholder]="'alert_enterData' | translate"
-              (input)="searchSubject(form.get('subjectName')?.value)"
-            />
-          </div>
+          <app-autocomplete
+            id="subjectName"
+            [placeholder]="'alert_enterData' | translate"
+            [suggestions]="filteredSubjects"
+            [displayKey]="'subjectName'"
+            [displayFormat]="customFormat"
+            (search)="searchSubject($event)"
+            (select)="selectSubject($event.subjectCode, $event.subjectName)"
+            [readonly]="isSubjectNameReadonly"
+            [value]="form.get('subjectName')!.value"
+          ></app-autocomplete>
+
+          <ng-template #customFormat let-item>
+            {{ item.subjectCode }} - {{ item.subjectName }}
+          </ng-template>
         </div>
 
         <!-- Academic Year -->

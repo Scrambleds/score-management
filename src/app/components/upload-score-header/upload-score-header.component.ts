@@ -16,6 +16,7 @@ export class UploadScoreHeaderComponent implements OnInit {
   public form: FormGroup;
   filteredSubjects: { subjectCode: string; subjectName: string }[] = [];
   isAutocompleteVisible = false;
+  isSubjectNameReadonly = false;
 
   academic_yearCodeOptions = [
     { value: null, label: 'กรุณาเลือก' },
@@ -66,6 +67,13 @@ export class UploadScoreHeaderComponent implements OnInit {
   selectSubject(subjectCode: string, subjectName: string) {
     this.form.get('subjectNo')!.setValue(subjectCode, { emitEvent: false });
     this.form.get('subjectName')!.setValue(subjectName, { emitEvent: false });
+    this.isSubjectNameReadonly = true;
+    this.filteredSubjects = [];
+  }
+  selectCode(subjectCode: string, subjectName: string) {
+    console.log(subjectCode, subjectName);
+    this.form.get('subjectName')!.setValue(subjectName, { emitEvent: false });
+    this.isSubjectNameReadonly = true;
     this.filteredSubjects = [];
   }
 

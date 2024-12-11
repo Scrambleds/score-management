@@ -8,6 +8,8 @@ import { SearchScoreComponent } from './route/search-score/search-score.componen
 import { DashboardComponent } from './route/dashboard/dashboard.component';
 import { LoginPageComponent } from './route/login-page/login-page.component';
 import { AuthGuard } from './auth/auth.guard';
+import { AuthLayoutComponent } from './layout/auth-layout/auth-layout.component';
+import { MainLayoutComponent } from './layout/main-layout/main-layout.component';
 
 const routes: Routes = [
   {
@@ -18,46 +20,63 @@ const routes: Routes = [
     pathMatch: 'full',
   },
   {
-    path: 'MasterData',
-    component: MasterDataComponent,
-    data: { messageKey: 'menu_masterdata' },
-    canActivate: [AuthGuard],
+    path: '',
+    component: AuthLayoutComponent,
+    children: [
+      {
+        path: 'Login',
+        component: LoginPageComponent,
+      },
+    ],
   },
   {
-    path: 'UserManagement',
-    component: UserManageComponent,
-    data: { messageKey: 'menu_usermanage' },
-    canActivate: [AuthGuard],
+    path: '',
+    component: MainLayoutComponent,
+    children: [
+      {
+        path: 'MasterData',
+        component: MasterDataComponent,
+        data: { messageKey: 'menu_masterdata' },
+        canActivate: [AuthGuard],
+      },
+      {
+        path: 'UserManagement',
+        component: UserManageComponent,
+        data: { messageKey: 'menu_usermanage' },
+        canActivate: [AuthGuard],
+      },
+      {
+        path: 'UploadScore',
+        component: UploadScoreComponent,
+        data: { messageKey: 'menu_uploadscore' },
+        canActivate: [AuthGuard],
+      },
+      {
+        path: 'SearchScore',
+        component: SearchScoreComponent,
+        data: { messageKey: 'menu_searchscore' },
+        canActivate: [AuthGuard],
+      },
+      {
+        path: 'ScoreAnnouncement',
+        component: ScoreAnnouncementComponent,
+        data: { messageKey: 'menu_scoreannounce' },
+        canActivate: [AuthGuard],
+      },
+      {
+        path: 'Dashboard',
+        component: DashboardComponent,
+        data: { messageKey: 'menu_dashboard' },
+        canActivate: [AuthGuard],
+      },
+    ],
   },
   {
-    path: 'UploadScore',
-    component: UploadScoreComponent,
-    data: { messageKey: 'menu_uploadscore' },
-    canActivate: [AuthGuard],
-  },
-  {
-    path: 'SearchScore',
-    component: SearchScoreComponent,
-    data: { messageKey: 'menu_searchscore' },
-    canActivate: [AuthGuard],
-  },
-  {
-    path: 'ScoreAnnouncement',
-    component: ScoreAnnouncementComponent,
-    data: { messageKey: 'menu_scoreannounce' },
-    canActivate: [AuthGuard],
-  },
-  {
-    path: 'Dashboard',
-    component: DashboardComponent,
-    data: { messageKey: 'menu_dashboard' },
-    canActivate: [AuthGuard],
-  },
-  {
-    path: 'Login',
-    component: LoginPageComponent
+    path: '**', // สำหรับเส้นทางที่ไม่พบให้ไปที่หน้า Login
+    redirectTo: '/Login',
   },
 ];
+
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],

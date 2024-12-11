@@ -1,0 +1,47 @@
+<div
+  class="input-group-autocomplete mb-2"
+  [ngClass]="{
+    'dropdown-top': dropdownPosition === 'top',
+    'dropdown-bottom': dropdownPosition === 'bottom'
+  }"
+>
+  <input
+    type="text"
+    class="form-control"
+    [placeholder]="placeholder"
+    [(ngModel)]="inputValue"
+    (input)="onSearch()"
+    (focus)="showAutocomplete()"
+    autocomplete="off"
+    [disabled]="disabled"
+    [readonly]="readonly"
+    [(ngModel)]="inputValue"
+  />
+  <div
+    #autocompleteContainer
+    *ngIf="isAutocompleteVisible && suggestions.length > 0"
+    class="autocomplete-container"
+    [ngClass]="{
+      'dropdown-top': dropdownPosition === 'top',
+      'dropdown-bottom': dropdownPosition === 'bottom',
+      'width-auto': widthAuto
+    }"
+  >
+    <div class="autocomplete-list">
+      <div
+        *ngFor="let item of suggestions"
+        class="autocomplete-item"
+        (click)="selectItem(item)"
+      >
+        <ng-container
+          *ngIf="displayFormat; else defaultFormat"
+          [ngTemplateOutlet]="displayFormat"
+          [ngTemplateOutletContext]="{ $implicit: item }"
+        ></ng-container>
+        <ng-template #defaultFormat>
+          {{ item[displayKey] }}
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</div>

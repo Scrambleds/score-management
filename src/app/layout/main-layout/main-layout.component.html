@@ -1,0 +1,12 @@
+<div class="body-container" [ngClass]="{ 'sidenav-open': isOpen }">
+  <app-top-nav [isOpen]="isOpen" (toggle)="toggleNav()"></app-top-nav>
+  <app-side-nav [isOpen]="isOpen" (toggle)="toggleNav()"></app-side-nav>
+  <main
+    class="content"
+    [class.content-with-sidenav]="isOpen"
+    [class.content-full-width]="!isOpen"
+  >
+    <router-outlet></router-outlet>
+  </main>
+  <app-footer [isOpen]="isOpen"></app-footer>
+</div>

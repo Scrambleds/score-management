@@ -29,14 +29,14 @@ html {
 
 .body-container .content {
   flex: 1;
-  padding: 20px;
+  padding: 1.25rem;
   background-color: var(--body-color);
 }
 
 /* side bar */
 .sidenav {
   height: 100%;
-  width: 250px;
+  width: 15.625rem;
   position: fixed;
   z-index: 1;
   top: 0;
@@ -51,17 +51,10 @@ html {
   color: var(--white-color);
 }
 
-.sidenav .closebtn {
-  position: absolute;
-  top: 0;
-  right: 25px;
-  font-size: 36px;
-  margin-left: 50px;
-}
-
 .sidenav-open {
   transform: translateX(0); /* เลื่อนกลับเข้ามา */
 }
+
 /* add new side bar header */
 .header-row {
   display: flex;
@@ -139,5 +132,5 @@ html {
 .route-container {
   display: flex;
   flex-direction: column; /* จัดเรียงในแนวตั้ง */
-  gap: 20px; /* เว้นระยะห่างระหว่าง items ในแนวตั้ง */
+  gap: 1.25rem; /* เว้นระยะห่างระหว่าง items ในแนวตั้ง */
 }
