@@ -37,6 +37,7 @@ import { provideHttpClient } from '@angular/common/http';
 import { TranslatePipe } from './shared/pipes/translate.pipe';
 import { UploadScoreHeaderComponent } from './components/upload-score-header/upload-score-header.component';
 import { UploadExcelContainerComponent } from './components/upload-excel-container/upload-excel-container.component';
+import { ModalEditComponent } from './components/modal-edit/modal-edit.component';
 
 @NgModule({
   declarations: [
@@ -55,6 +56,7 @@ import { UploadExcelContainerComponent } from './components/upload-excel-contain
     TranslatePipe,
     UploadScoreHeaderComponent,
     UploadExcelContainerComponent,
+    ModalEditComponent,
   ],
   imports: [
     BrowserModule,

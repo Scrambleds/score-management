@@ -8,7 +8,10 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
   styleUrl: './form-edit.component.css'
 })
 export class FormEditComponent {
+  isModalVisible = false;
+  selectedRowData: any = null;
   form: FormGroup;
+
   data = [
     {
       citizenId: 'REGXXXXXXX',
@@ -107,4 +110,23 @@ export class FormEditComponent {
     console.log('Delete clicked for:', value);
     // Add delete handling logic here
   }
+
+    // Parent Component
+  roleOption = [{ id: '1', title: 'ผู้ดูแลระบบ' }, { id: '2', title: 'อาจารย์' }];
+  statusOption = [{ id: '1', title: 'active' }, { id: '2', title: 'inactive' }];
+
+  openModal(row: any) {
+    this.selectedRowData = row; // Pass row data to modal if needed
+    this.isModalVisible = true; // Show modal
+  }
+
+  handleModalClose() {
+    this.isModalVisible = false; // Hide modal
+  }
+
+  handleModalSubmit(formData: any) {
+    console.log('Submitted Data:', formData);
+    this.isModalVisible = false;
+  }
+
 }
