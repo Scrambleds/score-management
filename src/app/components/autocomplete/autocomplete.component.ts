@@ -24,15 +24,23 @@ export class AutocompleteComponent {
   @Input() widthAuto: boolean = false; // เพิ่ม Input Property
   @Input() disabled: boolean = false; // เพิ่ม Input Property
   @Input() readonly: boolean = false; // เพิ่ม Input Property
-  @Input() set value(val: string) {
-    this.inputValue = val || ''; // อัปเดตค่า inputValue
+  private _value: string = '';
+  @Input()
+  set value(val: string) {
+    this._value = val;
+    this.inputValue = this._value; // อัปเดตค่าใน input
+    console.log('set value', this.inputValue);
+  }
+  get value(): string {
+    console.log('get value', this._value);
+    return this._value;
   }
   @Output() search = new EventEmitter<string>();
   @Output() select = new EventEmitter<any>();
 
   @ViewChild('autocompleteContainer') autocompleteContainer!: ElementRef;
 
-  inputValue: string = '';
+  inputValue: string = ''; // รับค่าจาก parent component
   isAutocompleteVisible = false;
   dropdownPosition: 'top' | 'bottom' = 'bottom';
 
@@ -44,10 +52,18 @@ export class AutocompleteComponent {
   }
 
   onSearch(): void {
+    console.log('onSearch');
     this.search.emit(this.inputValue);
     this.adjustDropdownPosition();
   }
-
+  onInputChange(event: Event): void {
+    console.log('onInputChange', event);
+    const target = event.target as HTMLInputElement; // ใช้ type assertion
+    if (target) {
+      this.inputValue = target.value; // อัปเดตค่า inputValue
+      this.onSearch(); // เรียกฟังก์ชันค้นหา
+    }
+  }
   showAutocomplete(): void {
     this.isAutocompleteVisible = true;
     this.adjustDropdownPosition();
@@ -56,7 +72,7 @@ export class AutocompleteComponent {
   hideAutocomplete(): void {
     setTimeout(() => {
       this.isAutocompleteVisible = false;
-    }, 100);
+    }, 500);
   }
 
   adjustDropdownPosition(): void {
@@ -85,8 +101,25 @@ export class AutocompleteComponent {
   }
 
   selectItem(item: any): void {
-    this.inputValue = item[this.displayKey];
-    this.isAutocompleteVisible = false;
-    this.select.emit(item);
+    if (item) {
+      console.log('selectItem', item); // ตรวจสอบค่าที่ส่งมา
+      this.inputValue = item[this.displayKey];
+      this.isAutocompleteVisible = false;
+      this.select.emit({
+        subjectCode: item.subjectCode, // หรือชื่อ key ที่คุณต้องการ
+        subjectName: item.subjectName, // หรือชื่อ key ที่คุณต้องการ
+      });
+    }
   }
+  // selectItem(item: any): void {
+  //   console.log('selectItem', item); // ตรวจสอบค่าที่ส่งมา
+  //   this.inputValue = item[this.displayKey]; // อัปเดตค่าของ input
+  //   this.isAutocompleteVisible = false; // ซ่อน dropdown
+
+  //   // ส่งค่าที่ต้องการกลับไปที่ parent component
+  //   this.select.emit({
+  //     subjectCode: item.subjectCode, // หรือชื่อ key ที่คุณต้องการ
+  //     subjectName: item.subjectName, // หรือชื่อ key ที่คุณต้องการ
+  //   });
+  // }
 }

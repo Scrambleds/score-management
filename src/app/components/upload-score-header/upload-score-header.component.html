@@ -14,8 +14,10 @@
               [suggestions]="filteredSubjects"
               [displayKey]="'subjectCode'"
               [displayFormat]="customFormat"
+              [widthAuto]="true"
               (search)="searchSubject($event)"
-              (select)="selectCode($event.subjectCode, $event.subjectName)"
+              (select)="selectCode($event)"
+              [value]="selectedSubjectCode"
             ></app-autocomplete>
 
             <ng-template #customFormat let-item>
@@ -36,7 +38,6 @@
             [displayKey]="'subjectName'"
             [displayFormat]="customFormat"
             (search)="searchSubject($event)"
-            (select)="selectSubject($event.subjectCode, $event.subjectName)"
             [readonly]="isSubjectNameReadonly"
             [value]="form.get('subjectName')!.value"
           ></app-autocomplete>
@@ -44,6 +45,10 @@
           <ng-template #customFormat let-item>
             {{ item.subjectCode }} - {{ item.subjectName }}
           </ng-template>
+          <!-- (select)="
+          !isSubjectNameReadonly &&
+            selectSubject($event.subjectCode, $event.subjectName)
+        " -->
         </div>
 
         <!-- Academic Year -->

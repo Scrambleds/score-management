@@ -8,11 +8,23 @@ import { map } from 'rxjs/operators';
 })
 export class UploadScoreService {
   private mockSubjects = [
-    { subjectCode: 'CS101', subjectName: 'Computer Science Basics' },
-    { subjectCode: 'CS102', subjectName: 'Advanced Computer Science' },
-    { subjectCode: 'MATH101', subjectName: 'Calculus I' },
-    { subjectCode: 'MATH102', subjectName: 'Calculus II' },
-    { subjectCode: 'ENG101', subjectName: 'English Literature' },
+    {
+      subjectCode: '01418442-60',
+      subjectName: 'Web Technology and Web Services',
+    },
+    { subjectCode: '01418499-65', subjectName: 'Computer Science Project' },
+    {
+      subjectCode: '01418221-60',
+      subjectName: 'Fundamentals of Database Systems',
+    },
+    {
+      subjectCode: '01418222-60',
+      subjectName: 'Internet Application for Commerce',
+    },
+    {
+      subjectCode: '01418233-60',
+      subjectName: 'Assembly Language and Computer Architecture',
+    },
   ];
 
   private apiUrl = 'https://example.com/api/subjects'; // Replace with your API endpoint

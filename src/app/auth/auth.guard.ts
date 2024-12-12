@@ -10,16 +10,18 @@ import {
   providedIn: 'root',
 })
 export class AuthGuard implements CanActivate {
-  
   constructor(private router: Router) {}
 
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): boolean {
-    const token = localStorage.getItem('token');
-    const tokenExpiration = localStorage.getItem('tokenExpiration');
-
+    let token;
+    let tokenExpiration;
+    if (typeof window !== 'undefined') {
+      token = localStorage.getItem('token');
+      tokenExpiration = localStorage.getItem('tokenExpiration');
+    }
     if (token && tokenExpiration && new Date() < new Date(tokenExpiration)) {
       localStorage.setItem('redirectPath', state.url); // Store the intended URL for redirection after login
       return true;

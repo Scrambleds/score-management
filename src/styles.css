@@ -7,6 +7,7 @@
   --grey-color: #2f3337;
   --white-color: #ffffff;
   --body-color: #eef5ff;
+  --disabled-color: #e9ecef;
   --font-size: 1rem;
   --font-color: #3c3c3c;
   --font-menu-color: #9d9fa1;
@@ -133,4 +134,10 @@ html {
   display: flex;
   flex-direction: column; /* จัดเรียงในแนวตั้ง */
   gap: 1.25rem; /* เว้นระยะห่างระหว่าง items ในแนวตั้ง */
+}
+
+/* ng-select */
+.ng-select.ng-select-disabled > .ng-select-container {
+  background-color: var(--disabled-color) !important;
+  opacity: 1;
 }

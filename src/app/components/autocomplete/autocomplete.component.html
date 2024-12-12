@@ -9,17 +9,21 @@
     type="text"
     class="form-control"
     [placeholder]="placeholder"
-    [(ngModel)]="inputValue"
-    (input)="onSearch()"
+    [value]="inputValue"
+    (input)="onInputChange($event)"
     (focus)="showAutocomplete()"
+    (blur)="hideAutocomplete()"
     autocomplete="off"
     [disabled]="disabled"
     [readonly]="readonly"
-    [(ngModel)]="inputValue"
   />
+  <!-- (blur)="hideAutocomplete()" -->
+  <!-- isAutocompleteVisible &&  -->
   <div
     #autocompleteContainer
-    *ngIf="isAutocompleteVisible && suggestions.length > 0"
+    *ngIf="
+      isAutocompleteVisible && suggestions.length > 0 && !disabled && !readonly
+    "
     class="autocomplete-container"
     [ngClass]="{
       'dropdown-top': dropdownPosition === 'top',
