@@ -5,7 +5,8 @@ export function passwordStrengthValidator(): ValidatorFn {
     const value = control.value || '';
     
     // ตรวจสอบว่ามีตัวอักษรภาษาอังกฤษและตัวเลข หรืออักขระพิเศษ
-    const hasEnglishAndSpecialCharacters = /^[a-zA-Z0-9!@#$%^&]*$/.test(value);
+    // const hasEnglishAndSpecialCharacters = /^[a-zA-Z0-9!@#$%^&]+$/.test(value);
+    const hasEnglishAndSpecialCharacters = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d!@#$%^&]{8,}$/.test(value);
     
     const hasUpperCase = /[A-Z]/.test(value);
     const hasLowerCase = /[a-z]/.test(value);
@@ -24,13 +25,24 @@ export function passwordStrengthValidator(): ValidatorFn {
     // if (!hasSpecialCharacter) {
     //   errors.missingSpecialCharacter = 'ต้องมีอักขระพิเศษ';
     // }
-    if (!hasMinLength) {
-      errors.minLength = 'ต้องมีอย่างน้อย 8 ตัวอักษร';
+    // if (!hasMinLength) {
+    //   errors.minLength = 'ต้องมีอย่างน้อย 8 ตัวอักษร';
+    // }
+    // if (!hasEnglishAndSpecialCharacters) {
+    //   errors.hasEnglishAndSpecialCharacters = "กรุณากรอกภาษาอังกฤษและตัวเลขเท่านั้น";
+    // }
+    if (value.length < 8) {
+      errors.errorMessage = "ต้องมีอย่างน้อย 8 ตัวอักษร";
     }
-    if (!hasEnglishAndSpecialCharacters) {
-      errors.hasEnglishAndSpecialCharacters = "กรุณากรอกภาษาอังกฤษและตัวเลขเท่านั้น";
+    
+    else if (!/[A-Za-z]/.test(value) || !/\d/.test(value)) {
+      errors.errorMessage = "ต้องผสมด้วยตัวอักษรภาษาอังกฤษและตัวเลข";
     }
-
+    
+    else if (!/^[A-Za-z\d!@#$%^&]*$/.test(value)) {
+      errors.errorMessage = "อนุญาตเฉพาะอักขระพิเศษ !@#$%^& เท่านั้น";
+    }
+    
     // คืนค่าข้อผิดพลาดหรือ null ถ้าผ่านทุกเงื่อนไข
     return Object.keys(errors).length ? errors : null;
   };

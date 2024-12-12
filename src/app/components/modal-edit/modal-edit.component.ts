@@ -6,15 +6,15 @@ import { passwordStrengthValidator } from '../validators/password-strength.valid
   selector: 'app-modal-edit',
   standalone: false,
   templateUrl: './modal-edit.component.html',
-  styleUrl: './modal-edit.component.css'
+  styleUrls: ['./modal-edit.component.css']
 })
 export class ModalEditComponent {
-  @Input() show = false; // Control visibility
+  @Input() show = false; // ควบคุมการแสดงผลของ modal
   @Input() role: Array<{ id: string; title: string }> = []; 
   @Input() active_status: Array<{ id: string; title: string }> = [];
 
-  @Output() hide = new EventEmitter<void>(); // Emit event to parent on hide
-  @Output() submit = new EventEmitter<any>(); // Emit form data to parent on submit
+  @Output() hide = new EventEmitter<void>(); // สัญญาณเมื่อปิด modal
+  @Output() submit = new EventEmitter<any>(); // ส่งข้อมูล form กลับไปที่ parent เมื่อ submit
 
   form: FormGroup;
   isDisabled = true;
@@ -28,74 +28,90 @@ export class ModalEditComponent {
       prefix: [null, Validators.required],
       firstname: [null, Validators.required],
       lastname: [null, Validators.required],
-      password: [null, [Validators.required, passwordStrengthValidator(),
-        // Validators.pattern(/^[a-zA-Z]+$/)
-      ]],
-      // confirm_password: [null, [Validators.required, passwordStrengthValidator()]],
-      // confirm_password: [{value:null, disabled: this.isDisabled}, Validators.required],
+      password: [null, [Validators.required, passwordStrengthValidator()]],
       active_status: [null, Validators.required],
     });
 
+    // ฟังการเปลี่ยนแปลงในฟิลด์ password
+    this.form.get('password')?.valueChanges.subscribe((password) => {
+      if (password && password.trim() !== '') {
+        this.addConditionalFields();
+      } else {
+        this.removeConditionalFields();
+      }
+    });
+  }
+
+  // ฟังก์ชันตรวจสอบการตรงกันของ password และ confirm_password
+  private matchPasswords: ValidatorFn = (control: AbstractControl) => {
+    const password = control.get('password')?.value;
+    const confirmPassword = control.get('confirm_password')?.value;
   
-
-  this.form.get('password')?.valueChanges.subscribe((password) =>{
-    if (password && password.trim() !== '') {
-      this.addConditionalFields();
-    } else{
-      this.removeConditionalFields();
-      // this.form.clearValidators();
+    if (password && confirmPassword && password !== confirmPassword) {
+      return { passwordMismatch: true }; // ส่งข้อผิดพลาดเมื่อรหัสผ่านไม่ตรงกัน
     }
-    // this.form.updateValueAndValidity();
-  });
-}
+    return null; // ไม่มีข้อผิดพลาด
+  };
 
-
-private matchPasswords: ValidatorFn = (control: AbstractControl) => {
-  const password = control.get('password')?.value;
-  const confirmPassword = control.get('confirm_password')?.value;
-  return password === confirmPassword ? null : { passwordMismatch: true };
-};
-
-// get passwordControl() {
-//   return this.form.get('password');
-// }
-
-private addConditionalFields() {
-  if (!this.form.contains('confirm_password')) {
-    // this.form.addControl(
-    //   'confirm_password',
-    //   this.fb.control(null, Validators.required)
-    this.form.addControl('confirm_password', this.fb.control(null, Validators.required));
-    this.form.setValidators(this.matchPasswords);
+  ngOnInit() {
+    // ฟังการเปลี่ยนแปลงของ password
+    this.form.get('password')?.valueChanges.subscribe(() => {
+      this.form.get('confirm_password')?.updateValueAndValidity();
+    });
+  
+    // ฟังการเปลี่ยนแปลงของ confirm_password
+    this.form.get('confirm_password')?.valueChanges.subscribe(() => {
+      this.form.get('confirm_password')?.updateValueAndValidity();
+    });
   }
-}
 
-private removeConditionalFields() {
-  if (this.form.contains('confirm_password')) {
-    this.form.removeControl('confirm_password');
-    this.form.clearValidators();
+  private addConditionalFields() {
+    if (!this.form.contains('confirm_password')) {
+      this.form.addControl('confirm_password', this.fb.control(null, Validators.required));
+    }
+  
+    // ตั้งค่า matchPasswords validator ใน confirm_password
+    this.form.get('confirm_password')?.setValidators([Validators.required, this.matchPasswords]);
+    this.form.get('confirm_password')?.updateValueAndValidity(); // อัพเดตการตรวจสอบ
+    this.form.updateValueAndValidity(); // อัพเดตฟอร์มทั้งหมด
   }
-}
+
+  private removeConditionalFields() {
+    if (this.form.contains('confirm_password')) {
+      this.form.removeControl('confirm_password');
+      // this.form.clearValidators();
+      this.form.setValidators(null);
+    }
+  }
 
   onHide() {
-    // if(confirm('ต้องการปิดหน้าต่างหรือไม่?')){
     this.hide.emit();
     this.form.reset();
     this.removeConditionalFields();
-  // }
-}
+  }
 
   onSubmit() {
     this.submitted = true;
+    this.form.markAllAsTouched();
+    this.form.updateValueAndValidity();
+
     if (this.form.valid) {
-      console.log("Form is valid Data submitted: ", this.form.getRawValue());
+      console.log("ฟอร์มถูกต้อง ข้อมูลที่ส่ง: ", this.form.getRawValue());
       this.submit.emit(this.form.value);
+      this.form.reset();
+      this.removeConditionalFields();
     } else {
-      console.log("Form is invalid. Errors: ", this.form.errors);
-      this.form.markAllAsTouched();
+      console.log("ฟอร์มไม่ถูกต้อง ข้อผิดพลาด: ", this.form.errors);
     }
   }
-  
+
+  // ฟังก์ชันนี้ใช้ในการอัพเดต validation ของ confirm_password เมื่อออกจากฟิลด์
+  onBlurConfirmPassword() {
+    const confirmPasswordControl = this.form.get('confirm_password');
+    confirmPasswordControl?.updateValueAndValidity(); // อัพเดตค่า validity
+    confirmPasswordControl?.markAsTouched(); // ทำเครื่องหมายเป็น touched เพื่อแสดงข้อผิดพลาด
+  }
+
   @HostListener('document:keydown.escape', ['$event'])
   onEscapePress(event: KeyboardEvent) {
     if (this.show) {
