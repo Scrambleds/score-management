@@ -5,7 +5,7 @@ export function passwordStrengthValidator(): ValidatorFn {
     const value = control.value || '';
     
     // ตรวจสอบว่ามีตัวอักษรภาษาอังกฤษและตัวเลข หรืออักขระพิเศษ
-    const hasEnglishAndSpecialCharacters = /^[a-zA-Z0-9]+$/.test(value);
+    const hasEnglishAndSpecialCharacters = /^[a-zA-Z0-9!@#$%^&]*$/.test(value);
     
     const hasUpperCase = /[A-Z]/.test(value);
     const hasLowerCase = /[a-z]/.test(value);
