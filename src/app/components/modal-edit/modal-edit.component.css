@@ -1,36 +1,35 @@
 .modal.show {
-    display: block;
-  }
-  
-  .modal-header.bg-dark-blue {
-    background-color: #03A96B;
-  }
-  
-  .modal-body.overflow-auto {
-    max-height: 70vh;
-    overflow-y: auto;
-  }
-  
-  .bg-light-green {
-    background-color: #B9ECCC;
-  }
-  
-  .text-title {
-    font-size: 1.2rem;
-    font-weight: bold;
-  }
+  display: block;
+}
 
-  .is-valid {
-    border-color: #28a745; /* สีเขียว */
-    background-color: #d4edda;
-  }
-  
-  .is-invalid {
-    border-color: #dc3545; /* สีแดง */
-    background-color: #f8d7da;
-  }
-  
-  .text-success {
-    color: #28a745; /* สีเขียว */
-  }
-  
+.modal-header.bg-dark-blue {
+  background-color: #03a96b;
+}
+
+.modal-body.overflow-auto {
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+.bg-light-green {
+  background-color: #b9eccc;
+}
+
+.text-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.is-valid {
+  border-color: #28a745; /* สีเขียว */
+  background-color: #d4edda;
+}
+
+.is-invalid {
+  border-color: #dc3545; /* สีแดง */
+  background-color: #f8d7da;
+}
+
+.text-success {
+  color: #28a745; /* สีเขียว */
+}
