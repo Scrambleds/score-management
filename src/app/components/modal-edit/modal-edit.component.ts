@@ -46,6 +46,10 @@ export class ModalEditComponent {
   private matchPasswords: ValidatorFn = (control: AbstractControl) => {
     const password = control.get('password')?.value;
     const confirmPassword = control.get('confirm_password')?.value;
+
+    if (!password || password.length < 8){
+      return null;
+    }
   
     if (password && confirmPassword && password !== confirmPassword) {
       return { passwordMismatch: true }; // ส่งข้อผิดพลาดเมื่อรหัสผ่านไม่ตรงกัน

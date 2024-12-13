@@ -93,8 +93,11 @@
                   }" placeholder="กรุณากรอก" />
 
                 <div *ngIf="form.get('password')?.dirty && form.get('password')?.invalid" class="text-danger ps-2">
-                  <div *ngIf="form.get('password')?.hasError('errorMessage')">
+                  <div *ngIf="form.get('password')?.hasError('errorMessage') && !form.get('password')?.hasError('required')">
                     {{ form.get("password")?.getError("errorMessage") }}
+                  </div>
+                  <div *ngIf="form.get('password')?.hasError('required')">
+                    กรุณากรอกข้อมูล
                   </div>
                 </div>
               </div>
@@ -103,16 +106,25 @@
               <div *ngIf="form.contains('confirm_password')" class="col-6 col-md-4">
                 <label for="confirm_password" class="form-label ps-2">ยืนยันรหัสผ่าน</label>
                 <input type="password" id="confirm_password" class="form-control"
-                  [ngClass]="{
-                    'is-valid': form.get('confirm_password')?.valid && form.get('password')?.value === form.get('confirm_password')?.value,
-                    'is-invalid': form.get('confirm_password')?.touched && form.get('confirm_password')?.invalid
-                  }" formControlName="confirm_password" placeholder="กรุณายืนยันรหัสผ่าน" (blur)="onBlurConfirmPassword()" />
+                [ngClass]="{
+                  'is-valid': 
+                    form.get('confirm_password')?.valid &&
+                    form.get('password')?.value?.length >= 8 &&
+                    form.get('password')?.value === form.get('confirm_password')?.value,
+                  'is-invalid': 
+                    form.get('confirm_password')?.touched &&
+                    form.get('confirm_password')?.invalid
+                }"
+                  formControlName="confirm_password" placeholder="กรุณายืนยันรหัสผ่าน" (blur)="onBlurConfirmPassword()" />
               
                 <div *ngIf="form.get('confirm_password')?.touched" class="text-danger ps-2">
                   <div *ngIf="form.get('confirm_password')?.hasError('required')">
                     กรุณากรอกข้อมูล
                   </div>
-                  <div *ngIf="form.get('confirm_password')?.hasError('passwordMismatch')">
+                  <!-- <div *ngIf="form.get('confirm_password')?.hasError('passwordMismatch')"> -->
+                    <div *ngIf="!form.get('confirm_password')?.hasError('required') && 
+                    form.get('password')?.touched &&
+                    form.get('password')?.value !== form.get('confirm_password')?.value">
                     รหัสผ่านไม่ตรงกัน
                   </div>
                 </div>
