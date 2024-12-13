@@ -10,8 +10,11 @@ import { passwordStrengthValidator } from '../validators/password-strength.valid
 })
 export class ModalEditComponent {
   @Input() show = false; // ควบคุมการแสดงผลของ modal
-  @Input() role: Array<{ id: string; title: string }> = []; 
-  @Input() active_status: Array<{ id: string; title: string }> = [];
+  // @Input() role: Array<{ id: string; title: string }> = []; 
+  @Input() roleOptions: Array<{ id: string; title: string }> = [];
+  @Input() statusOptions: Array<{ id: string; title: string }> = [];
+  // @Input() active_status: Array<{ id: string; title: string }> = [];
+  @Input() selectedRowData: any; 
 
   @Output() hide = new EventEmitter<void>(); // สัญญาณเมื่อปิด modal
   @Output() submit = new EventEmitter<any>(); // ส่งข้อมูล form กลับไปที่ parent เมื่อ submit
@@ -22,6 +25,7 @@ export class ModalEditComponent {
 
   constructor(private fb: FormBuilder) {
     this.form = this.fb.group({
+      row_id: [null],
       teacher_code: [{value: null , disabled: this.isDisabled}, Validators.required],
       email: [{value: null, disabled: this.isDisabled}, [Validators.required, Validators.email]],
       role: [null, Validators.required],
@@ -56,6 +60,21 @@ export class ModalEditComponent {
     }
     return null; // ไม่มีข้อผิดพลาด
   };
+
+  ngOnChanges() {
+    if (this.selectedRowData) {
+      this.form.patchValue({
+        row_id: this.selectedRowData.row_id,
+        teacher_code: this.selectedRowData.teacher_code,
+        email: this.selectedRowData.email,
+        role: this.selectedRowData.role,
+        prefix: this.selectedRowData.prefix,
+        firstname: this.selectedRowData.firstname,
+        lastname: this.selectedRowData.lastname,
+        active_status: this.selectedRowData.active_status,
+      });
+    }
+  }
 
   ngOnInit() {
     // ฟังการเปลี่ยนแปลงของ password
@@ -94,18 +113,25 @@ export class ModalEditComponent {
     this.removeConditionalFields();
   }
 
-  onSubmit() {
-    this.submitted = true;
-    this.form.markAllAsTouched();
-    this.form.updateValueAndValidity();
+  // onSubmit() {
+  //   this.submitted = true;
+  //   this.form.markAllAsTouched();
+  //   this.form.updateValueAndValidity();
 
-    if (this.form.valid) {
-      console.log("ฟอร์มถูกต้อง ข้อมูลที่ส่ง: ", this.form.getRawValue());
+  //   if (this.form.valid) {
+  //     console.log("ฟอร์มถูกต้อง ข้อมูลที่ส่ง: ", this.form.getRawValue());
+  //     this.submit.emit(this.form.value);
+  //     this.form.reset();
+  //     this.removeConditionalFields();
+  //   } else {
+  //     console.log("ฟอร์มไม่ถูกต้อง ข้อผิดพลาด: ", this.form.errors);
+  //   }
+  // }
+
+  onSubmit(){
+    if(this.form.valid){
       this.submit.emit(this.form.value);
       this.form.reset();
-      this.removeConditionalFields();
-    } else {
-      console.log("ฟอร์มไม่ถูกต้อง ข้อผิดพลาด: ", this.form.errors);
     }
   }
 

@@ -13,7 +13,7 @@
         <div class="bg-light-green">
           <p class="fw-bold mb-3 ps-3">ข้อมูลบัญชีผู้ใช้</p>
         </div>
-        <form [formGroup]="form">
+        <form [formGroup]="form" (ngSubmit)="onSubmit()">
           <!-- Row 1 -->
           <div class="container">
             <div class="row g-2 mb-3">
@@ -39,7 +39,7 @@
 
               <div class="col-6 col-md-4">
                 <label for="role" class="form-label ps-2">หน้าที่</label>
-                <ng-select [items]="role" bindLabel="title" bindValue="id" placeholder="กรุณาเลือก"
+                <ng-select [items]="roleOptions" bindLabel="title" bindValue="id" placeholder="กรุณาเลือก"
                   formControlName="role" [searchable]="true" [required]="true">
                 </ng-select>
                 <div *ngIf="form.get('role')?.touched && form.get('role')?.invalid" class="text-danger ps-2">
@@ -132,7 +132,7 @@
 
               <div class="col-6 col-md-4">
                 <label for="active_status" class="form-label ps-2">สถานะการใช้งาน</label>
-                <ng-select [items]="active_status" bindLabel="title" bindValue="id" placeholder="กรุณาเลือก"
+                <ng-select [items]="statusOptions" bindLabel="title" bindValue="id" placeholder="กรุณาเลือก"
                   formControlName="active_status" [searchable]="true">
                 </ng-select>
                 <div *ngIf="form.get('active_status')?.touched && form.get('active_status')?.invalid"

@@ -23,24 +23,24 @@
         <div class="col-12 col-md-5">
           <div class="row">
             <div class="col-12 col-sm-5 text-start ps-5">
-              {{ value.citizenId }}
+              {{ value.email }}
             </div>
             <div class="col-12 col-sm-7 text-start ps-5">
-              {{ value.prospectFullName }}
+              {{ value.teacher_code }}
             </div>
           </div>
         </div>
         <div class="col-12 col-md-4">
           <div class="row">
             <div class="col-12 col-sm-7 text-start ps-5">
-              {{ value.corpStatus }}
+              {{ value.prefix }} {{ value.firstname }} {{ value.lastname }}
             </div>
-            <div class="col-12 col-sm-5 text-center">{{ value.saleType }}</div>
+            <div class="col-12 col-sm-5 text-center">{{ getRoleTitle(value.role) }}</div>
           </div>
         </div>
         <div class="col-12 col-md-3">
           <div class="row">
-            <div class="col-12 col-sm-6 text-end">{{ value.createDate }}</div>
+            <div class="col-12 col-sm-6 text-end">{{ getStatusTitle(value.active_status) }}</div>
             <div
               class="col-12 col-sm-6 d-flex justify-content-end align-items-center"
             >
@@ -63,8 +63,9 @@
 
 <app-modal-edit
   [show]="isModalVisible"
-  [active_status]="statusOption"
-  [role]="roleOption"
+  [selectedRowData]="selectedRowData"
+  [statusOptions]="statusOption"
+  [roleOptions]="roleOption"
   (hide)="handleModalClose()"
   (submit)="handleModalSubmit($event)"
 >
