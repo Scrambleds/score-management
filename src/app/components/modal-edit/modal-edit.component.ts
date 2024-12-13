@@ -32,7 +32,7 @@ export class ModalEditComponent {
       prefix: [null, Validators.required],
       firstname: [null, Validators.required],
       lastname: [null, Validators.required],
-      password: [null, [Validators.required, passwordStrengthValidator()]],
+      password: [null, [passwordStrengthValidator()]],
       active_status: [null, Validators.required],
     });
 
@@ -40,7 +40,11 @@ export class ModalEditComponent {
     this.form.get('password')?.valueChanges.subscribe((password) => {
       if (password && password.trim() !== '') {
         this.addConditionalFields();
-      } else {
+      } 
+      // else if(password.trim() === ''){
+      //   this.removeConditionalFields();
+      // }
+      else {
         this.removeConditionalFields();
       }
     });
@@ -113,27 +117,24 @@ export class ModalEditComponent {
     this.removeConditionalFields();
   }
 
-  // onSubmit() {
-  //   this.submitted = true;
-  //   this.form.markAllAsTouched();
-  //   this.form.updateValueAndValidity();
+  onSubmit() {
+    this.submitted = true;
+    this.form.markAllAsTouched();
+    this.form.updateValueAndValidity();
 
-  //   if (this.form.valid) {
-  //     console.log("ฟอร์มถูกต้อง ข้อมูลที่ส่ง: ", this.form.getRawValue());
-  //     this.submit.emit(this.form.value);
-  //     this.form.reset();
-  //     this.removeConditionalFields();
-  //   } else {
-  //     console.log("ฟอร์มไม่ถูกต้อง ข้อผิดพลาด: ", this.form.errors);
-  //   }
-  // }
-
-  onSubmit(){
-    if(this.form.valid){
+    if (this.form.valid) {
+      console.log("ฟอร์มถูกต้อง ข้อมูลที่ส่ง: ", this.form.getRawValue());
       this.submit.emit(this.form.value);
       this.form.reset();
+      this.removeConditionalFields();
+    } else {
+      console.log("ฟอร์มไม่ถูกต้อง ข้อผิดพลาด: ", this.form.errors);
     }
   }
+
+  // onSubmit(){
+  //   console.log(this.form.value);
+  // }
 
   // ฟังก์ชันนี้ใช้ในการอัพเดต validation ของ confirm_password เมื่อออกจากฟิลด์
   onBlurConfirmPassword() {

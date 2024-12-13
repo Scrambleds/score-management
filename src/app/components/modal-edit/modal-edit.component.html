@@ -81,48 +81,58 @@
 
           <div class="container">
             <div class="row g-3 mb-4">
-              <div class="col-6 col-md-4">
+              <!-- <div class="col-6 col-md-4">
                 <label for="password" class="form-label ps-2">รหัสผ่าน</label>
                 <input type="password" id="password" class="form-control" formControlName="password" [ngClass]="{
                     'is-valid':
                       form.get('password')?.valid &&
                       form.get('password')?.dirty,
-                    'is-invalid':
-                      form.get('password')?.invalid &&
-                      form.get('password')?.touched
                   }" placeholder="กรุณากรอก" />
-
-                <div *ngIf="form.get('password')?.dirty && form.get('password')?.invalid" class="text-danger ps-2">
-                  <div *ngIf="form.get('password')?.hasError('errorMessage') && !form.get('password')?.hasError('required')">
-                    {{ form.get("password")?.getError("errorMessage") }}
+              
+                <div *ngIf="form.get('password')?.dirty && form.get('password')?.value !== '' && form.get('password')?.invalid" class="text-danger ps-2">
+                  <div *ngIf="form.get('password')?.hasError('errorMessage')">
+                    {{ form.get('password')?.getError('errorMessage') }}
                   </div>
-                  <div *ngIf="form.get('password')?.hasError('required')">
-                    กรุณากรอกข้อมูล
+                </div>
+              </div> -->
+
+              <div class="col-6 col-md-4">
+                <label for="password" class="form-label ps-2">รหัสผ่าน</label>
+                <input type="password" id="password" class="form-control" formControlName="password" [ngClass]="{
+                    'is-valid':
+                      form.get('password')?.valid &&
+                      form.get('password')?.dirty && form.get('password')?.value.length > 0
+                  }" placeholder="กรุณากรอก" />
+              
+                <div *ngIf="form.get('password')?.invalid && form.get('password')?.dirty" class="text-danger ps-2">
+                  <div *ngIf="form.get('password')?.hasError('errorMessage')">
+                    {{ form.get('password')?.getError('errorMessage') }}
                   </div>
                 </div>
               </div>
+              
+              
 
               <!-- Confirm Password -->
               <div *ngIf="form.contains('confirm_password')" class="col-6 col-md-4">
                 <label for="confirm_password" class="form-label ps-2">ยืนยันรหัสผ่าน</label>
-                <input type="password" id="confirm_password" class="form-control"
-                [ngClass]="{
+                <input type="password" id="confirm_password" class="form-control" [ngClass]="{
                   'is-valid': 
                     form.get('confirm_password')?.valid &&
                     form.get('password')?.value?.length >= 8 &&
                     form.get('password')?.value === form.get('confirm_password')?.value,
                   'is-invalid': 
                     form.get('confirm_password')?.touched &&
-                    form.get('confirm_password')?.invalid
-                }"
-                  formControlName="confirm_password" placeholder="กรุณายืนยันรหัสผ่าน" (blur)="onBlurConfirmPassword()" />
-              
+                    form.get('confirm_password')?.invalid,
+                }" formControlName="confirm_password" placeholder="กรุณายืนยันรหัสผ่าน"
+                  (blur)="onBlurConfirmPassword()" />
+
                 <div *ngIf="form.get('confirm_password')?.touched" class="text-danger ps-2">
                   <div *ngIf="form.get('confirm_password')?.hasError('required')">
                     กรุณากรอกข้อมูล
                   </div>
                   <!-- <div *ngIf="form.get('confirm_password')?.hasError('passwordMismatch')"> -->
-                    <div *ngIf="!form.get('confirm_password')?.hasError('required') && 
+                  <div *ngIf="!form.get('confirm_password')?.hasError('required') && 
                     form.get('password')?.touched &&
                     form.get('password')?.value !== form.get('confirm_password')?.value">
                     รหัสผ่านไม่ตรงกัน
@@ -145,7 +155,14 @@
 
           <!-- Submit Button -->
           <div class="d-flex justify-content-center pt-3">
-            <button type="button" class="btn btn-primary" [disabled]="!form.valid || form.get('password')?.value !== form.get('confirm_password')?.value" (click)="onSubmit()">
+            <!-- <button type="button" class="btn btn-primary" [disabled]="!form.valid || form.get('password') !== null && form.get('password')?.value !== form.get('confirm_password')?.value" (click)="onSubmit()"> -->
+            <!-- <button type="button" class="btn btn-primary"
+              [disabled]="form.get('password') === null || (form.get('password')?.value !== form.get('confirm_password')?.value)"
+              (click)="onSubmit()">
+              <i class="bi bi-floppy-fill me-2"></i>บันทึกข้อมูล
+            </button> -->
+            <button type="button" class="btn btn-primary" 
+            (click)="onSubmit()">
               <i class="bi bi-floppy-fill me-2"></i>บันทึกข้อมูล
             </button>
           </div>

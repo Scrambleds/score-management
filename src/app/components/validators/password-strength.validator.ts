@@ -31,6 +31,9 @@ export function passwordStrengthValidator(): ValidatorFn {
     // if (!hasEnglishAndSpecialCharacters) {
     //   errors.hasEnglishAndSpecialCharacters = "กรุณากรอกภาษาอังกฤษและตัวเลขเท่านั้น";
     // }
+    if(  value.length == 0) {
+      return null;
+    }
     if (value.length < 8) {
       errors.errorMessage = "ต้องมีอย่างน้อย 8 ตัวอักษร";
     }
