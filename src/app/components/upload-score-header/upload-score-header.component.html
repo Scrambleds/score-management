@@ -10,7 +10,7 @@
           }}</label>
           <div class="input-group-autocomplete mb-2">
             <app-autocomplete
-              [placeholder]="'alert_enterData' | translate"
+              [placeholder]="'placeholder_text' | translate"
               [suggestions]="filteredSubjects"
               [displayKey]="'subjectCode'"
               [displayFormat]="customFormat"
@@ -33,7 +33,7 @@
           }}</label>
           <app-autocomplete
             id="subjectName"
-            [placeholder]="'alert_enterData' | translate"
+            [placeholder]="'placeholder_text' | translate"
             [suggestions]="filteredSubjects"
             [displayKey]="'subjectName'"
             [displayFormat]="customFormat"

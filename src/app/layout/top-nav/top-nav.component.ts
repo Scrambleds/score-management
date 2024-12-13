@@ -20,7 +20,7 @@ export class TopNavComponent implements OnInit {
     private languageService: LanguageService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
-    private translationService: TranslationService,
+    private translationService: TranslationService
   ) {}
 
   ngOnInit(): void {
@@ -40,6 +40,7 @@ export class TopNavComponent implements OnInit {
         filter((event) => event instanceof NavigationEnd),
         map(() => {
           let route = this.activatedRoute;
+          console.log(route);
           while (route.firstChild) {
             route = route.firstChild;
           }
@@ -49,6 +50,8 @@ export class TopNavComponent implements OnInit {
       .subscribe((key) => {
         this.currentTitle = key || 'No title'; // กำหนดค่าเริ่มต้นในกรณีที่ไม่มี messageKey
       });
+    // เรียกใช้เมธอดนี้หลังจากที่ Angular ได้ทำการเรนเดอร์หน้าและเปลี่ยนเส้นทาง
+    this.setInitialTitle();
   }
 
   // Function สำหรับ Toggle Side Nav
@@ -64,9 +67,17 @@ export class TopNavComponent implements OnInit {
     localStorage.setItem('language', lang); // เก็บภาษาลงใน localStorage
   }
 
+  // เพิ่มฟังก์ชั่นนี้เพื่ออัพเดต title เมื่อเข้าหน้าโดยตรง
+  setInitialTitle(): void {
+    let route = this.activatedRoute;
+    while (route.firstChild) {
+      route = route.firstChild;
+    }
+    this.currentTitle = route.snapshot.data['messageKey'] || 'No title';
+  }
+
   onLogout() {
     localStorage.clear(); // Clear token and expiration
     this.router.navigate(['/Login']); // Redirect to login page
   }
-
 }
