@@ -1,7 +1,12 @@
 <div class="custom-card">
   <div class="card-body">
     <div class="text-center">รายละเอียด</div>
-    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="w-100">
+    <form
+      #myForm="ngForm"
+      [formGroup]="form"
+      (ngSubmit)="onSubmit()"
+      class="w-100"
+    >
       <div class="row">
         <!-- Subject Code -->
         <div class="col-6 col-sm-5 col-md-2">
@@ -10,14 +15,17 @@
           }}</label>
           <div class="input-group-autocomplete mb-2">
             <app-autocomplete
+              #subjectCode
+              id="subjectCode"
               [placeholder]="'placeholder_text' | translate"
               [suggestions]="filteredSubjects"
               [displayKey]="'subjectCode'"
               [displayFormat]="customFormat"
               [widthAuto]="true"
-              (search)="searchSubject($event)"
+              (search)="searchCode($event)"
               (select)="selectCode($event)"
               [value]="selectedSubjectCode"
+              [disabled]="!isUploaded"
             ></app-autocomplete>
 
             <ng-template #customFormat let-item>
@@ -38,8 +46,10 @@
             [displayKey]="'subjectName'"
             [displayFormat]="customFormat"
             (search)="searchSubject($event)"
+            (select)="selectSubject($event)"
             [readonly]="isSubjectNameReadonly"
             [value]="form.get('subjectName')!.value"
+            [disabled]="!isUploaded"
           ></app-autocomplete>
 
           <ng-template #customFormat let-item>
@@ -131,10 +141,6 @@
           </div>
         </div>
       </div>
-
-      <button type="submit" class="btn btn-primary mt-3">
-        {{ "submit" | translate }}
-      </button>
     </form>
   </div>
 </div>

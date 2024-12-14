@@ -1,6 +1,19 @@
-import { Component, Input } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import * as XLSX from 'xlsx';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  FormGroupDirective,
+  Validators,
+} from '@angular/forms';
+import { UploadScoreHeaderComponent } from '../upload-score-header/upload-score-header.component';
 
 @Component({
   selector: 'app-upload-excel-container',
@@ -12,6 +25,21 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 export class UploadExcelContainerComponent {
   @Input() titleName: string = 'No title'; // รับค่าจาก Parent
   @Input() buttonName: string = 'No title'; // รับค่าจาก Parent
+
+  //return to parent
+  // @Output() isUploaded: boolean = false;
+  @Output() isUploaded = new EventEmitter<boolean>(); // ส่งค่ากลับไปยัง Parent
+
+  //view child
+  // @ViewChild('subjectDetailForm', { read: FormGroupDirective })
+  // subjectDetailFormRef?: FormGroupDirective;
+  // @ViewChild(SubjectDetailComponent)
+  // subjectDetailComponent: SubjectDetailComponent;
+  @ViewChild(UploadScoreHeaderComponent, { static: false })
+  subjectDetailComponent?: UploadScoreHeaderComponent;
+
+  @Output() submitRequest = new EventEmitter<void>();
+  @Output() sendDataToApi = new EventEmitter<any>(); // Emit final data to send to API
 
   public form: FormGroup;
 
@@ -71,9 +99,6 @@ export class UploadExcelContainerComponent {
     });
   }
 
-  onGridReady(params: any) {
-    // params.api.sizeColumnsToFit(); // ปรับความกว้างของคอลัมน์ให้เต็มตาราง
-  }
   // เมื่อผู้ใช้ลากไฟล์เข้ามา
   onDragOver(event: DragEvent) {
     event.preventDefault();
@@ -104,6 +129,7 @@ export class UploadExcelContainerComponent {
           // โหลดข้อมูลลงใน ag-Grid
           this.loadGridData(modifiedData);
           this.isFileUploaded = true; // ตั้งค่า flag เมื่อไฟล์อัปโหลดแล้ว
+          this.isUploaded.emit(true); // แจ้ง Parent ว่าไฟล์ถูกอัปโหลดสำเร็จ
         } else {
           alert('ไฟล์ไม่ถูกต้อง กรุณาอัปโหลดไฟล์ที่มีฟีลด์ครบถ้วน');
         }
@@ -211,6 +237,7 @@ export class UploadExcelContainerComponent {
         };
       });
       this.rowData = data;
+      console.log(this.rowData);
     }
   }
 
@@ -221,11 +248,43 @@ export class UploadExcelContainerComponent {
     }
   }
 
-  onSubmit(): void {
+  onSubmitFilter() {}
+
+  onSubmitWithGridData(): void {
     if (this.form.valid) {
-      console.log('Form Submitted:', this.form.value);
+      // รวมข้อมูลจากฟอร์มและ ag-Grid
+      const combinedData = {
+        formData: this.form.value,
+        gridData: this.rowData,
+      };
+
+      console.log('Combined Data:', combinedData);
+
+      // // ส่งข้อมูลไปยัง parent component
+      // this.isUploaded.emit(combinedData); // หรือส่งข้อมูลนี้ไปยัง API
     } else {
       console.log('Form is invalid');
     }
+  }
+  //save data
+  onSaveData() {
+    this.submitRequest.emit();
+  }
+
+  sendToApi(formData: any) {
+    const additionalData = { data: this.rowData }; // Add extra object data
+    console.log(this.rowData);
+    const payload = { ...formData, ...additionalData }; // Merge formData with additionalData
+    console.log('Final Payload to API:', payload);
+
+    // this.sendDataToApi.emit(payload);
+  }
+
+  // ลบข้อมูลใน ag-Grid
+  onDelete() {
+    this.rowData = []; // ล้างข้อมูลทั้งหมดจาก ag-Grid
+    this.isFileUploaded = false; // ปรับ flag เพื่อแสดง UI สำหรับการอัปโหลดไฟล์ใหม่
+    this.isUploaded.emit(false); // แจ้ง Parent ว่าไฟล์ถูกอัปโหลดสำเร็จ
+    console.log(this.rowData);
   }
 }

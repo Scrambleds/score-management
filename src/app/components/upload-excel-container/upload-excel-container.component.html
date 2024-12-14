@@ -29,7 +29,7 @@
           </div>
           <div
             [formGroup]="form"
-            (ngSubmit)="onSubmit()"
+            (ngSubmit)="onSubmitFilter()"
             class="d-flex justify-content-start align-items-start flex-row gap-2 w-100"
           >
             <div class="" style="width: 50%">
@@ -83,14 +83,14 @@
         class="col-12 col-md ms-auto d-flex justify-content-end align-items-end"
       >
         <div class="button-container mb-2 d-flex gap-2">
-          <button class="btn btn-primary">
+          <button class="btn btn-primary" (click)="onSaveData()">
             <i
               class="bi bi-floppy-fill"
               style="font-size: var(--icon-size); color: var(--white-color)"
             ></i>
             บันทึกข้อมูล
           </button>
-          <button class="btn btn-secondary">
+          <button class="btn btn-secondary" (click)="onDelete()">
             <i
               class="bi bi-trash-fill"
               style="font-size: var(--icon-size); color: var(--white-color)"
@@ -100,87 +100,6 @@
         </div>
       </div>
     </div>
-    <!-- <div class="row gx-0 w-100">
-      <div class="col-12 col-md-6">
-        <div
-          class="d-flex justify-content-start align-items-start flex-column w-100"
-        >
-          <div class="w-100">
-            <div class="text-start">ตารางคะแนน</div>
-          </div>
-          <div
-            [formGroup]="form"
-            (ngSubmit)="onSubmit()"
-            class="d-flex justify-content-start align-items-start flex-row gap-2 w-100"
-          >
-            <div class="" style="width: 50%">
-              <label for="subjectNo" class="mb-2"
-                >รหัสนิสิต/ชื่อนิสิต/อีเมล</label
-              >
-              <div class="input-group-autocomplete mb-2">
-                <app-autocomplete
-                  [placeholder]="'alert_enterData' | translate"
-                  [suggestions]="filteredSubjects"
-                  [displayKey]="'subjectCode'"
-                  [displayFormat]="customFormat"
-                  [widthAuto]="true"
-                ></app-autocomplete>
-
-                <ng-template #customFormat let-item>
-                  {{ item.subjectCode }} - {{ item.subjectName }}
-                </ng-template>
-              </div>
-            </div>
-            <div class="" style="width: 25%">
-              <label for="subjectNo" class="mb-2">รหัสสาขา</label>
-              <ng-select
-                id="majorCode"
-                formControlName="majorCode"
-                [items]="majorCodeOptions"
-                bindLabel="label"
-                bindValue="value"
-                [placeholder]="'placeholder_select' | translate"
-                [clearable]="true"
-                (change)="onSelectChange($event, 'majorCode')"
-              >
-              </ng-select>
-            </div>
-            <div
-              class="d-flex align-items-end"
-              style="width: 25%; height: 68px"
-            >
-              <button class="btn btn-primary">
-                <i
-                  class="bi bi-floppy-fill"
-                  style="font-size: var(--icon-size); color: var(--white-color)"
-                ></i>
-                บันทึกข้อมูล
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div
-        class="col-12 col-md-6 d-flex justify-content-end align-items-end flex-row"
-      >
-        <div class="button-container mb-2 d-flex gap-2">
-          <button class="btn btn-primary">
-            <i
-              class="bi bi-floppy-fill"
-              style="font-size: var(--icon-size); color: var(--white-color)"
-            ></i>
-            บันทึกข้อมูล
-          </button>
-          <button class="btn btn-secondary">
-            <i
-              class="bi bi-trash-fill"
-              style="font-size: var(--icon-size); color: var(--white-color)"
-            ></i>
-            ลบข้อมูล
-          </button>
-        </div>
-      </div>
-    </div> -->
     <!-- ag-Grid -->
     <ag-grid-angular
       *ngIf="isFileUploaded"
@@ -189,7 +108,6 @@
       [rowData]="rowData"
       [columnDefs]="columnDefs"
       [defaultColDef]="defaultColDef"
-      (gridReady)="onGridReady($event)"
     >
     </ag-grid-angular>
   </div>

@@ -57,8 +57,8 @@ export class AutocompleteComponent {
     this.adjustDropdownPosition();
   }
   onInputChange(event: Event): void {
-    console.log('onInputChange', event);
     const target = event.target as HTMLInputElement; // ใช้ type assertion
+    console.log('onInputChange', target.value);
     if (target) {
       this.inputValue = target.value; // อัปเดตค่า inputValue
       this.onSearch(); // เรียกฟังก์ชันค้นหา
@@ -111,6 +111,7 @@ export class AutocompleteComponent {
       });
     }
   }
+
   // selectItem(item: any): void {
   //   console.log('selectItem', item); // ตรวจสอบค่าที่ส่งมา
   //   this.inputValue = item[this.displayKey]; // อัปเดตค่าของ input

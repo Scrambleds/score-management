@@ -1,7 +1,14 @@
 <div class="route-container">
-  <app-upload-score-header></app-upload-score-header>
+  <app-upload-score-header
+    #formComponent
+    [isUploaded]="isFileUploaded"
+    (formSubmitted)="handleFormSubmitted($event)"
+  ></app-upload-score-header>
   <app-upload-excel-container
+    #triggerComponent
     [titleName]="'uploadscore_uploadStudentScore' | translate"
     [buttonName]="'uploadscore_uploadExcelFile' | translate"
+    (isUploaded)="handleUploadEvent($event)"
+    (submitRequest)="handleSubmitRequest()"
   ></app-upload-excel-container>
 </div>

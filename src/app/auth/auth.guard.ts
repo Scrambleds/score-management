@@ -26,8 +26,10 @@ export class AuthGuard implements CanActivate {
       localStorage.setItem('redirectPath', state.url); // Store the intended URL for redirection after login
       return true;
     } else {
-      localStorage.clear(); // Clear invalid token
-      this.router.navigate(['/Login']);
+      if (typeof window !== 'undefined') {
+        localStorage.clear(); // Clear invalid token
+        this.router.navigate(['/Login']);
+      }
       return false;
     }
   }
