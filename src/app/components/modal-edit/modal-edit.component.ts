@@ -135,9 +135,6 @@ export class ModalEditComponent {
       this.form.removeControl('confirm_password');
     }
   }
-  onShow() {
-    this.show = true;
-  }
 
   onHide() {
     this.show = false;

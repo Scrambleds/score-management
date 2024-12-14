@@ -12,17 +12,17 @@
 }
 
 .is-valid {
-  border-color: #28a745; /* สีเขียว */
+  border-color: #28a745; 
   background-color: #d4edda;
 }
 
 .is-invalid {
-  border-color: #dc3545; /* สีแดง */
+  border-color: #dc3545; 
   background-color: #f8d7da;
 }
 
 .text-success {
-  color: #28a745; /* สีเขียว */
+  color: #28a745;
 }
 
 .swal2-popup{
@@ -33,20 +33,38 @@
   font-size: 1.5rem;
 }
 
-/* ลบสิ่งที่ไม่จำเป็นออกไป */
-.modal.fade .modal-dialog {
-  transition: transform 0.3s ease-out, opacity 0.3s ease;
-  transform: translate(0, -50px); /* ปรับการแสดงผลให้เป็นไปตามที่ Bootstrap ต้องการ */
-  opacity: 0;
+@keyframes modelShow{
+  0% {
+    opacity: 0;
+    transform: scale(0.7);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
-.modal.fade.show .modal-dialog {
-  transform: translate(0, 0);
-  opacity: 1;
+.modal.fade .modal-dialog {
+  animation: modalShow 0.3s ease-out forwards;
+}
+
+@keyframes modalHide {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.7);
+  }
+}
+
+.modal.fade.hide .modal-dialog {
+  animation: modalHide 0.3s ease-out forwards;
 }
 
 .modal-overlay {
-  display: block;
+  display: none;
   position: fixed;
   top: 0;
   left: 0;
@@ -56,36 +74,14 @@
   z-index: 1040;
   opacity: 0;
   transition: opacity 0.3s ease;
-  display: none;
 }
 
 .modal-overlay.show {
-  opacity: 1;
-  display: block; 
-}
-
-/* ปรับคลาส modal และ modal-dialog */
-.modal.fade .modal-dialog {
-  transition: transform 0.3s ease-out, opacity 0.3s ease;
-}
-
-.modal.fade.show .modal-dialog {
-  transform: translate(0, 0);
-  opacity: 1;
+  display: block;  /* แสดงผลเมื่อ modal เปิด */
+  opacity: 1;      /* เปลี่ยนความมืดของพื้นหลัง */
 }
 
 .modal-content {
   border: none !important;
   box-shadow: none !important;
 }
-
-/* .modal-backdrop {
-  background-color: transparent !important;
-} */
-
-/* .my-custom-class {
-  background-color: #007bff !important;
-  color: #ffffff !important;    
-  border-radius: 5px;               
-  border: none;                      
-} */
