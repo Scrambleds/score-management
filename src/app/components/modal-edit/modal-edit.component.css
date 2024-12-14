@@ -1,14 +1,5 @@
-.modal.show {
-  display: block;
-}
-
 .modal-header.bg-dark-blue {
   background-color: #03a96b;
-}
-
-.modal-body.overflow-auto {
-  max-height: 70vh;
-  overflow-y: auto;
 }
 
 .bg-light-green {
@@ -21,15 +12,100 @@
 }
 
 .is-valid {
-  border-color: #28a745; /* สีเขียว */
+  border-color: #28a745; 
   background-color: #d4edda;
 }
 
 .is-invalid {
-  border-color: #dc3545; /* สีแดง */
+  border-color: #dc3545; 
   background-color: #f8d7da;
 }
 
 .text-success {
-  color: #28a745; /* สีเขียว */
+  color: #28a745;
+}
+
+.swal2-popup{
+  font-family: 'Promt', sans-serif;
+}
+
+.swal2-title{
+  font-size: 1.5rem;
+}
+
+/* 
+@keyframes modalShow {
+  0% {
+    opacity: 0;
+    transform: scale(0.7);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+} */
+
+/* 
+@keyframes modalHide {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.7);
+  }
+} */
+
+/* 
+.modal.fade .modal-dialog {
+  animation: modalShow 0.5s ease-out forwards;
+} */
+
+/* 
+.modal.fade.hide .modal-dialog {
+  animation: modalHide 0.8s ease-in forwards;
+} */
+
+/* 
+.modal-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1040;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+} */
+
+/* 
+.modal-overlay.show {
+  display: block;
+  opacity: 1;
+} */
+
+/* 
+.modal-overlay.hide {
+  opacity: 0;
+  pointer-events: none;
+} */
+
+/* 
+.modal.fade.hide .modal-overlay{
+  animation: modalHide 0.8s ease-in forwards;
+} */
+
+
+.modal-content {
+  border: none !important;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  transition: box-shadow 0.3s ease-in-out;
+}
+
+
+.modal-content:hover {
+  box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.3);
 }

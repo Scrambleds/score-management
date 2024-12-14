@@ -42,6 +42,7 @@ import { LoginPageComponent } from './route/login-page/login-page.component';
 import { MainLayoutComponent } from './layout/main-layout/main-layout.component';
 import { AuthLayoutComponent } from './layout/auth-layout/auth-layout.component';
 import { AutocompleteComponent } from './components/autocomplete/autocomplete.component';
+import { RequiredMarkerDirective } from '../../src/app/components/required-marker/required-marker.directive'
 
 @NgModule({
   declarations: [
@@ -81,6 +82,7 @@ import { AutocompleteComponent } from './components/autocomplete/autocomplete.co
     NgOptionTemplateDirective,
     NgSelectComponent,
     MatSelectModule,
+    RequiredMarkerDirective,
   ],
   providers: [
     provideHttpClient(),

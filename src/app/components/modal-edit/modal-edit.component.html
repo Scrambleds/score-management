@@ -1,11 +1,12 @@
-<div class="modal fade" tabindex="-1" [ngClass]="{ show: show }" [style.display]="show ? 'block' : 'none'" role="dialog"
-  aria-labelledby="modalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+<div class="modal-overlay" (click)="onBackdropClick($event)"></div>
+
+<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true" #modalElement>
+  <div class="modal-dialog modal-lg modal-dialog-centered" role="document" (click)="onModalDialogClick($event)">
     <div class="modal-content">
       <!-- Header -->
       <div class="modal-header bg-dark-blue text-white">
         <h5 class="modal-title fw-bold" id="modalLabel">จัดการผู้ใช้งาน</h5>
-        <button type="button" class="btn-close btn-close-white" aria-label="Close" (click)="onHide()"></button>
+        <button type="button" class="btn-close" aria-label="Close" (click)="closeModal()"></button>
       </div>
 
       <!-- Body -->
@@ -17,38 +18,32 @@
           <!-- Row 1 -->
           <div class="container">
             <div class="row g-2 mb-3">
-              <!-- ชื่อโอกาสขาย -->
               <div class="col-6 col-md-4">
-                <label for="teacher_code" class="form-label ps-2">รหัสอาจารย์</label>
-                <input type="text" id="teacher_code" class="form-control" formControlName="teacher_code"
-                  placeholder="กรุณากรอก" />
-                <div *ngIf="form.get('teacher_code')?.touched && form.get('teacher_code')?.invalid"
-                  class="text-danger ps-2">
+                <label for="teacher_code" class="form-label ps-2" [appRequiredMarker]="form.get('teacher_code')">รหัสอาจารย์</label>
+                <input type="text" id="teacher_code" class="form-control" formControlName="teacher_code" placeholder="กรุณากรอก" />
+                <div *ngIf="form.get('teacher_code')?.touched && form.get('teacher_code')?.invalid" class="text-danger ps-2">
                   กรุณากรอกข้อมูล
                 </div>
               </div>
 
               <div class="col-6 col-md-4">
-                <label for="email" class="form-label ps-2">อีเมล</label>
+                <label for="email" class="form-label ps-2" [appRequiredMarker]="form.get('email')">อีเมล</label>
                 <input type="text" id="email" class="form-control" formControlName="email" placeholder="กรุณากรอก" />
-                <div *ngIf="form.get('email')?.touched && form.get('email')?.hasError('email')"
-                  class="text-danger ps-2">
+                <div *ngIf="form.get('email')?.touched && form.get('email')?.hasError('email')" class="text-danger ps-2">
                   กรุณากรอกอีเมลที่ถูกต้อง
                 </div>
               </div>
 
               <div class="col-6 col-md-4">
-                <label for="role" class="form-label ps-2">หน้าที่</label>
-                <ng-select [items]="roleOptions" bindLabel="title" bindValue="id" placeholder="กรุณาเลือก"
-                  formControlName="role" [searchable]="true" [required]="true">
-                </ng-select>
+                <label for="role" class="form-label ps-2" [appRequiredMarker]="form.get('role')">หน้าที่</label>
+                <ng-select [items]="roleOptions" bindLabel="title" bindValue="id" placeholder="กรุณาเลือก" formControlName="role" [searchable]="true"></ng-select>
                 <div *ngIf="form.get('role')?.touched && form.get('role')?.invalid" class="text-danger ps-2">
                   กรุณากรอกข้อมูล
                 </div>
               </div>
 
               <div class="col-6 col-md-4">
-                <label for="prefix" class="form-label ps-2">คำนำหน้าชื่อ</label>
+                <label for="prefix" class="form-label ps-2" [appRequiredMarker]="form.get('prefix')">คำนำหน้าชื่อ</label>
                 <input type="text" id="prefix" class="form-control" formControlName="prefix" placeholder="กรุณากรอก" />
                 <div *ngIf="form.get('prefix')?.touched && form.get('prefix')?.invalid" class="text-danger ps-2">
                   กรุณากรอกข้อมูล
@@ -56,18 +51,16 @@
               </div>
 
               <div class="col-6 col-md-4">
-                <label for="firstname" class="form-label ps-2">ชื่อ</label>
-                <input type="text" id="firstname" class="form-control" formControlName="firstname"
-                  placeholder="กรุณากรอก" />
+                <label for="firstname" class="form-label ps-2" [appRequiredMarker]="form.get('firstname')">ชื่อ</label>
+                <input type="text" id="firstname" class="form-control" formControlName="firstname" placeholder="กรุณากรอก" />
                 <div *ngIf="form.get('firstname')?.touched && form.get('firstname')?.invalid" class="text-danger ps-2">
                   กรุณากรอกข้อมูล
                 </div>
               </div>
 
               <div class="col-6 col-md-4">
-                <label for="lastname" class="form-label ps-2">นามสกุล</label>
-                <input type="text" id="lastname" class="form-control" formControlName="lastname"
-                  placeholder="กรุณากรอก" />
+                <label for="lastname" class="form-label ps-2" [appRequiredMarker]="form.get('lastname')">นามสกุล</label>
+                <input type="text" id="lastname" class="form-control" formControlName="lastname" placeholder="กรุณากรอก" />
                 <div *ngIf="form.get('lastname')?.touched && form.get('lastname')?.invalid" class="text-danger ps-2">
                   กรุณากรอกข้อมูล
                 </div>
@@ -81,72 +74,33 @@
 
           <div class="container">
             <div class="row g-3 mb-4">
-              <!-- <div class="col-6 col-md-4">
-                <label for="password" class="form-label ps-2">รหัสผ่าน</label>
-                <input type="password" id="password" class="form-control" formControlName="password" [ngClass]="{
-                    'is-valid':
-                      form.get('password')?.valid &&
-                      form.get('password')?.dirty,
-                  }" placeholder="กรุณากรอก" />
-              
-                <div *ngIf="form.get('password')?.dirty && form.get('password')?.value !== '' && form.get('password')?.invalid" class="text-danger ps-2">
-                  <div *ngIf="form.get('password')?.hasError('errorMessage')">
-                    {{ form.get('password')?.getError('errorMessage') }}
-                  </div>
-                </div>
-              </div> -->
-
               <div class="col-6 col-md-4">
                 <label for="password" class="form-label ps-2">รหัสผ่าน</label>
-                <input type="password" id="password" class="form-control" formControlName="password" [ngClass]="{
-                    'is-valid':
-                      form.get('password')?.valid &&
-                      form.get('password')?.dirty && form.get('password')?.value.length > 0
-                  }" placeholder="กรุณากรอก" />
-              
+                <input type="password" id="password" class="form-control" formControlName="password" [ngClass]="{'is-valid': form.get('password')?.valid && form.get('password')?.dirty && form.get('password')?.value.length > 0}" placeholder="กรุณากรอก" />
                 <div *ngIf="form.get('password')?.invalid && form.get('password')?.dirty" class="text-danger ps-2">
                   <div *ngIf="form.get('password')?.hasError('errorMessage')">
                     {{ form.get('password')?.getError('errorMessage') }}
                   </div>
                 </div>
               </div>
-              
-              
 
-              <!-- Confirm Password -->
               <div *ngIf="form.contains('confirm_password')" class="col-6 col-md-4">
                 <label for="confirm_password" class="form-label ps-2">ยืนยันรหัสผ่าน</label>
-                <input type="password" id="confirm_password" class="form-control" [ngClass]="{
-                  'is-valid': 
-                    form.get('confirm_password')?.valid &&
-                    form.get('password')?.valid &&
-                    form.get('password')?.value === form.get('confirm_password')?.value,
-                  'is-invalid': 
-                    form.get('confirm_password')?.touched &&
-                    form.get('confirm_password')?.invalid,
-                }" formControlName="confirm_password" placeholder="กรุณายืนยันรหัสผ่าน"
-                  (blur)="onBlurConfirmPassword()" />
-
+                <input type="password" id="confirm_password" class="form-control" [ngClass]="{'is-valid': form.get('confirm_password')?.valid && form.get('password')?.valid && form.get('password')?.value === form.get('confirm_password')?.value, 'is-invalid': form.get('confirm_password')?.touched && form.get('confirm_password')?.invalid}" formControlName="confirm_password" placeholder="กรุณายืนยันรหัสผ่าน" (blur)="onBlurConfirmPassword()" />
                 <div *ngIf="form.get('confirm_password')?.touched" class="text-danger ps-2">
                   <div *ngIf="form.get('confirm_password')?.hasError('required')">
                     กรุณากรอกข้อมูล
                   </div>
-                  <!-- <div *ngIf="form.get('confirm_password')?.hasError('passwordMismatch')"> -->
-                  <div *ngIf="!form.get('confirm_password')?.hasError('required') && 
-                    form.get('password')?.touched &&
-                    form.get('password')?.value !== form.get('confirm_password')?.value">
+                  <div *ngIf="!form.get('confirm_password')?.hasError('required') && form.get('password')?.touched && form.get('password')?.value !== form.get('confirm_password')?.value">
                     รหัสผ่านไม่ตรงกัน
                   </div>
                 </div>
               </div>
 
               <div class="col-6 col-md-4">
-                <label for="active_status" class="form-label ps-2">สถานะการใช้งาน</label>
-                <ng-select [items]="statusOptions" bindLabel="title" bindValue="id" placeholder="กรุณาเลือก"
-                  formControlName="active_status" [searchable]="true">
-                </ng-select>
-                <div *ngIf="form.get('active_status')?.touched && form.get('active_status')?.invalid"
-                  class="text-danger ps-2">
+                <label for="active_status" class="form-label ps-2" [appRequiredMarker]="form.get('active_status')">สถานะการใช้งาน</label>
+                <ng-select [items]="statusOptions" bindLabel="title" bindValue="id" placeholder="กรุณาเลือก" formControlName="active_status" [searchable]="true"></ng-select>
+                <div *ngIf="form.get('active_status')?.touched && form.get('active_status')?.invalid" class="text-danger ps-2">
                   กรุณากรอกข้อมูล
                 </div>
               </div>
@@ -155,14 +109,7 @@
 
           <!-- Submit Button -->
           <div class="d-flex justify-content-center pt-3">
-            <!-- <button type="button" class="btn btn-primary" [disabled]="!form.valid || form.get('password') !== null && form.get('password')?.value !== form.get('confirm_password')?.value" (click)="onSubmit()"> -->
-            <!-- <button type="button" class="btn btn-primary"
-              [disabled]="form.get('password') === null || (form.get('password')?.value !== form.get('confirm_password')?.value)"
-              (click)="onSubmit()">
-              <i class="bi bi-floppy-fill me-2"></i>บันทึกข้อมูล
-            </button> -->
-            <button type="button" class="btn btn-primary" 
-            (click)="onSubmit()">
+            <button type="button" class="btn btn-primary" (click)="onSubmit()">
               <i class="bi bi-floppy-fill me-2"></i>บันทึกข้อมูล
             </button>
           </div>

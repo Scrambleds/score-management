@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, AfterViewInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Modal } from 'bootstrap';
 
 @Component({
   selector: 'app-form-edit',
@@ -7,7 +8,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
   templateUrl: './form-edit.component.html',
   styleUrl: './form-edit.component.css'
 })
-export class FormEditComponent {
+export class FormEditComponent implements AfterViewInit {
   isModalVisible = false;
   selectedRowData: any = null;
   form: FormGroup;
@@ -75,6 +76,9 @@ export class FormEditComponent {
     },
   ];
 
+  modalElement: any;
+  modalInstance: any;
+
   // masterdata = {
   //   accounttype: [
   //     { id: '1', title: 'Individual' },
@@ -102,10 +106,9 @@ export class FormEditComponent {
     }
   }
 
-  handleClickBtnDeleteData(value: any): void {
-    console.log('Delete clicked for:', value);
-    // Add delete handling logic here
-  }
+  // handleClickBtnDeleteData(value: any): void {
+  //   console.log('Delete clicked for:', value);
+  // }
 
     // Parent Component
   roleOption = [{ id: '1', title: 'ผู้ดูแลระบบ' }, { id: '2', title: 'อาจารย์' }];
@@ -122,13 +125,39 @@ export class FormEditComponent {
     return status ? status.title : '';
   }
 
+  // openModal(row: any) {
+  //   this.selectedRowData = { ...row }; // Create a copy to avoid direct mutation
+  //   this.isModalVisible = true;
+  // }
+
+  // handleModalClose() {
+  //   this.isModalVisible = false; // Hide modal
+  // }
+
+  ngAfterViewInit() {
+    this.modalElement = document.querySelector('.modal');
+    this.modalInstance = new Modal(this.modalElement);
+  }
+
+  // ฟังก์ชันเปิด Modal
   openModal(row: any) {
-    this.selectedRowData = { ...row }; // Create a copy to avoid direct mutation
+    this.selectedRowData = { ...row }; 
     this.isModalVisible = true;
+    if (this.modalInstance) {
+      this.modalInstance.show(); 
+    }
+  }
+
+  // ฟังก์ชันปิด Modal
+  closeModal() {
+    if (this.modalInstance) {
+      this.modalInstance.hide();
+    }
+    this.isModalVisible = false; 
   }
 
   handleModalClose() {
-    this.isModalVisible = false; // Hide modal
+    this.closeModal();  // ปิด modal เมื่อปิด
   }
 
   handleModalSubmit(updatedData: any) {
@@ -137,6 +166,7 @@ export class FormEditComponent {
     if (index !== -1) {
       this.data[index] = { ...this.data[index], ...updatedData }; // Update the data array
     }
-    this.isModalVisible = false;
+    // this.isModalVisible = false;
+    this.closeModal();
   }
 }
