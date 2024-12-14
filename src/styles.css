@@ -41,11 +41,10 @@ html {
   position: fixed;
   z-index: 1;
   top: 0;
-  left: 0;
+  left: -15.625rem; /* ซ่อน sidebar ออกนอกหน้าจอ */
   background-color: var(--grey-color);
   overflow-x: hidden;
-  transform: translateX(-100%); /* เลื่อนออกนอกหน้าจอ */
-  transition: 0.5s;
+  transition: left 0.5s; /* ใช้ transition กับ left */
 }
 
 .sidenav a:hover {
@@ -53,7 +52,7 @@ html {
 }
 
 .sidenav-open {
-  transform: translateX(0); /* เลื่อนกลับเข้ามา */
+  left: 0; /* เลื่อน sidebar กลับเข้ามา */
 }
 
 /* add new side bar header */

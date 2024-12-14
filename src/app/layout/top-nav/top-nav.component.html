@@ -15,17 +15,93 @@
       {{ currentTitle | translate }}
     </div>
     <div class="d-flex ms-auto">
+      <!-- Notify -->
+      <div class="dropdown d-flex align-items-center">
+        <button
+          class="btn btn-link"
+          type="button"
+          id="notificationDropdown"
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
+        >
+          <i
+            class="bi bi-bell-fill"
+            style="font-size: var(--icon-size); color: var(--white-color)"
+          ></i>
+        </button>
+        <ul
+          class="dropdown-menu dropdown-menu-end"
+          aria-labelledby="notificationDropdown"
+        >
+          <li><h6 class="dropdown-header">Notifications</h6></li>
+          <li>
+            <a class="dropdown-item" href="#">
+              <div style="font-size: 14px">
+                <span style="font-weight: 600">01418222-60 </span>
+                <span
+                  >ส่งทั้งหมด 10 รายการ
+                  <span class="text-success">สำเร็จ 8 รายการ </span
+                  ><span class="text-danger">ไม่สำเร็จ 2 รายการ</span></span
+                >
+              </div>
+
+              <div style="font-size: 12px; color: grey">2 นาทีที่แล้ว</div>
+            </a>
+          </li>
+          <li><hr class="dropdown-divider" /></li>
+          <li>
+            <a class="dropdown-item" href="#">
+              <div style="font-size: 14px">
+                <span style="font-weight: 600">01418221-60 </span>
+                <span
+                  >ส่งทั้งหมด 50 รายการ
+                  <span class="text-success">สำเร็จ 45 รายการ </span
+                  ><span class="text-danger">ไม่สำเร็จ 5 รายการ</span></span
+                >
+              </div>
+
+              <div style="font-size: 12px; color: grey">15 นาทีที่แล้ว</div>
+            </a>
+          </li>
+          <li><hr class="dropdown-divider" /></li>
+          <li>
+            <a class="dropdown-item" href="#">
+              <div style="font-size: 14px">
+                <span style="font-weight: 600"> 01418442-60 </span>
+                <span
+                  >ส่งทั้งหมด 30 รายการ
+                  <span class="text-success">สำเร็จ 18 รายการ </span
+                  ><span class="text-danger">ไม่สำเร็จ 12 รายการ</span></span
+                >
+              </div>
+
+              <div style="font-size: 12px; color: grey">1 ชั่วโมงที่แล้ว</div>
+            </a>
+          </li>
+          <!-- <li><hr class="dropdown-divider" /></li>
+          <li>
+            <a class="dropdown-item text-center" href="#"
+              >See all notifications</a
+            >
+          </li> -->
+        </ul>
+      </div>
       <!-- switch language -->
-      <div class="dropdown">
+      <div class="dropdown d-flex align-items-center">
         <a
-          class="btn btn-secondary dropdown-toggle"
+          class="btn btn-link dropdown-toggle"
           href="#"
           role="button"
           id="languageMenu"
           data-bs-toggle="dropdown"
           aria-expanded="false"
+          style="color: var(--white-color); text-decoration: none"
         >
-          {{ "language" | translate }}
+          <span id="currentLanguage">TH</span>
+          <!-- <i
+            class="bi bi-chevron-bar-down"
+            style="font-size: var(--icon-size); color: var(--white-color)"
+          ></i> -->
         </a>
         <ul class="dropdown-menu" aria-labelledby="languageMenu">
           <li>
@@ -33,7 +109,7 @@
               class="dropdown-item d-flex justify-content-center"
               href="#"
               (click)="changeLanguage($event, 'en')"
-              >English</a
+              >EN</a
             >
           </li>
           <li>
@@ -41,29 +117,108 @@
               class="dropdown-item d-flex justify-content-center"
               href="#"
               (click)="changeLanguage($event, 'th')"
-              >ไทย</a
+              >TH</a
             >
           </li>
         </ul>
       </div>
       <!-- profile menu -->
-      <div class="dropdown">
+      <div class="dropdown d-flex align-items-center">
         <button
-          class="btn btn-secondary dropdown-toggle"
+          class="btn btn-link"
           type="button"
           id="dropdownMenuButton"
           data-bs-toggle="dropdown"
           aria-expanded="false"
+          style="color: var(--white-color); text-decoration: none"
         >
-          User Profile
+          <div class="row">
+            <div class="col-1">
+              <i
+                class="bi bi-person-fill"
+                style="
+                  font-size: var(--icon-size);
+                  color: var(--grey-color);
+                  background-color: white; /* Background color (black circle) */
+                  -webkit-mask-image: radial-gradient(
+                    circle,
+                    var(--grey-color) 60%,
+                    transparent 61%
+                  );
+                  mask-image: radial-gradient(
+                    circle,
+                    var(--grey-color) 60%,
+                    transparent 61%
+                  );
+                  -webkit-mask-composite: source-in;
+                  mask-composite: intersect;
+                  padding: 6px; /* Optional padding for better appearance */
+                  border-radius: 50%; /* Ensure it remains circular */
+                "
+              ></i>
+            </div>
+            <div class="col-8 d-flex flex-column text-end">
+              <div style="font-size: 12px">ดร.ฉัตรชัย เกษมทวีโชค</div>
+              <div style="font-size: 10px">รหัสอาจารย์: S2024</div>
+            </div>
+            <div class="col-1 d-flex align-items-center justify-content-center">
+              <i
+                class="bi bi-chevron-down"
+                style="font-size: 12px; color: white"
+              ></i>
+            </div>
+          </div>
         </button>
         <ul
           class="dropdown-menu dropdown-menu-end"
           aria-labelledby="dropdownMenuButton"
+          style="width: 200px; padding: 0; border-radius: 4px"
         >
-          <li><a class="dropdown-item" href="#">Profile</a></li>
-          <li><a class="dropdown-item" href="#">Settings</a></li>
-          <li><a class="dropdown-item" (click)="onLogout()">Logout</a></li>
+          <li>
+            <div
+              class="d-flex flex-column align-items-center justify-content-center"
+              style="
+                background-color: var(--green-color);
+                width: 100%;
+                height: 100px;
+                color: var(--white-color);
+                font-size: 14px;
+              "
+            >
+              <div>ดร.ฉัตรชัย เกษมทวีโชค</div>
+              <div>รหัสอาจารย์: S2024</div>
+              <div>หน้าที่: อาจารย์ผู้สอน</div>
+            </div>
+          </li>
+          <li>
+            <a class="dropdown-item text-center" href="#"
+              ><i
+                class="bi bi-key-fill"
+                style="
+                  font-size: 12px;
+                  color: var(--grey-color);
+                  -webkit-text-stroke: 0.8px var(--grey-color); /* Adds thickness */
+                  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+                "
+              ></i>
+              เปลี่ยนรหัส</a
+            >
+          </li>
+          <li><hr class="dropdown-divider" style="margin: 0" /></li>
+          <li>
+            <a class="dropdown-item text-center" (click)="onLogout()"
+              ><i
+                class="bi bi-box-arrow-right"
+                style="
+                  font-size: 12px;
+                  color: var(--grey-color);
+                  -webkit-text-stroke: 0.8px var(--grey-color); /* Adds thickness */
+                  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+                "
+              ></i>
+              ออกจากระบบ</a
+            >
+          </li>
         </ul>
       </div>
     </div>
