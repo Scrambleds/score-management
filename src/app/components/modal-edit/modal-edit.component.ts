@@ -1,7 +1,8 @@
-import { Component, EventEmitter, HostListener, Input, Output } from '@angular/core';
+import { Component, EventEmitter, HostListener, Input, Output,  AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { passwordStrengthValidator } from '../validators/password-strength.validator';
 import Swal from 'sweetalert2';
+import { Modal } from 'bootstrap';
 
 @Component({
   selector: 'app-modal-edit',
@@ -19,6 +20,8 @@ export class ModalEditComponent {
   @Output() submit = new EventEmitter<any>(); // ส่งข้อมูล form กลับไปที่ parent เมื่อ submit
 
   form: FormGroup;
+  @ViewChild('modalElement') modalElement: ElementRef | undefined;
+  modalInstance: Modal | undefined;
   isDisabled = true; 
   submitted = false;
   
@@ -59,6 +62,38 @@ export class ModalEditComponent {
     }
     return null; // ไม่มีข้อผิดพลาด
   };
+
+  ngAfterViewInit() {
+    if (this.modalElement) {
+      this.modalInstance = new Modal(this.modalElement.nativeElement);
+    }
+  }
+
+  openModal(row: any) {
+    this.selectedRowData = { ...row };
+    if (this.modalInstance) {
+      this.modalInstance.show();
+    }
+    this.form.patchValue({
+      row_id: this.selectedRowData.row_id,
+      teacher_code: this.selectedRowData.teacher_code,
+      email: this.selectedRowData.email,
+      role: this.selectedRowData.role,
+      prefix: this.selectedRowData.prefix,
+      firstname: this.selectedRowData.firstname,
+      lastname: this.selectedRowData.lastname,
+      active_status: this.selectedRowData.active_status,
+    });
+  }
+
+  closeModal() {
+    if (this.modalInstance) {
+      this.modalInstance.hide();
+    }
+    this.hide.emit(); // Emit hide event
+    this.form.reset(); // Reset the form fields
+    this.removeConditionalFields(); // Remove confirm_password field
+  }
 
   ngOnChanges() {
     if (this.show) {
@@ -136,12 +171,19 @@ export class ModalEditComponent {
     }
   }
 
+  onShowModal() {
+    this.show = true;
+  }
+
   onHide() {
     this.show = false;
     this.hide.emit();
     this.unlockScroll();
+
+    setTimeout(() => {
     this.form.reset();
     this.removeConditionalFields();
+  }, 800);
   }
 
   onSubmit() {

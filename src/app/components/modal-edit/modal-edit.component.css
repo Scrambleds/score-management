@@ -33,7 +33,8 @@
   font-size: 1.5rem;
 }
 
-@keyframes modelShow{
+/* 
+@keyframes modalShow {
   0% {
     opacity: 0;
     transform: scale(0.7);
@@ -42,12 +43,9 @@
     opacity: 1;
     transform: scale(1);
   }
-}
+} */
 
-.modal.fade .modal-dialog {
-  animation: modalShow 0.3s ease-out forwards;
-}
-
+/* 
 @keyframes modalHide {
   0% {
     opacity: 1;
@@ -57,12 +55,19 @@
     opacity: 0;
     transform: scale(0.7);
   }
-}
+} */
 
+/* 
+.modal.fade .modal-dialog {
+  animation: modalShow 0.5s ease-out forwards;
+} */
+
+/* 
 .modal.fade.hide .modal-dialog {
-  animation: modalHide 0.3s ease-out forwards;
-}
+  animation: modalHide 0.8s ease-in forwards;
+} */
 
+/* 
 .modal-overlay {
   display: none;
   position: fixed;
@@ -73,15 +78,34 @@
   background-color: rgba(0, 0, 0, 0.5);
   z-index: 1040;
   opacity: 0;
-  transition: opacity 0.3s ease;
-}
+  transition: opacity 0.3s ease-in-out;
+} */
 
+/* 
 .modal-overlay.show {
-  display: block;  /* แสดงผลเมื่อ modal เปิด */
-  opacity: 1;      /* เปลี่ยนความมืดของพื้นหลัง */
-}
+  display: block;
+  opacity: 1;
+} */
+
+/* 
+.modal-overlay.hide {
+  opacity: 0;
+  pointer-events: none;
+} */
+
+/* 
+.modal.fade.hide .modal-overlay{
+  animation: modalHide 0.8s ease-in forwards;
+} */
+
 
 .modal-content {
   border: none !important;
-  box-shadow: none !important;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  transition: box-shadow 0.3s ease-in-out;
+}
+
+
+.modal-content:hover {
+  box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.3);
 }
