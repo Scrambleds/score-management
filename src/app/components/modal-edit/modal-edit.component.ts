@@ -1,6 +1,7 @@
 import { Component, EventEmitter, HostListener, Input, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { passwordStrengthValidator } from '../validators/password-strength.validator';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-modal-edit',
@@ -125,10 +126,30 @@ export class ModalEditComponent {
     if (this.form.valid) {
       console.log("ฟอร์มถูกต้อง ข้อมูลที่ส่ง: ", this.form.getRawValue());
       this.submit.emit(this.form.value);
+
+      Swal.fire({
+        title: 'สำเร็จ',
+        text: 'บันทึกข้อมูลเรียบร้อยแล้ว',
+        icon: 'success',
+        confirmButtonText: 'ตกลง',
+        confirmButtonColor: '#007bff'
+        // showConfirmButton: false,
+        // timer: 2000,
+      });
+
       this.form.reset();
       this.removeConditionalFields();
     } else {
       console.log("ฟอร์มไม่ถูกต้อง ข้อผิดพลาด: ", this.form.errors);
+
+      // Swal.fire({
+      //   title: 'เกิดข้อผิดพลาด',
+      //   text: 'กรุณากรอกข้อมูลให้ครบถ้วน',
+      //   icon: 'error',
+      //   confirmButtonText: 'ตกลง'
+      //   // showConfirmButton: false,
+      //   // timer: 2000,
+      // });
     }
   }
 
