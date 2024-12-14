@@ -11,18 +11,17 @@ import Swal from 'sweetalert2';
 })
 export class ModalEditComponent {
   @Input() show = false; // ควบคุมการแสดงผลของ modal
-  // @Input() role: Array<{ id: string; title: string }> = []; 
   @Input() roleOptions: Array<{ id: string; title: string }> = [];
   @Input() statusOptions: Array<{ id: string; title: string }> = [];
-  // @Input() active_status: Array<{ id: string; title: string }> = [];
   @Input() selectedRowData: any; 
 
   @Output() hide = new EventEmitter<void>(); // สัญญาณเมื่อปิด modal
   @Output() submit = new EventEmitter<any>(); // ส่งข้อมูล form กลับไปที่ parent เมื่อ submit
 
   form: FormGroup;
-  isDisabled = true;
+  isDisabled = true; 
   submitted = false;
+  
 
   constructor(private fb: FormBuilder) {
     this.form = this.fb.group({
@@ -37,15 +36,10 @@ export class ModalEditComponent {
       active_status: [null, Validators.required],
     });
 
-    // ฟังการเปลี่ยนแปลงในฟิลด์ password
     this.form.get('password')?.valueChanges.subscribe((password) => {
       if (password && password.trim() !== '') {
         this.addConditionalFields();
-      } 
-      // else if(password.trim() === ''){
-      //   this.removeConditionalFields();
-      // }
-      else {
+      } else {
         this.removeConditionalFields();
       }
     });
@@ -67,6 +61,12 @@ export class ModalEditComponent {
   };
 
   ngOnChanges() {
+    if (this.show) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+
     if (this.selectedRowData) {
       this.form.patchValue({
         row_id: this.selectedRowData.row_id,
@@ -81,7 +81,35 @@ export class ModalEditComponent {
     }
   }
 
+  ngOnDestroy(){
+    this.unlockScroll();
+  }
+
+  lockScroll() {
+    document.body.classList.add('modal-open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  unlockScroll() {
+    document.body.classList.remove('modal-open');
+    document.body.style.overflow = '';
+  }
+
+  onBackdropClick(event: MouseEvent) {
+    if ((event.target as HTMLElement).classList.contains('modal-overlay')) {
+      this.onHide();
+    }
+  }
+
+  onModalDialogClick(event: Event) {
+    event.stopPropagation(); // ป้องกันการปิด modal เมื่อคลิกใน modal
+  }
+
   ngOnInit() {
+    if(this.show){
+      this.lockScroll();
+    }
+
     // ฟังการเปลี่ยนแปลงของ password
     this.form.get('password')?.valueChanges.subscribe(() => {
       this.form.get('confirm_password')?.updateValueAndValidity();
@@ -97,23 +125,24 @@ export class ModalEditComponent {
     if (!this.form.contains('confirm_password')) {
       this.form.addControl('confirm_password', this.fb.control(null, Validators.required));
     }
-  
-    // ตั้งค่า matchPasswords validator ใน confirm_password
     this.form.get('confirm_password')?.setValidators([Validators.required, this.matchPasswords]);
-    this.form.get('confirm_password')?.updateValueAndValidity(); // อัพเดตการตรวจสอบ
-    this.form.updateValueAndValidity(); // อัพเดตฟอร์มทั้งหมด
+    this.form.get('confirm_password')?.updateValueAndValidity(); 
+    this.form.updateValueAndValidity(); 
   }
 
   private removeConditionalFields() {
     if (this.form.contains('confirm_password')) {
       this.form.removeControl('confirm_password');
-      // this.form.clearValidators();
-      this.form.setValidators(null);
     }
+  }
+  onShow() {
+    this.show = true;
   }
 
   onHide() {
+    this.show = false;
     this.hide.emit();
+    this.unlockScroll();
     this.form.reset();
     this.removeConditionalFields();
   }
@@ -133,35 +162,19 @@ export class ModalEditComponent {
         icon: 'success',
         confirmButtonText: 'ตกลง',
         confirmButtonColor: '#007bff'
-        // showConfirmButton: false,
-        // timer: 2000,
       });
 
       this.form.reset();
       this.removeConditionalFields();
     } else {
       console.log("ฟอร์มไม่ถูกต้อง ข้อผิดพลาด: ", this.form.errors);
-
-      // Swal.fire({
-      //   title: 'เกิดข้อผิดพลาด',
-      //   text: 'กรุณากรอกข้อมูลให้ครบถ้วน',
-      //   icon: 'error',
-      //   confirmButtonText: 'ตกลง'
-      //   // showConfirmButton: false,
-      //   // timer: 2000,
-      // });
     }
   }
 
-  // onSubmit(){
-  //   console.log(this.form.value);
-  // }
-
-  // ฟังก์ชันนี้ใช้ในการอัพเดต validation ของ confirm_password เมื่อออกจากฟิลด์
   onBlurConfirmPassword() {
     const confirmPasswordControl = this.form.get('confirm_password');
-    confirmPasswordControl?.updateValueAndValidity(); // อัพเดตค่า validity
-    confirmPasswordControl?.markAsTouched(); // ทำเครื่องหมายเป็น touched เพื่อแสดงข้อผิดพลาด
+    confirmPasswordControl?.updateValueAndValidity(); 
+    confirmPasswordControl?.markAsTouched(); 
   }
 
   @HostListener('document:keydown.escape', ['$event'])

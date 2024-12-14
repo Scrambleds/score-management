@@ -1,14 +1,5 @@
-.modal.show {
-  display: block;
-}
-
 .modal-header.bg-dark-blue {
   background-color: #03a96b;
-}
-
-.modal-body.overflow-auto {
-  max-height: 70vh;
-  overflow-y: auto;
 }
 
 .bg-light-green {
@@ -41,6 +32,56 @@
 .swal2-title{
   font-size: 1.5rem;
 }
+
+/* ลบสิ่งที่ไม่จำเป็นออกไป */
+.modal.fade .modal-dialog {
+  transition: transform 0.3s ease-out, opacity 0.3s ease;
+  transform: translate(0, -50px); /* ปรับการแสดงผลให้เป็นไปตามที่ Bootstrap ต้องการ */
+  opacity: 0;
+}
+
+.modal.fade.show .modal-dialog {
+  transform: translate(0, 0);
+  opacity: 1;
+}
+
+.modal-overlay {
+  display: block;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1040;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  display: none;
+}
+
+.modal-overlay.show {
+  opacity: 1;
+  display: block; 
+}
+
+/* ปรับคลาส modal และ modal-dialog */
+.modal.fade .modal-dialog {
+  transition: transform 0.3s ease-out, opacity 0.3s ease;
+}
+
+.modal.fade.show .modal-dialog {
+  transform: translate(0, 0);
+  opacity: 1;
+}
+
+.modal-content {
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* .modal-backdrop {
+  background-color: transparent !important;
+} */
 
 /* .my-custom-class {
   background-color: #007bff !important;
