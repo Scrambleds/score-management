@@ -49,45 +49,42 @@ export class EditUserComponent {
   //   }
   // }
 
-  onSearch(): void {
-    if (this.form.valid) {
-      const searchCriteria = this.form.value;
-      const fullname = searchCriteria.fullname ? searchCriteria.fullname.trim() : '';
+// ฟังก์ชันแยก fullname ออกเป็น prefix, firstname, lastname
+private splitFullname(fullname: string): [string, string, string] {
+  const nameParts = fullname.split(' ').filter(part => part.trim() !== '');
 
-      // แยกข้อมูลจาก fullname
-      const [prefix, firstname, lastname] = this.splitFullname(fullname);
+  let prefix = '';
+  let firstname = '';
+  let lastname = '';
 
-      // อัพเดต search criteria โดยใช้ข้อมูลที่แยกจาก fullname
-      this.searchService.updateSearchCriteria({
-        prefix: prefix,
-        firstname: firstname,
-        lastname: lastname,
-        email: searchCriteria.email,
-        role: searchCriteria.role,
-        active_status: searchCriteria.active_status
-      });
+  if (nameParts.length >= 1) prefix = nameParts[0];  // คำนำหน้าชื่อ
+  if (nameParts.length >= 2) firstname = nameParts[1];  // ชื่อ
+  if (nameParts.length >= 3) lastname = nameParts.slice(2).join(' ');  // นามสกุล (กรณีที่มี 3 คำขึ้นไป)
 
-      console.log('ส่งข้อมูล:', searchCriteria);
-    } else {
-      console.log('กรุณากรอกข้อมูลให้ครบถ้วน');
-      this.searchService.updateSearchCriteria({});
-    }
+  return [prefix, firstname, lastname];
+}
+
+// ฟังก์ชันในการค้นหาข้อมูล
+onSearch(): void {
+  if (this.form.valid) {
+    const searchCriteria = this.form.value;
+    const fullname = searchCriteria.fullname ? searchCriteria.fullname.trim() : '';
+
+    // อัพเดต search criteria โดยใช้ fullname ในการค้นหาคำ
+    this.searchService.updateSearchCriteria({
+      teacher_code: searchCriteria.teacher_code,
+      fullname: fullname, // ส่ง fullname ไปยัง searchCriteria
+      email: searchCriteria.email,
+      role: searchCriteria.role,
+      active_status: searchCriteria.active_status
+    });
+
+    console.log('ส่งข้อมูล:', searchCriteria);
+  } else {
+    console.log('กรุณากรอกข้อมูลให้ครบถ้วน');
+    this.searchService.updateSearchCriteria({});
   }
-  
-  // ฟังก์ชันแยก fullname ออกเป็น prefix, firstname, lastname
-  private splitFullname(fullname: string): [string, string, string] {
-    const nameParts = fullname.split(' ').filter(part => part.trim() !== '');
-    
-    let prefix = '';
-    let firstname = '';
-    let lastname = '';
-
-    if (nameParts.length >= 1) prefix = nameParts[0];  // คำนำหน้าชื่อ
-    if (nameParts.length >= 2) firstname = nameParts[1];  // ชื่อ
-    if (nameParts.length >= 3) lastname = nameParts.slice(2).join(' ');
-
-    return [prefix, firstname, lastname];
-  }
+}
 
   // ฟังก์ชันรีเซ็ตฟอร์ม
   onReset(): void {
