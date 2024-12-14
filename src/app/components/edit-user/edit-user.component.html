@@ -5,13 +5,13 @@
             <i class="bi bi-person-fill text-start ps-2" style="color: #03A96B;"></i>
             <p class="text-title fw-bold mb-0 d-inline">{{ "menu_usermanage_Search" | translate }}</p>
         </div>
-        <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <form [formGroup]="form" (ngSubmit)="onSearch()">
             <div class="row g-2">
                 <!-- Input Field -->
                 <div class="row mb-0 g-3">
                     <!-- Column 1 -->
                     <div class="col-12 col-md-6 col-lg-2">
-                        <label for="teacher_code" class="form-label fw-bold ps-2">รหัสอาจารย์</label>
+                        <label for="teacher_code" class="form-label fw-bold ps-2" [appRequiredMarker]="form.get('teacher_code')">รหัสอาจารย์</label>
                         <input type="text" id="teacher_code" class="form-control" placeholder="กรุณากรอก"
                             formControlName="teacher_code"  />
                             <div *ngIf="form.get('teacher_code')?.touched && form.get('teacher_code')?.invalid"
@@ -21,17 +21,17 @@
                     </div>
                     <!-- Column 2 -->
                     <div class="col-12 col-md-6 col-lg-2">
-                        <label for="firstname" class="form-label fw-bold ps-2">ชื่ออาจารย์</label>
-                        <input type="text" id="firstname" class="form-control" placeholder="กรุณากรอก"
-                            formControlName="firstname" />
-                            <div *ngIf="form.get('firstname')?.touched && form.get('firstname')?.invalid"
+                        <label for="fullname" class="form-label fw-bold ps-2" [appRequiredMarker]="form.get('fullname')">ชื่ออาจารย์</label>
+                        <input type="text" id="fullname" class="form-control" placeholder="กรุณากรอก"
+                            formControlName="fullname" />
+                            <div *ngIf="form.get('fullname')?.touched && form.get('fullname')?.invalid"
                             class="text-danger ps-2">
                             กรุณากรอกข้อมูล
                           </div>
                     </div>
                     <!-- Column 3 -->
                     <div class="col-12 col-md-6 col-lg-2">
-                        <label for="email" class="form-label fw-bold ps-2">อีเมล</label>
+                        <label for="email" class="form-label fw-bold ps-2" [appRequiredMarker]="form.get('email')">อีเมล</label>
                         <input type="text" id="email" class="form-control" placeholder="กรุณากรอก"
                             formControlName="email"  />
                             <div *ngIf="form.get('email')?.touched && form.get('email')?.invalid"
@@ -41,7 +41,7 @@
                     </div>
                     <!-- Column 4 (Select dropdown) -->
                     <div class="col-12 col-md-6 col-lg-2">
-                        <label for="role" class="form-label fw-bold ps-2">หน้าที่</label>
+                        <label for="role" class="form-label fw-bold ps-2" [appRequiredMarker]="form.get('role')">หน้าที่</label>
                         <ng-select
                           id="role"
                           formControlName="role"
@@ -59,7 +59,7 @@
                     
                     <!-- Column 5 (Select dropdown) -->
                     <div class="col-12 col-md-6 col-lg-2">
-                        <label for="active_status" class="form-label fw-bold ps-2">สถานะการใช้งาน</label>
+                        <label for="active_status" class="form-label fw-bold ps-2" [appRequiredMarker]="form.get('active_status')">สถานะการใช้งาน</label>
                         <ng-select
                           id="active_status"
                           formControlName="active_status"

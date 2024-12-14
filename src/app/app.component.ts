@@ -8,6 +8,12 @@ import { Router } from '@angular/router';
   styleUrl: './app.component.css',
 })
 export class AppComponent {
+  searchCriteria: any = {};
+
+  onSearch(criteria: any) {
+    this.searchCriteria = criteria; // รับข้อมูลจาก EditUserComponent
+  }
+
   title = 'score-management';
   // isNavOpen = false; // ควบคุมสถานะของ side navigation bar
 

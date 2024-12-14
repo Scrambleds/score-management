@@ -1,6 +1,9 @@
-import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators  } from '@angular/forms';
+import { Component, EventEmitter, HostListener, Input, output, Output } from '@angular/core';
 import { ValueCache } from 'ag-grid-community';
+import { SearchService } from '../search-service/seach.service';
+import { Router } from '@angular/router';
+
 
 @Component({
   selector: 'app-edit-user',
@@ -10,6 +13,9 @@ import { ValueCache } from 'ag-grid-community';
 })
 export class EditUserComponent {
  public form: FormGroup;
+  submittedData: any = null;
+  @Output() searchEvent = new EventEmitter<any>(); 
+  @Output() submit = new EventEmitter<any>();
 
   roleOption = [
     { id: '1', label: 'ผู้ดูแลระบบ' },
@@ -22,37 +28,76 @@ export class EditUserComponent {
   ];
   
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private router: Router, private searchService: SearchService){
     // กำหนดโครงสร้างฟอร์มและ Validation
     this.form = this.fb.group({
-      teacher_code: [null, Validators.required],
-      firstname: [null, Validators.required],
-      email: [null, Validators.required],
-      role: [null, Validators.required],
-      active_status: [null, Validators.required],
-      dropdownField: ['option1', Validators.required], // เพิ่ม dropdown ให้รองรับ reset
+      teacher_code: [null],
+      fullname: [null],
+      email: [null],
+      role: [null],
+      active_status: [null],
+      dropdownField: [null], // เพิ่ม dropdown ให้รองรับ reset
     });
   }
 
   // Handle form submission
-  onSubmit(): void {
+  // onSubmit(): void {
+  //   if (this.form.valid) {
+  //     console.log('Form Submitted:', this.form.value);
+  //   } else {
+  //     console.log('Form is invalid');
+  //   }
+  // }
+
+  onSearch(): void {
     if (this.form.valid) {
-      console.log('Form Submitted:', this.form.value);
+      const searchCriteria = this.form.value;
+      const fullname = searchCriteria.fullname ? searchCriteria.fullname.trim() : '';
+
+      // แยกข้อมูลจาก fullname
+      const [prefix, firstname, lastname] = this.splitFullname(fullname);
+
+      // อัพเดต search criteria โดยใช้ข้อมูลที่แยกจาก fullname
+      this.searchService.updateSearchCriteria({
+        prefix: prefix,
+        firstname: firstname,
+        lastname: lastname,
+        email: searchCriteria.email,
+        role: searchCriteria.role,
+        active_status: searchCriteria.active_status
+      });
+
+      console.log('ส่งข้อมูล:', searchCriteria);
     } else {
-      console.log('Form is invalid');
+      console.log('กรุณากรอกข้อมูลให้ครบถ้วน');
+      this.searchService.updateSearchCriteria({});
     }
   }
+  
+  // ฟังก์ชันแยก fullname ออกเป็น prefix, firstname, lastname
+  private splitFullname(fullname: string): [string, string, string] {
+    const nameParts = fullname.split(' ').filter(part => part.trim() !== '');
+    
+    let prefix = '';
+    let firstname = '';
+    let lastname = '';
 
-  // Reset form fields
+    if (nameParts.length >= 1) prefix = nameParts[0];  // คำนำหน้าชื่อ
+    if (nameParts.length >= 2) firstname = nameParts[1];  // ชื่อ
+    if (nameParts.length >= 3) lastname = nameParts.slice(2).join(' ');
+
+    return [prefix, firstname, lastname];
+  }
+
+  // ฟังก์ชันรีเซ็ตฟอร์ม
   onReset(): void {
-    // กำหนดค่าฟอร์มเริ่มต้น
     this.form.reset({
-      teacher_code: null,
-      firstname: null,
+      fullname: null,
       email: null,
       role: null,
       active_status: null,
-      dropdownField: null, // ค่าที่กำหนดเริ่มต้นสำหรับ dropdown
+      dropdownField: null,
     });
+    this.searchService.updateSearchCriteria({});
   }
 }
