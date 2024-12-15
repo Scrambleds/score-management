@@ -27,8 +27,8 @@
         <div
           class="d-flex justify-content-start align-items-start flex-column w-100"
         >
-          <div class="w-100">
-            <div class="text-start">ตารางคะแนน</div>
+          <div class="w-100 mb-2">
+            <div class="fw-bold text-start">ตารางคะแนน</div>
           </div>
           <form
             [formGroup]="form"
@@ -36,7 +36,7 @@
             class="d-flex justify-content-start align-items-start flex-row gap-2 w-100 mb-0"
           >
             <div class="" style="width: 50%">
-              <label for="subjectNo" class="mb-2"
+              <label for="subjectNo" class="fw-bold mb-2"
                 >รหัสนิสิต/ชื่อนิสิต/อีเมล</label
               >
               <div class="input-group-autocomplete mb-2">
@@ -50,7 +50,7 @@
               </div>
             </div>
             <div class="" style="width: 25%">
-              <label for="subjectNo" class="mb-2">รหัสสาขา</label>
+              <label for="subjectNo" class="fw-bold mb-2">รหัสสาขา</label>
               <ng-select
                 id="majorCode"
                 formControlName="majorCode"
