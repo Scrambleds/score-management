@@ -10,6 +10,7 @@ import { LoginPageComponent } from './route/login-page/login-page.component';
 import { AuthGuard } from './auth/auth.guard';
 import { AuthLayoutComponent } from './layout/auth-layout/auth-layout.component';
 import { MainLayoutComponent } from './layout/main-layout/main-layout.component';
+import { AddUserRoute } from './route/add-user/add-user.component';
 
 const routes: Routes = [
   {
@@ -42,6 +43,12 @@ const routes: Routes = [
       {
         path: 'UserManagement',
         component: UserManageComponent,
+        data: { messageKey: 'menu_usermanage' },
+        canActivate: [AuthGuard],
+      },
+      {
+        path: 'UserManagement/AddUser',
+        component: AddUserRoute,
         data: { messageKey: 'menu_usermanage' },
         canActivate: [AuthGuard],
       },

@@ -32,6 +32,7 @@ import { SearchScoreComponent } from './route/search-score/search-score.componen
 import { UploadScoreComponent } from './route/upload-score/upload-score.component';
 import { ScoreAnnouncementComponent } from './route/score-announcement/score-announcement.component';
 import { DashboardComponent } from './route/dashboard/dashboard.component';
+import { AddUserRoute } from './route/add-user/add-user.component';
 
 import { provideHttpClient } from '@angular/common/http';
 import { TranslatePipe } from './shared/pipes/translate.pipe';
@@ -42,7 +43,9 @@ import { LoginPageComponent } from './route/login-page/login-page.component';
 import { MainLayoutComponent } from './layout/main-layout/main-layout.component';
 import { AuthLayoutComponent } from './layout/auth-layout/auth-layout.component';
 import { AutocompleteComponent } from './components/autocomplete/autocomplete.component';
-import { RequiredMarkerDirective } from '../../src/app/components/required-marker/required-marker.directive'
+import { RequiredMarkerDirective } from '../../src/app/components/required-marker/required-marker.directive';
+import { AddUserComponent } from '../../src/app/components/add-user/add-user.component';
+
 
 @NgModule({
   declarations: [
@@ -66,7 +69,9 @@ import { RequiredMarkerDirective } from '../../src/app/components/required-marke
     MainLayoutComponent,
     AuthLayoutComponent,
     AutocompleteComponent,
-  ],
+    AddUserComponent,
+    AddUserRoute
+    ],
   imports: [
     BrowserModule,
     AppRoutingModule,

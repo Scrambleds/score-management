@@ -1,7 +1,8 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Modal } from 'bootstrap';
-import { SearchService } from '../search-service/seach.service';
+import { SearchService } from '../../services/search-service/seach.service'
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-form-edit',
@@ -11,6 +12,7 @@ import { SearchService } from '../search-service/seach.service';
 })
 export class FormEditComponent implements OnInit, AfterViewInit {
 
+  isUploadExcelVisible = false;
   isModalVisible = false;
   selectedRowData: any = null;
   modalElement: any;
@@ -85,7 +87,7 @@ export class FormEditComponent implements OnInit, AfterViewInit {
   roleOption = [{ id: '1', title: 'ผู้ดูแลระบบ' }, { id: '2', title: 'อาจารย์' }];
   statusOption = [{ id: '1', title: 'active' }, { id: '2', title: 'inactive' }];
 
-  constructor(private searchService: SearchService, private fb: FormBuilder) {
+  constructor(private searchService: SearchService, private fb: FormBuilder, private router: Router) {
     this.form = this.fb.group({
       teacher_code: ['', Validators.required],
       fullname: ['', Validators.required],
@@ -93,6 +95,10 @@ export class FormEditComponent implements OnInit, AfterViewInit {
       role: ['', Validators.required],
       active_status: ['', Validators.required]
     });
+  }
+
+  onAddUserClick(){
+    this.router.navigate(['UserManagement/AddUser'])
   }
 
   // รับข้อมูลจาก searchService
@@ -105,6 +111,16 @@ export class FormEditComponent implements OnInit, AfterViewInit {
         this.filteredData = this.filterData(this.searchCriteria); // ฟิลเตอร์ข้อมูลตาม criteria
       }
     });
+  }
+
+  toggleUploadExcel(): void {
+    this.isUploadExcelVisible = !this.isUploadExcelVisible; // Toggle การแสดงผล
+  }
+
+  handleFileUpload(data: any): void {
+    console.log('Data uploaded:', data);
+    this.filteredData = [...this.filteredData, ...data];
+    this.isUploadExcelVisible = false;
   }
 
   // ฟังก์ชันการฟิลเตอร์ข้อมูลตาม criteria
