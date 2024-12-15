@@ -1,7 +1,7 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Modal } from 'bootstrap';
-import { SearchService } from '../search-service/seach.service';
+import { SearchService } from '../../services/search-service/seach.service'
 
 @Component({
   selector: 'app-form-edit',

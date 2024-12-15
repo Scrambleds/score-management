@@ -1,7 +1,7 @@
 import { FormBuilder, FormGroup, Validators  } from '@angular/forms';
 import { Component, EventEmitter, HostListener, Input, output, Output } from '@angular/core';
 import { ValueCache } from 'ag-grid-community';
-import { SearchService } from '../search-service/seach.service';
+import { SearchService } from '../../services/search-service/seach.service'
 import { Router } from '@angular/router';
 
 
