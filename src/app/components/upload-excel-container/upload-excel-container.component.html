@@ -1,19 +1,22 @@
-<!-- <div class="d-flex"> -->
-<div *ngIf="!isFileUploaded" class="custom-card">
+<div
+  *ngIf="!isFileUploaded"
+  class="custom-card"
+  style="border: 1px dashed; width: 100%; height: 100%"
+>
   <div
-    class="card-body"
+    class="card-body w-100"
     (dragover)="onDragOver($event)"
     (drop)="onDrop($event)"
-    style="border: 1px dashed; width: 100%; height: 100%"
   >
     <div class="text-center">{{ titleName }}</div>
-    <button class="btn btn-primary">
+    <label for="uploadfile" class="btn btn-primary">
       <i
         class="bi bi-box-arrow-in-down"
         style="font-size: var(--icon-size); color: var(--white-color)"
       ></i>
       {{ buttonName }}
-    </button>
+    </label>
+    <input id="uploadfile" type="file" class="d-none" />
   </div>
 </div>
 
@@ -24,34 +27,30 @@
         <div
           class="d-flex justify-content-start align-items-start flex-column w-100"
         >
-          <div class="w-100">
-            <div class="text-start">ตารางคะแนน</div>
+          <div class="w-100 mb-2">
+            <div class="fw-bold text-start">ตารางคะแนน</div>
           </div>
-          <div
+          <form
             [formGroup]="form"
             (ngSubmit)="onSubmitFilter()"
-            class="d-flex justify-content-start align-items-start flex-row gap-2 w-100"
+            class="d-flex justify-content-start align-items-start flex-row gap-2 w-100 mb-0"
           >
             <div class="" style="width: 50%">
-              <label for="subjectNo" class="mb-2"
+              <label for="subjectNo" class="fw-bold mb-2"
                 >รหัสนิสิต/ชื่อนิสิต/อีเมล</label
               >
               <div class="input-group-autocomplete mb-2">
-                <app-autocomplete
-                  [placeholder]="'alert_enterData' | translate"
-                  [suggestions]="filteredSubjects"
-                  [displayKey]="'subjectCode'"
-                  [displayFormat]="customFormat"
-                  [widthAuto]="true"
-                ></app-autocomplete>
-
-                <ng-template #customFormat let-item>
-                  {{ item.subjectCode }} - {{ item.subjectName }}
-                </ng-template>
+                <input
+                  class="form-control"
+                  formControlName="search"
+                  type="text"
+                  name="search"
+                  [placeholder]="'placeholder_text' | translate"
+                />
               </div>
             </div>
             <div class="" style="width: 25%">
-              <label for="subjectNo" class="mb-2">รหัสสาขา</label>
+              <label for="subjectNo" class="fw-bold mb-2">รหัสสาขา</label>
               <ng-select
                 id="majorCode"
                 formControlName="majorCode"
@@ -68,7 +67,7 @@
               class="d-flex align-items-end"
               style="width: 25%; height: 68px"
             >
-              <button class="btn btn-primary">
+              <button type="submit" class="btn btn-primary">
                 <i
                   class="bi bi-search"
                   style="font-size: var(--icon-size); color: var(--white-color)"
@@ -76,7 +75,7 @@
                 ค้นหา
               </button>
             </div>
-          </div>
+          </form>
         </div>
       </div>
       <div
@@ -113,4 +112,3 @@
     </ag-grid-angular>
   </div>
 </div>
-<!-- </div> -->

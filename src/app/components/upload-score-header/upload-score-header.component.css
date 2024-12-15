@@ -31,7 +31,8 @@
   background-color: var(--bs-card-bg);
   background-clip: border-box;
   border: var(--bs-card-border-width) solid var(--bs-card-border-color);
-  border-radius: var(--bs-card-border-radius);
+  border-radius: 0.75rem;
+  box-shadow: 0 0.15rem 0.5rem rgba(0, 0, 0, 0.2);
 }
 
 .card-body {

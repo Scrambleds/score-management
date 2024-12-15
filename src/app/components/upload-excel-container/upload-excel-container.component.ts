@@ -46,6 +46,7 @@ export class UploadExcelContainerComponent {
 
   rowData: any[] = []; // ข้อมูลที่จะแสดงใน ag-Grid
   columnDefs: any[] = []; // คำนิยามของคอลัมน์
+  originalData: any[] = []; // สำหรับใช้กรองข้อมูล
   isFileUploaded = false; // flag ตรวจสอบการอัปโหลดไฟล์
   filteredSubjects = [
     {
@@ -96,7 +97,8 @@ export class UploadExcelContainerComponent {
     this.form = this.fb.group({
       // subjectNo: [''],
       // subjectName: [''],
-      majorCode: [{ value: null }, Validators.required],
+      search: [{ value: '', disabled: false }],
+      majorCode: [{ value: null, disabled: false }],
     });
   }
 
@@ -238,6 +240,7 @@ export class UploadExcelContainerComponent {
         };
       });
       this.rowData = data;
+      this.originalData = data;
       console.log(this.rowData);
     }
   }
@@ -249,7 +252,33 @@ export class UploadExcelContainerComponent {
     }
   }
 
-  onSubmitFilter() {}
+  onSubmitFilter() {
+    const formValues = this.form.value; // ค่า input จากฟอร์ม
+    console.log(this.originalData);
+
+    // ถ้าไม่มีการกรอกข้อมูล แสดงข้อมูลทั้งหมด
+    if (!formValues.search && !formValues.majorCode) {
+      this.rowData = [...this.originalData]; // คัดลอก originalData
+      return;
+    }
+
+    // กรองข้อมูลจาก originalData
+    this.rowData = this.originalData.filter((row: any) => {
+      // ฟังก์ชันย่อยสำหรับตรวจสอบ search
+      const matchesSearch = formValues.search
+        ? row['รหัสนิสิต']?.toString().includes(formValues.search) || // แปลงเป็น string
+          row['ชื่อ']?.includes(formValues.search) ||
+          row['อีเมล']?.includes(formValues.search)
+        : true;
+
+      // ฟังก์ชันย่อยสำหรับตรวจสอบ majorCode
+      const matchesMajorCode = formValues.majorCode
+        ? row['รหัสสาขา'] === formValues.majorCode
+        : true;
+
+      return matchesSearch && matchesMajorCode; // ต้องตรงทั้งสองเงื่อนไข
+    });
+  }
 
   onSubmitWithGridData(): void {
     if (this.form.valid) {
