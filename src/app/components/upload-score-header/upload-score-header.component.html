@@ -1,12 +1,8 @@
 <div class="custom-card">
   <div class="card-body">
     <div class="text-center">รายละเอียด</div>
-    <form
-      #myForm="ngForm"
-      [formGroup]="form"
-      (ngSubmit)="onSubmit()"
-      class="w-100"
-    >
+    <!-- parent will submit this form instead -->
+    <form [formGroup]="form" class="w-100">
       <div class="row">
         <!-- Subject Code -->
         <div class="col-6 col-sm-5 col-md-2">
@@ -17,6 +13,8 @@
             <app-autocomplete
               #subjectCode
               id="subjectCode"
+              [name]="'subjectCode'"
+              formControlName="subjectCode"
               [placeholder]="'placeholder_text' | translate"
               [suggestions]="filteredSubjects"
               [displayKey]="'subjectCode'"
@@ -24,13 +22,22 @@
               [widthAuto]="true"
               (search)="searchCode($event)"
               (select)="selectCode($event)"
-              [value]="selectedSubjectCode"
+              [value]="form.get('subjectCode')?.value"
               [disabled]="!isUploaded"
             ></app-autocomplete>
 
             <ng-template #customFormat let-item>
               {{ item.subjectCode }} - {{ item.subjectName }}
             </ng-template>
+          </div>
+          <div
+            *ngIf="
+              form.get('subjectCode')?.touched &&
+              form.get('subjectCode')?.invalid
+            "
+            class="text-danger ps-2"
+          >
+            {{ "alert_enterData" | translate }}
           </div>
         </div>
 
@@ -41,6 +48,8 @@
           }}</label>
           <app-autocomplete
             id="subjectName"
+            [name]="'subjectName'"
+            formControlName="subjectName"
             [placeholder]="'placeholder_text' | translate"
             [suggestions]="filteredSubjects"
             [displayKey]="'subjectName'"
@@ -67,20 +76,20 @@
             "academic_year" | translate
           }}</label>
           <ng-select
-            id="academic_year"
-            formControlName="academic_yearCode"
-            [items]="academic_yearCodeOptions"
+            name="academicYearCode"
+            formControlName="academicYearCode"
+            [items]="academicYearCodeOptions"
             bindLabel="label"
             bindValue="value"
             [placeholder]="'placeholder_select' | translate"
             [clearable]="true"
-            (change)="onSelectChange($event, 'academic_yearCode')"
+            (change)="onSelectChange($event, 'academicYearCode')"
           >
           </ng-select>
           <div
             *ngIf="
-              form.get('academic_yearCode')?.touched &&
-              form.get('academic_yearCode')?.invalid
+              form.get('academicYearCode')?.touched &&
+              form.get('academicYearCode')?.invalid
             "
             class="text-danger ps-2"
           >
@@ -94,7 +103,7 @@
             "semester" | translate
           }}</label>
           <ng-select
-            id="semester"
+            name="semesterCode"
             formControlName="semesterCode"
             [items]="semesterCodeOptions"
             bindLabel="label"
@@ -117,23 +126,24 @@
 
         <!-- Section -->
         <div class="col-6 col-sm-4 col-md-2">
-          <label for="sectionId" class="mb-2">{{
+          <label for="sectionCode" class="mb-2">{{
             "section" | translate
           }}</label>
           <ng-select
-            id="sectionId"
-            formControlName="sectionId"
-            [items]="sectionIdOptions"
+            name="sectionCode"
+            formControlName="sectionCode"
+            [items]="sectionCodeOptions"
             bindLabel="label"
             bindValue="value"
             [placeholder]="'placeholder_select' | translate"
             [clearable]="true"
-            (change)="onSelectChange($event, 'sectionId')"
+            (change)="onSelectChange($event, 'sectionCode')"
           >
           </ng-select>
           <div
             *ngIf="
-              form.get('sectionId')?.touched && form.get('sectionId')?.invalid
+              form.get('sectionCode')?.touched &&
+              form.get('sectionCode')?.invalid
             "
             class="text-danger ps-2"
           >

@@ -11,6 +11,7 @@ import {
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { UploadScoreService } from '../../services/upload-score/upload-score.service';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-upload-score-header',
@@ -31,8 +32,8 @@ export class UploadScoreHeaderComponent implements OnInit, AfterViewInit {
   @ViewChild('subjectDetailForm', { static: false })
   subjectDetailForm?: FormGroup;
 
-  @ViewChild('myForm') myForm!: NgForm;
-  @Output() formSubmitted = new EventEmitter<any>(); // Emit form data when submitted
+  // @ViewChild('myForm') myForm!: NgForm;
+  @Output() formSubmitted = new EventEmitter<FormGroup>(); // Emit form data when submitted
 
   public form: FormGroup;
   filteredSubjects: { subjectCode: string; subjectName: string }[] = [];
@@ -40,12 +41,13 @@ export class UploadScoreHeaderComponent implements OnInit, AfterViewInit {
 
   isAutocompleteVisible = false;
   isSubjectNameReadonly = false;
+  isSubmit: boolean = true;
 
   isAcademicYearDisabled: boolean = true;
   isSemesterDisabled: boolean = true;
-  isSectionIdDisabled: boolean = true;
+  isSectionCodeDisabled: boolean = true;
 
-  academic_yearCodeOptions = [
+  academicYearCodeOptions = [
     { value: null, label: 'กรุณาเลือก' },
     { value: '2022', label: '2565' },
     { value: '2023', label: '2566' },
@@ -58,7 +60,7 @@ export class UploadScoreHeaderComponent implements OnInit, AfterViewInit {
     { value: '2', label: 'ภาคปลาย' },
     { value: '3', label: 'ภาคฤดูร้อน' },
   ];
-  sectionIdOptions = [
+  sectionCodeOptions = [
     { value: null, label: 'กรุณาเลือก' },
     { value: '800', label: '800' },
     { value: '801', label: '801' },
@@ -71,11 +73,17 @@ export class UploadScoreHeaderComponent implements OnInit, AfterViewInit {
     private uploadScoreService: UploadScoreService
   ) {
     this.form = this.fb.group({
-      subjectCode: [''],
-      subjectName: [''],
-      academic_yearCode: [{ value: null, disabled: true }, Validators.required],
+      subjectCode: [
+        { value: '', disabled: !this.isUploaded },
+        Validators.required,
+      ],
+      subjectName: [
+        { value: '', disabled: !this.isUploaded },
+        Validators.required,
+      ],
+      academicYearCode: [{ value: null, disabled: true }, Validators.required],
       semesterCode: [{ value: null, disabled: true }, Validators.required],
-      sectionId: [{ value: null, disabled: true }, Validators.required],
+      sectionCode: [{ value: null, disabled: true }, Validators.required],
     });
   }
 
@@ -88,7 +96,11 @@ export class UploadScoreHeaderComponent implements OnInit, AfterViewInit {
     //       this.searchSubject(value);
     //     }
     //   });
+
     console.log('oninit');
+    console.log(this.form.get('subjectCode')?.value); // ดูค่าว่ามีการอัปเดต
+    console.log(this.form.get('subjectCode')?.invalid); // ตรวจสอบว่า invalid หรือไม่
+    console.log(this.form.get('subjectCode')?.touched); // ตรวจสอบว่า touched หรือไม่
   }
   ngAfterViewInit() {
     // ตรวจสอบว่ามี ViewChild หรือไม่
@@ -118,13 +130,13 @@ export class UploadScoreHeaderComponent implements OnInit, AfterViewInit {
 
       // ปรับปรุงการเปิด/ปิด ng-select จาก form control
       if (isNotEmpty) {
-        this.form.get('academic_yearCode')?.enable();
+        this.form.get('academicYearCode')?.enable();
         this.form.get('semesterCode')?.enable();
-        this.form.get('sectionId')?.enable();
+        this.form.get('sectionCode')?.enable();
       } else {
-        this.form.get('academic_yearCode')?.disable();
+        this.form.get('academicYearCode')?.disable();
         this.form.get('semesterCode')?.disable();
-        this.form.get('sectionId')?.disable();
+        this.form.get('sectionCode')?.disable();
       }
     });
   }
@@ -150,6 +162,7 @@ export class UploadScoreHeaderComponent implements OnInit, AfterViewInit {
         } else {
           // ถ้า subjectCode ไม่ตรงกับที่ต้องการ
           this.isSubjectNameReadonly = false;
+          this.form.get('subjectCode')!.setValue(term, { emitEvent: false });
           this.form.get('subjectName')!.reset();
         }
       } else if (this.filteredSubjects.length === 0) {
@@ -252,27 +265,28 @@ export class UploadScoreHeaderComponent implements OnInit, AfterViewInit {
     }, 100);
   }
 
-  //end auto complete
-  // onSubmit(): void {
-  //   if (this.form.valid) {
-  //     console.log('Form Submitted:', this.form.value);
-  //   } else {
-  //     console.log('Form is invalid');
-  //   }
-  // }
+  // 8. validate and send formdata to parent
   onSubmit() {
-    const formData = this.myForm.value;
-    console.log('Form Submitted:', formData);
+    this.isSubmit = true;
+    this.form.markAllAsTouched();
+    this.form.updateValueAndValidity();
 
-    // Emit form data to parent component
-    this.formSubmitted.emit(formData);
-  }
+    if (this.form.valid) {
+      console.log('ฟอร์มถูกต้อง ข้อมูลที่ส่ง: ', this.form.getRawValue());
+      const formData = this.form.value;
+      //send formData to parent with event emitter
+      this.formSubmitted.emit(formData);
+      Swal.fire({
+        title: 'สำเร็จ',
+        text: 'บันทึกข้อมูลเรียบร้อยแล้ว',
+        icon: 'success',
+        confirmButtonText: 'ตกลง',
+        confirmButtonColor: 'var(--primary-color)',
+      });
 
-  submitForm() {
-    if (this.myForm.valid) {
-      this.myForm.ngSubmit.emit(); // Trigger the form's submit event
+      // this.form.reset();
     } else {
-      console.log('Form is invalid');
+      console.log('ฟอร์มไม่ถูกต้อง ข้อผิดพลาด: ', this.form.errors);
     }
   }
 }

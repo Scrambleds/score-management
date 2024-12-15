@@ -11,9 +11,9 @@ import { UploadExcelContainerComponent } from '../../components/upload-excel-con
 })
 export class UploadScoreComponent {
   isFileUploaded = false; // flag ตรวจสอบการอัปโหลดไฟล์
-  @ViewChild('formComponent') formComponent!: UploadScoreHeaderComponent;
-  @ViewChild('triggerComponent')
-  triggerComponent!: UploadExcelContainerComponent;
+  @ViewChild('scoreHeader') scoreHeader!: UploadScoreHeaderComponent;
+  @ViewChild('scoreContent')
+  scoreContent!: UploadExcelContainerComponent;
   private formData: any;
 
   handleUploadEvent(isUploaded: boolean): void {
@@ -22,14 +22,15 @@ export class UploadScoreComponent {
   }
 
   handleSubmitRequest() {
-    this.formComponent.submitForm();
+    // 6. call fn: onSubmit form UploadScoreHeaderComponent
+    this.scoreHeader.onSubmit();
   }
 
-  // Handle form submission and save the data
+  // 10. call&send FormData to fn: sendToApi form UploadExcelContainerComponent
   handleFormSubmitted(formData: any) {
     this.formData = formData;
     console.log('Received Form Data from B:', this.formData);
 
-    this.triggerComponent.sendToApi(formData);
+    this.scoreContent.sendToApi(formData);
   }
 }

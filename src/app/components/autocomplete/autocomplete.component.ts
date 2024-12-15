@@ -2,12 +2,18 @@ import {
   Component,
   ElementRef,
   EventEmitter,
+  forwardRef,
   HostListener,
   Input,
   Output,
   TemplateRef,
   ViewChild,
 } from '@angular/core';
+import {
+  ControlValueAccessor,
+  NG_VALIDATORS,
+  NG_VALUE_ACCESSOR,
+} from '@angular/forms';
 
 @Component({
   selector: 'app-autocomplete',
@@ -15,16 +21,25 @@ import {
 
   templateUrl: './autocomplete.component.html',
   styleUrl: './autocomplete.component.css',
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => AutocompleteComponent),
+      multi: true,
+    },
+  ],
 })
-export class AutocompleteComponent {
-  @Input() placeholder: string = 'Search...';
+export class AutocompleteComponent implements ControlValueAccessor {
+  @Input() placeholder: string = '';
+  @Input() name: string = '';
   @Input() suggestions: any[] = [];
-  @Input() displayKey: string = 'name';
+  @Input() displayKey: string = '';
   @Input() displayFormat?: TemplateRef<any>;
   @Input() widthAuto: boolean = false; // เพิ่ม Input Property
   @Input() disabled: boolean = false; // เพิ่ม Input Property
   @Input() readonly: boolean = false; // เพิ่ม Input Property
   private _value: string = '';
+
   @Input()
   set value(val: string) {
     this._value = val;
@@ -44,6 +59,9 @@ export class AutocompleteComponent {
   isAutocompleteVisible = false;
   dropdownPosition: 'top' | 'bottom' = 'bottom';
 
+  private onChange: (value: any) => void = () => {};
+  private onTouched: () => void = () => {};
+
   constructor(private elementRef: ElementRef) {}
 
   @HostListener('window:resize')
@@ -51,19 +69,39 @@ export class AutocompleteComponent {
     this.adjustDropdownPosition();
   }
 
+  writeValue(value: any): void {
+    if (value) {
+      this.inputValue = value;
+      this.onChange(this.inputValue);
+    }
+  }
+
+  registerOnChange(fn: any): void {
+    this.onChange = fn;
+  }
+
+  registerOnTouched(fn: any): void {
+    this.onTouched = fn;
+  }
+
+  setDisabledState(isDisabled: boolean): void {
+    this.disabled = isDisabled;
+  }
+
   onSearch(): void {
-    console.log('onSearch');
     this.search.emit(this.inputValue);
     this.adjustDropdownPosition();
   }
+
   onInputChange(event: Event): void {
-    const target = event.target as HTMLInputElement; // ใช้ type assertion
-    console.log('onInputChange', target.value);
+    const target = event.target as HTMLInputElement;
     if (target) {
-      this.inputValue = target.value; // อัปเดตค่า inputValue
-      this.onSearch(); // เรียกฟังก์ชันค้นหา
+      this.inputValue = target.value || '';
+      this.onChange(this.inputValue);
+      this.onSearch();
     }
   }
+
   showAutocomplete(): void {
     this.isAutocompleteVisible = true;
     this.adjustDropdownPosition();
@@ -72,6 +110,7 @@ export class AutocompleteComponent {
   hideAutocomplete(): void {
     setTimeout(() => {
       this.isAutocompleteVisible = false;
+      this.onTouched(); // Mark input as touched
     }, 500);
   }
 
@@ -81,7 +120,6 @@ export class AutocompleteComponent {
     if (inputElement && containerElement) {
       const inputRect = inputElement.getBoundingClientRect();
       const containerHeight = containerElement.offsetHeight;
-
       const spaceAbove = inputRect.top;
       const spaceBelow = window.innerHeight - inputRect.bottom;
 
@@ -90,10 +128,7 @@ export class AutocompleteComponent {
           ? 'top'
           : 'bottom';
 
-      // Add the appropriate class for top/bottom positioning
-      // containerElement.classList.remove('top', 'bottom');
       containerElement.classList.add(this.dropdownPosition);
-      // กำหนดความกว้างเฉพาะเมื่อ widthAuto = false
       if (!this.widthAuto) {
         containerElement.style.width = `${inputRect.width}px`;
       }
@@ -102,25 +137,10 @@ export class AutocompleteComponent {
 
   selectItem(item: any): void {
     if (item) {
-      console.log('selectItem', item); // ตรวจสอบค่าที่ส่งมา
       this.inputValue = item[this.displayKey];
       this.isAutocompleteVisible = false;
-      this.select.emit({
-        subjectCode: item.subjectCode, // หรือชื่อ key ที่คุณต้องการ
-        subjectName: item.subjectName, // หรือชื่อ key ที่คุณต้องการ
-      });
+      this.onChange(this.inputValue);
+      this.select.emit(item);
     }
   }
-
-  // selectItem(item: any): void {
-  //   console.log('selectItem', item); // ตรวจสอบค่าที่ส่งมา
-  //   this.inputValue = item[this.displayKey]; // อัปเดตค่าของ input
-  //   this.isAutocompleteVisible = false; // ซ่อน dropdown
-
-  //   // ส่งค่าที่ต้องการกลับไปที่ parent component
-  //   this.select.emit({
-  //     subjectCode: item.subjectCode, // หรือชื่อ key ที่คุณต้องการ
-  //     subjectName: item.subjectName, // หรือชื่อ key ที่คุณต้องการ
-  //   });
-  // }
 }

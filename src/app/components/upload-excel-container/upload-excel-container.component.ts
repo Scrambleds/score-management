@@ -14,6 +14,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { UploadScoreHeaderComponent } from '../upload-score-header/upload-score-header.component';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-upload-excel-container',
@@ -268,12 +269,16 @@ export class UploadExcelContainerComponent {
   }
   //save data
   onSaveData() {
+    // 2.send emitter to parent component
     this.submitRequest.emit();
   }
 
+  // 11. call service for send to API
   sendToApi(formData: any) {
+    //list student score from Excel
     const additionalData = { data: this.rowData }; // Add extra object data
     console.log(this.rowData);
+    // add payload : subjectDetail and list student score
     const payload = { ...formData, ...additionalData }; // Merge formData with additionalData
     console.log('Final Payload to API:', payload);
 
@@ -282,9 +287,27 @@ export class UploadExcelContainerComponent {
 
   // ลบข้อมูลใน ag-Grid
   onDelete() {
-    this.rowData = []; // ล้างข้อมูลทั้งหมดจาก ag-Grid
-    this.isFileUploaded = false; // ปรับ flag เพื่อแสดง UI สำหรับการอัปโหลดไฟล์ใหม่
-    this.isUploaded.emit(false); // แจ้ง Parent ว่าไฟล์ถูกอัปโหลดสำเร็จ
-    console.log(this.rowData);
+    Swal.fire({
+      title: 'ต้องการลบข้อมูลใช่หรือไม่',
+      text: 'หลังจากลบข้อมูลแล้วจะไม่สามารถกลับมาแก้ไขได้',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      confirmButtonText: 'Delete',
+      cancelButtonColor: 'var(--secondary-color)',
+      cancelButtonText: 'ยกเลิก',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // หากคลิก "ตกลง"
+        this.rowData = []; // ล้างข้อมูลทั้งหมดจาก ag-Grid
+        this.isFileUploaded = false; // ปรับ flag เพื่อแสดง UI สำหรับการอัปโหลดไฟล์ใหม่
+        this.isUploaded.emit(false); // แจ้ง Parent ว่าไฟล์ถูกอัปโหลดสำเร็จ
+        console.log(this.rowData);
+        console.log('ข้อมูลถูกลบแล้ว');
+      } else if (result.isDismissed) {
+        // หากคลิก "ยกเลิก"
+        console.log('การบันทึกถูกยกเลิก');
+      }
+    });
   }
 }
