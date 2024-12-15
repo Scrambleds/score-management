@@ -1,0 +1,84 @@
+/* Backgrounds */
+.custom-bg {
+  background-image: url("/assets/background/bg_login.png");
+}
+
+.custom-card {
+  height: 781px;
+  width: 1246px;
+  max-width: 100%;
+  border-radius: 5%;
+  background-image: url("/assets/other/kusrc.png");
+  background-position: left;
+  background-repeat: no-repeat;
+}
+
+body.login-page {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  height: 100vh;
+  margin: 0;
+}
+
+body.login-page .custom-card {
+  background-color: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Text Overlay */
+.text-overlay {
+  color: #ffffff;
+  text-align: center;
+}
+
+/* Buttons */
+.btn-success {
+  background-color: #00755e;
+  border: none;
+}
+
+.btn-success:hover {
+  background-color: #005946;
+}
+
+/* Form Styles */
+.form-control {
+  border: 1px solid #006c68;
+  color: #005946;
+  font-size: 16px;
+}
+
+.form-control:focus {
+  border-color: #006c68;
+  box-shadow: 0 0 0 0.2rem rgba(0, 108, 104, 0.25);
+  outline: none;
+}
+
+/* Typography */
+.title-head {
+  color: #006c68;
+  font-size: 30px;
+}
+
+.title {
+  color: #006c68;
+  font-size: 18px;
+}
+
+.title-form {
+  font-size: 18px;
+  margin-bottom: 0;
+  margin-top: 2.5rem;
+  color: #505050;
+}
+
+.form-label {
+  font-size: 18px;
+  color: #505050;
+}
+
+.error-message{
+  margin: 3rem 0;
+  color: red;
+}

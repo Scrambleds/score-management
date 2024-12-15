@@ -1,63 +1,87 @@
 <div
-  class="container-fluid vh-100 d-flex align-items-center justify-content-center bg-light"
+  class="container-fluid vh-100 d-flex align-items-center justify-content-center custom-bg"
 >
-  <div class="row w-100">
-    <!-- Left Section -->
-    <div class="col-lg-6 d-none d-lg-block p-0">
-      <img
-        src="../../../assets/other/kusrc.jpg"
-        alt="Campus View"
-        class="img-fluid h-100 w-100 object-fit-cover"
-      />
-      <div
-        class="position-absolute top-50 start-50 translate-middle text-white text-center"
-      >
-        <h1 class="display-4 fw-bold">ระบบจัดการคะแนน</h1>
-      </div>
-    </div>
-    <!-- Right Section -->
-    <div class="col-lg-6 d-flex align-items-center justify-content-center">
-      <div class="card p-4 shadow-sm w-75">
-        <div class="text-center">
-          <img
-            src="../../../assets/logo/ku-logo.png"
-            alt="Kasetsart University Logo"
-            class="mb-4"
-            style="width: 80px"
-          />
-          <h4 class="fw-bold">มหาวิทยาลัยเกษตรศาสตร์</h4>
-          <p class="text-muted">Kasetsart University</p>
+  <div class="col-lg-8 d-flex align-items-center justify-content-center">
+    <div class="card p-4 shadow-sm custom-card overflow-hidden">
+      <div class="row g-0">
+        <!-- Left Section: Image with Overlay Text -->
+        <div class="col-lg-6 position-relative d-none d-lg-block">
+          <div
+            class="position-absolute mt-4 top-0 start-0 w-100 h-100 d-flex align-items-start justify-content-center text-white text-overlay"
+          >
+            <h1 class="fw-bold">ระบบจัดการคะแนน</h1>
+          </div>
         </div>
-        <form (ngSubmit)="onLogin()">
-          <div class="mb-3">
-            <label for="username" class="form-label">รหัสผู้ใช้งาน</label>
-            <input
-              type="text"
-              id="username"
-              class="form-control"
-              [(ngModel)]="username"
-              name="username"
-              required
+
+        <!-- Right Section: Login Form -->
+        <div
+          class="col-lg-6 p-4 d-flex align-items-center justify-content-center mt-4"
+        >
+          <div class="w-100 text-center">
+            <!-- Logo and Title -->
+            <img
+              src="assets/logo/ku-logo.png"
+              alt="Kasetsart University Logo"
+              style="width: 80px"
             />
+            <h4 class="fw-bold title-head mt-4">มหาวิทยาลัยเกษตรศาสตร์</h4>
+            <p class="title">Kasetsart University</p>
+
+            <!-- Form -->
+            <p class="mt-8 title-form">ลงชื่อเข้าใช้</p>
+            <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
+              <div class="row justify-content-center">
+                <div class="col-7">
+                  <div class="mb-3">
+                    <label for="username" class="form-label text-start w-100"
+                      >รหัสผู้ใช้งาน</label
+                    >
+                    <input
+                      type="text"
+                      id="username"
+                      class="form-control rounded-3"
+                      formControlName="username"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div class="row justify-content-center">
+                <div class="col-7">
+                  <div class="mb-4">
+                    <label
+                      for="password"
+                      class="form-label text-start w-100 text-muted"
+                      >รหัสผ่าน</label
+                    >
+                    <input
+                      type="password"
+                      id="password"
+                      class="form-control rounded-3"
+                      formControlName="password"
+                    />
+                    <div *ngIf="errorMessage" class="error-message text-start">
+                      {{ errorMessage }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row justify-content-start">
+                
+              </div>
+              <div class="row justify-content-center">
+                <div class="col-3">
+                  <button
+                    type="submit"
+                    class="btn btn-success w-100 rounded-3"
+                    [disabled]="loginForm.invalid"
+                  >
+                    เข้าสู่ระบบ
+                  </button>
+                </div>
+              </div>
+            </form>
           </div>
-          <div class="mb-4">
-            <label for="password" class="form-label">รหัสผ่าน</label>
-            <input
-              type="password"
-              id="password"
-              class="form-control"
-              [(ngModel)]="password"
-              name="password"
-              required
-            />
-          </div>
-          <div *ngIf="errorMessage" class="error-message">
-            {{ errorMessage }}
-          </div>
-          <button type="submit" class="btn btn-success w-100">
-            เข้าสู่ระบบ
-          </button>
-        </form>
+        </div>
       </div>
     </div>
   </div>

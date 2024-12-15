@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { environment } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-login-page',
@@ -13,12 +14,18 @@ export class LoginPageComponent {
   username: string = '';
   password: string = '';
   errorMessage: string = '';
-
+  loginForm: FormGroup;
   constructor(
     private http: HttpClient,
     private router: Router,
-    private activatedRoute: ActivatedRoute
-  ) {}
+    private activatedRoute: ActivatedRoute,
+    private fb: FormBuilder
+  ) {
+    this.loginForm = this.fb.group({
+      username: ['', Validators.required],
+      password: ['', Validators.required],
+    });
+  }
 
   ngOnInit(): void {
     // Check token expiration on direct access to login page
@@ -39,10 +46,21 @@ export class LoginPageComponent {
     }
   }
 
+  // usernameInput: string = ''; // เก็บค่าที่ผู้ใช้พิมพ์
+
+  // onUsernameInput() {
+  //   // เช็คว่าผู้ใช้พิมพ์แล้วมี @example.com ต่อท้ายหรือยัง
+  //   const suffix = '@ku.th';
+  //   if (!this.usernameInput.endsWith(suffix)) {
+  //     // ถ้ายังไม่มี suffix ให้เติมต่อท้าย
+  //     this.usernameInput = this.usernameInput + suffix;
+  //   }
+  // }
+
   onLogin() {
     const loginData = {
-      username: this.username,
-      password: this.password,
+      username: this.loginForm.value.username,
+      password: this.loginForm.value.password,
     };
 
     this.http
