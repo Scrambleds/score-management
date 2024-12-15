@@ -88,6 +88,7 @@ onSearch(): void {
 
   // ฟังก์ชันรีเซ็ตฟอร์ม
   onReset(): void {
+    this.router.navigate(['/UserManagement'])
     this.form.reset({
       fullname: null,
       email: null,
