@@ -1,12 +1,12 @@
 <div class="custom-card">
   <div class="card-body">
-    <div class="text-center">รายละเอียด</div>
+    <div class="fw-bold">รายละเอียด</div>
     <!-- parent will submit this form instead -->
     <form [formGroup]="form" class="w-100">
       <div class="row">
         <!-- Subject Code -->
         <div class="col-6 col-sm-5 col-md-2">
-          <label for="subjectNo" class="mb-2">{{
+          <label for="subjectNo" class="fw-bold mb-2">{{
             "subject_code" | translate
           }}</label>
           <div class="input-group-autocomplete mb-2">
@@ -43,7 +43,7 @@
 
         <!-- Subject Name -->
         <div class="col-6 col-sm-7 col-md-4">
-          <label for="subjectName" class="mb-2">{{
+          <label for="subjectName" class="fw-bold mb-2">{{
             "subject_name" | translate
           }}</label>
           <app-autocomplete
@@ -72,7 +72,7 @@
 
         <!-- Academic Year -->
         <div class="col-6 col-sm-4 col-md-2">
-          <label for="academic_year" class="mb-2">{{
+          <label for="academic_year" class="fw-bold mb-2">{{
             "academic_year" | translate
           }}</label>
           <ng-select
@@ -99,7 +99,7 @@
 
         <!-- Semester -->
         <div class="col-6 col-sm-4 col-md-2">
-          <label for="semester" class="mb-2">{{
+          <label for="semester" class="fw-bold mb-2">{{
             "semester" | translate
           }}</label>
           <ng-select
@@ -126,7 +126,7 @@
 
         <!-- Section -->
         <div class="col-6 col-sm-4 col-md-2">
-          <label for="sectionCode" class="mb-2">{{
+          <label for="sectionCode" class="fw-bold mb-2">{{
             "section" | translate
           }}</label>
           <ng-select

@@ -1,9 +1,21 @@
-<div *ngIf="!isFileUploaded" class="custom-card">
-  <div class="card-body" (dragover)="onDragOver($event)" (drop)="onDrop($event)" style="border: 1px dashed; width: 100%; height: 100%">
+<div
+  *ngIf="!isFileUploaded"
+  class="custom-card"
+  style="border: 1px dashed; width: 100%; height: 100%"
+>
+  <div
+    class="card-body"
+    (dragover)="onDragOver($event)"
+    (drop)="onDrop($event)"
+  >
     <div class="text-center">{{ titleName }}</div>
-    <button class="btn btn-primary">
-      <i class="bi bi-box-arrow-in-down" style="font-size: var(--icon-size); color: var(--white-color)"></i>
+    <label for="uploadfile" class="btn btn-primary">
+      <i
+        class="bi bi-box-arrow-in-down"
+        style="font-size: var(--icon-size); color: var(--white-color)"
+      ></i>
       {{ buttonName }}
-    </button>
+    </label>
+    <input id="uploadfile" type="file" class="d-none" />
   </div>
 </div>
