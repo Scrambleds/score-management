@@ -132,7 +132,7 @@ html {
 .route-container {
   display: flex;
   flex-direction: column; /* จัดเรียงในแนวตั้ง */
-  gap: 1.25rem; /* เว้นระยะห่างระหว่าง items ในแนวตั้ง */
+  gap: 0.6rem; /* เว้นระยะห่างระหว่าง items ในแนวตั้ง */
 }
 
 /* ng-select */
