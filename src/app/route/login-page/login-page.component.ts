@@ -74,7 +74,7 @@ export class LoginPageComponent {
             localStorage.setItem('tokenExpiration', expiration.toISOString());
             const redirectUrl =
               this.activatedRoute.snapshot.queryParams['redirectUrl'] ||
-              '/Dashboard';
+              '/ScoreAnnouncement';
 
             // Ensure NavigationEnd is triggered after successful login
             this.router.navigate([redirectUrl]).then(() => {
