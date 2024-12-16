@@ -90,22 +90,22 @@ onSearch(): void {
     this.searchService.updateSearchCriteria({});  // รีเซ็ต criteria
   }
 
-  ngOnInit() {
-    // ดึงข้อมูลทั้งหมดจาก API
-    this.UserManageService.getUsers().subscribe({
-      next: (response: any) => {
-        if (response.isSuccess) {
-          this.originalData = response.objectResponse;  // เก็บข้อมูลทั้งหมด
-          this.filteredData = [...this.originalData];  // เริ่มต้นให้แสดงข้อมูลทั้งหมด
-        } else {
-          console.error('ไม่สามารถดึงข้อมูลได้', response.message);
-        }
-      },
-      error: err => {
-        console.error('API Error:', err);
-      }
-    });
-  }
+  // ngOnInit() {
+  //   // ดึงข้อมูลทั้งหมดจาก API
+  //   this.UserManageService.getUsers().subscribe({
+  //     next: (response: any) => {
+  //       if (response.isSuccess) {
+  //         this.originalData = response.objectResponse;  // เก็บข้อมูลทั้งหมด
+  //         this.filteredData = [...this.originalData];  // เริ่มต้นให้แสดงข้อมูลทั้งหมด
+  //       } else {
+  //         console.error('ไม่สามารถดึงข้อมูลได้', response.message);
+  //       }
+  //     },
+  //     error: err => {
+  //       console.error('API Error:', err);
+  //     }
+  //   });
+  // }
 
   // ฟังก์ชันฟิลเตอร์ข้อมูล
   filterData(data: any[], criteria: any): any[] {
