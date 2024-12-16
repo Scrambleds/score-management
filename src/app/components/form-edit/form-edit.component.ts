@@ -3,6 +3,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Modal } from 'bootstrap';
 import { SearchService } from '../../services/search-service/seach.service'
 import { Router } from '@angular/router';
+import { UserManageService } from '../../services/user-manage/user-manage.service';
+import { HttpResponseBase } from '@angular/common/http';
 
 @Component({
   selector: 'app-form-edit',
@@ -18,76 +20,18 @@ export class FormEditComponent implements OnInit, AfterViewInit {
   modalElement: any;
   modalInstance: any;
   searchCriteria: any;
+  originalData: any[] = [];
   filteredData: any[] = [];
   form: FormGroup;
 
-  data = [
-    {
-      row_id: 1,
-      email: 'Chatchai.ka@ku.th',
-      teacher_code: 'REGXXXXXXX',
-      prefix: 'ดร',
-      firstname: 'ฉัตรชัย',
-      lastname: 'เกษมทวีโชค',
-      role: '2',
-      active_status: '1',
-    },
-    {
-      row_id: 2,
-      email: 'Rawee.si@ku.th',
-      teacher_code: '6430250318',
-      prefix: 'นาย',
-      firstname: 'รวี',
-      lastname: 'สินบำรุง',
-      role: '1',
-      active_status: '1',
-    },
-    {
-      row_id: 3,
-      email: 'Minnie.si@ku.th',
-      teacher_code: 'REGXXXXXXX',
-      prefix: 'นางสาว',
-      firstname: 'มินนี่',
-      lastname: 'สินทรัพย์',
-      role: '2',
-      active_status: '2',
-    },
-    {
-      row_id: 4,
-      email: 'Kamon.pon@ku.th',
-      teacher_code: 'REGXXXXXXX',
-      prefix: 'นางสาว',
-      firstname: 'กมลพร',
-      lastname: 'พรหม',
-      role: '1',
-      active_status: '1',
-    },
-    {
-      row_id: 5,
-      email: 'salee.da@ku.th',
-      teacher_code: 'REGXXXXXXX',
-      prefix: 'นางสาว',
-      firstname: 'สาลี',
-      lastname: 'ดาวเดือน',
-      role: '1',
-      active_status: '1',
-    },
-    {
-      row_id: 6,
-      email: 'krangkai.m@ku.th',
-      teacher_code: 'REGXXXXXXX',
-      prefix: 'นาย',
-      firstname: 'เกรียงไกร',
-      lastname: 'มุขมรกต',
-      role: '1',
-      active_status: '1',
-    },
-  ];
+  roleOption = [{ id: 'ผู้ดูแลระบบ', title: 'ผู้ดูแลระบบ' }, { id: 'อาจารย์', title: 'อาจารย์' }];
+  statusOption = [{ id: 'active', title: 'active' }, { id: 'inactive', title: 'inactive' }];
 
-  roleOption = [{ id: '1', title: 'ผู้ดูแลระบบ' }, { id: '2', title: 'อาจารย์' }];
-  statusOption = [{ id: '1', title: 'active' }, { id: '2', title: 'inactive' }];
-
-  constructor(private searchService: SearchService, private fb: FormBuilder, private router: Router) {
+  constructor(private UserManageService: UserManageService,
+    private searchService: SearchService, 
+    private fb: FormBuilder, 
+    private router: Router) 
+    {
     this.form = this.fb.group({
       teacher_code: ['', Validators.required],
       fullname: ['', Validators.required],
@@ -103,13 +47,42 @@ export class FormEditComponent implements OnInit, AfterViewInit {
 
   // รับข้อมูลจาก searchService
   ngOnInit() {
-    this.filteredData = this.filterData({}); // กำหนดค่าเริ่มต้นเป็นค่าว่างเพื่อแสดงข้อมูลทั้งหมด
+    // เรียก API เพื่อดึงข้อมูลจาก server
+    this.UserManageService.getUsers().subscribe({
+      next: (response: any) => {
+        if (response.isSuccess) {
+          this.originalData = response.objectResponse;
+          this.filteredData = [...this.originalData];
+          // this.filteredData = this.filterData(response.objectResponse, {});
+          console.log("MY DATA",this.filteredData);
+        } else {
+          console.error('Failed to fetch data', response.message);
+        }
+      },
+      error: err => {
+        console.error('API Error:', err);
+      }
+    });
 
     this.searchService.currentSearchCriteria.subscribe(criteria => {
       this.searchCriteria = criteria;
       if (this.searchCriteria) {
-        this.filteredData = this.filterData(this.searchCriteria); // ฟิลเตอร์ข้อมูลตาม criteria
+        this.filteredData = this.filterData(this.originalData, this.searchCriteria);  // ฟิลเตอร์ข้อมูลตาม criteria
       }
+    });
+  }
+
+    // ฟังก์ชันการฟิลเตอร์ข้อมูลตาม criteria
+  filterData(data: any[], criteria: any): any[] {
+    return data.filter(item => {
+      const searchString = criteria.fullname?.toLowerCase() || '';
+      return (
+        (!criteria.teacher_code || item.teacher_code?.includes(criteria.teacher_code)) &&
+        (!criteria.email || item.email?.includes(criteria.email)) &&
+        (!criteria.role || item.role === criteria.role) &&
+        (!criteria.active_status || item.active_status === criteria.active_status) &&
+        (!searchString || this.matchAnyField(searchString, item)) // เปลี่ยนการค้นหาตาม fullname ทั้งหมด
+      );
     });
   }
 
@@ -123,35 +96,15 @@ export class FormEditComponent implements OnInit, AfterViewInit {
     this.isUploadExcelVisible = false;
   }
 
-  // ฟังก์ชันการฟิลเตอร์ข้อมูลตาม criteria
-  filterData(criteria: any): any[] {
-    return this.data.filter(item => {
-      const searchString = criteria.fullname || '';  // ใช้ fullname ในการค้นหา
-  
-      return (
-        (!criteria.teacher_code || item.teacher_code.includes(criteria.teacher_code)) &&
-        (!criteria.email || item.email.includes(criteria.email)) &&
-        (!criteria.role || item.role === criteria.role) &&
-        (!criteria.active_status || item.active_status === criteria.active_status) &&
-        // ค้นหาจาก fullname โดยใช้ฟังก์ชัน matchAnyField
-        (!searchString || this.matchAnyField(searchString, item)) 
-      );
-    });
-  }
-
     // ฟังก์ชันในการค้นหาข้อมูลในทุกๆ ฟิลด์
     matchAnyField(searchString: string, item: any): boolean {
       const lowerCaseSearchString = searchString.toLowerCase();
     
-      // ค้นหาคำใน prefix, firstname, lastname
-      return (
-        item.prefix.toLowerCase().includes(lowerCaseSearchString) || 
-        item.firstname.toLowerCase().includes(lowerCaseSearchString) || 
-        item.lastname.toLowerCase().includes(lowerCaseSearchString)
-      );
+      // รวม prefix, firstname, lastname และทำการค้นหาคำในทุกฟิลด์
+      const fullName = `${item.prefix} ${item.firstname} ${item.lastname}`.toLowerCase();
+      return fullName.includes(lowerCaseSearchString);
     }
-
-
+    
   onSubmit(): void {
     if (this.form.valid) {
       console.log('Form Submitted', this.form.value);
@@ -162,17 +115,19 @@ export class FormEditComponent implements OnInit, AfterViewInit {
 
   getRoleTitle(roleId: string): string {
     const role = this.roleOption.find(role => role.id === roleId);
+    // console.log('Role:', role);
     return role ? role.title : '';
   }
+  
 
   getStatusTitle(statusId: string): string {
-    const status = this.statusOption.find(status => status.id === statusId);
+    const status = this.statusOption.find(status => status.id === statusId); // Cast statusId to a number
     return status ? status.title : '';
   }
 
   // เปิด Modal
   openModal(row: any) {
-    this.selectedRowData = { ...row }; 
+    this.selectedRowData = { ...row };
     this.isModalVisible = true;
     if (this.modalInstance) {
       this.modalInstance.show(); 
@@ -195,9 +150,9 @@ export class FormEditComponent implements OnInit, AfterViewInit {
   // Handle modal submit event
   handleModalSubmit(updatedData: any) {
     console.log('Submitted Data:', updatedData);
-    const index = this.data.findIndex(item => item.row_id === updatedData.row_id);
+    const index = this.filteredData.findIndex(item => item.row_id === updatedData.row_id);
     if (index !== -1) {
-      this.data[index] = { ...this.data[index], ...updatedData }; // Update the data array
+      this.filteredData[index] = { ...this.filteredData[index], ...updatedData }; // Update the data array
     }
     this.closeModal();
   }

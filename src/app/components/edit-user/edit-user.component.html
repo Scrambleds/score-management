@@ -12,7 +12,7 @@
                     <!-- Column 1 -->
                     <div class="col-12 col-md-6 col-lg-2">
                         <label for="teacher_code" class="form-label fw-bold text-truncate ps-2" [appRequiredMarker]="form.get('teacher_code')">รหัสอาจารย์</label>
-                        <input type="text" id="teacher_code" class="form-control" placeholder="กรุณากรอก"
+                        <input type="text" class="form-control" placeholder="กรุณากรอก"
                             formControlName="teacher_code"  />
                             <div *ngIf="form.get('teacher_code')?.touched && form.get('teacher_code')?.invalid"
                             class="text-danger ps-2">
@@ -32,7 +32,7 @@
                     <!-- Column 3 -->
                     <div class="col-12 col-md-6 col-lg-2">
                         <label for="email" class="form-label text-truncate fw-bold ps-2" [appRequiredMarker]="form.get('email')">อีเมล</label>
-                        <input type="text" id="email" class="form-control" placeholder="กรุณากรอก"
+                        <input type="text" class="form-control" placeholder="กรุณากรอก"
                             formControlName="email"  />
                             <div *ngIf="form.get('email')?.touched && form.get('email')?.invalid"
                             class="text-danger ps-2">
@@ -46,7 +46,7 @@
                           id="role"
                           formControlName="role"
                           [items]="roleOption"
-                          bindLabel="label"
+                          bindLabel="title"
                           bindValue="id"
                           placeholder="กรุณาเลือก"
                           [clearable]="true">
@@ -64,7 +64,7 @@
                           id="active_status"
                           formControlName="active_status"
                           [items]="statusOption"
-                          bindLabel="label"
+                          bindLabel="title"
                           bindValue="id"
                           placeholder="กรุณาเลือก"
                           [clearable]="true"> 

@@ -191,7 +191,8 @@ export class ModalEditComponent {
     this.form.markAllAsTouched();
     this.form.updateValueAndValidity();
 
-    if (this.form.valid) {
+    if (this.form.valid && ((!this.form.value.password && !this.form.value.confirm_password) || (this.form.value.password === this.form.value.confirm_password))) {
+    
       console.log("ฟอร์มถูกต้อง ข้อมูลที่ส่ง: ", this.form.getRawValue());
       this.submit.emit(this.form.value);
 
