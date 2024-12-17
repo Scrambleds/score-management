@@ -1,0 +1,73 @@
+/* เพิ่มไอคอน bi-chevron-right ที่ขวาสุดของแต่ละ dropdown-item */
+.dropdown-item-container:has(.dropdown-submenu) > .dropdown-item::after {
+  content: "\f285"; /* Unicode สำหรับ bi-chevron-right */
+  font-family: "bootstrap-icons"; /* ใช้ Bootstrap Icons */
+  position: absolute; /* ตำแหน่งแบบ absolute */
+  right: 10px; /* ระยะห่างจากด้านขวา */
+  color: var(--grey-color, #6c757d); /* สีเทา, สามารถเปลี่ยนได้ */
+  font-size: 1rem; /* ขนาดไอคอน */
+}
+
+/* ปรับ dropdown-item ให้รองรับ position: relative */
+.dropdown-item {
+  position: relative; /* ทำให้ ::after ใช้ absolute ภายในได้ */
+  padding-right: 30px; /* เพิ่ม padding ขวาให้ไม่ทับกับไอคอน */
+}
+
+/* ซ่อน Sub Menu ย่อย */
+.dropdown-submenu {
+  display: none;
+  position: absolute;
+  left: 100%; /* ชิดขวาของเมนูหลัก */
+  top: 0; /* ชิดด้านบน */
+  min-width: 200px; /* กำหนดความกว้าง */
+  background-color: #fff; /* สีพื้นหลัง */
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  z-index: 1000;
+  padding: 8px 0;
+  list-style: none;
+}
+
+/* แสดง Sub Menu เมื่อ Hover เมนูหลัก */
+.dropdown-item-container:hover > .dropdown-submenu {
+  display: block;
+}
+
+/* ตกแต่ง dropdown-item */
+.dropdown-item-container {
+  position: relative; /* เพื่อรองรับ Sub Menu */
+}
+
+.dropdown-item-container > .dropdown-item:hover {
+  background-color: var(--active-color);
+  color: var(--white-color);
+}
+.dropdown-item-container > .dropdown-item:active {
+  background-color: var(--active-color);
+  color: var(--white-color);
+}
+
+/* Sub Menu แต่ละรายการ */
+.dropdown-submenu .dropdown-item {
+  padding: 4px auto 4px 16px;
+  color: #333;
+  text-decoration: none;
+  display: block;
+}
+
+/* สไตล์เมื่อ Hover บน Sub Menu */
+.dropdown-submenu .dropdown-item:hover {
+  background-color: var(--active-color);
+  color: var(--white-color);
+}
+
+textarea {
+  font-size: 0.8rem;
+}
+
+@media (min-width: 992px) {
+  .modal-custom {
+    --bs-modal-width: 46.875rem;
+  }
+}

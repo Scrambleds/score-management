@@ -1,0 +1,224 @@
+<!-- Modal -->
+<div
+  class="modal fade modal-custom"
+  id="announceScoreModal"
+  data-bs-backdrop="static"
+  data-bs-keyboard="false"
+  tabindex="-1"
+  aria-labelledby="announceScoreLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h5 class="modal-title" id="announceScoreLabel">ประกาศคะแนนนิสิต</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="modal-body pt-2">
+        <!-- Recipient Email Input -->
+        <div class="mb-2">
+          <label for="recipientEmail" class="form-label">ถึง</label>
+          <input
+            type="email"
+            class="form-control"
+            id="recipientEmail"
+            value="pamornpon.t@ku.th"
+            readonly
+            disabled
+          />
+        </div>
+
+        <!-- Subject Input -->
+        <div class="mb-2">
+          <label for="emailSubject" class="form-label">เรื่อง</label>
+          <input
+            type="text"
+            class="form-control"
+            id="emailSubject"
+            name="emailSubject"
+            [(ngModel)]="emailSubject"
+            (focus)="onSubjectFocus()"
+            (blur)="onBlur()"
+          />
+        </div>
+
+        <!-- Variable Selection -->
+        <div class="mb-2">
+          <label for="variableSelect" class="form-label me-2"
+            >เพิ่มตัวแปร</label
+          >
+          <div class="d-flex align-items-center">
+            <select
+              class="form-select"
+              id="variableSelect"
+              [(ngModel)]="selectedVariable"
+              style="width: 35%"
+            >
+              <option selected disabled>กรุณาเลือก</option>
+              <option value="{!STUDENT_NAME}">ชื่อนักเรียน</option>
+              <option value="{!STUDENT_ID}">รหัสนักเรียน</option>
+              <option value="{!SCORE}">คะแนน</option>
+            </select>
+            <button
+              type="button"
+              class="btn btn-primary ms-2"
+              (click)="addVariable()"
+              [disabled]="!canAddVariable || !selectedVariable"
+            >
+              <i class="bi bi-plus-square"></i> เพิ่ม
+            </button>
+          </div>
+        </div>
+
+        <!-- Message Textarea -->
+        <div class="mb-1">
+          <label for="emailMessage" class="form-label">ข้อความ</label>
+          <textarea
+            class="form-control"
+            id="emailMessage"
+            rows="10"
+            (focus)="onTextareaFocus()"
+            (blur)="onBlur()"
+            [(ngModel)]="messageText"
+          ></textarea>
+        </div>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="modal-footer justify-content-between">
+        <div class="dropdown">
+          <button
+            type="button"
+            class="btn btn-secondary dropdown-toggle"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            <i
+              class="bi bi-file-earmark-text-fill"
+              style="font-size: 1rem; color: var(--white-color)"
+            ></i>
+            เทมเพลต
+          </button>
+          <ul class="dropdown-menu">
+            <li class="dropdown-item-container">
+              <button
+                class="dropdown-item"
+                type="button"
+                (click)="$event.stopPropagation()"
+              >
+                เทมเพลตพื้นฐาน
+              </button>
+              <ul class="dropdown-submenu">
+                <li>
+                  <button
+                    class="dropdown-item"
+                    type="button"
+                    (click)="loadTemplate('basicTemplate1')"
+                  >
+                    พื้นฐาน 1
+                  </button>
+                </li>
+                <li>
+                  <button
+                    class="dropdown-item"
+                    type="button"
+                    (click)="loadTemplate('basicTemplate1')"
+                  >
+                    พื้นฐาน 2
+                  </button>
+                </li>
+              </ul>
+            </li>
+            <li class="dropdown-item-container">
+              <button
+                class="dropdown-item"
+                type="button"
+                (click)="$event.stopPropagation()"
+              >
+                เทมเพลตส่วนตัว
+              </button>
+              <ul class="dropdown-submenu">
+                <li>
+                  <button
+                    class="dropdown-item"
+                    type="button"
+                    (click)="loadTemplate('basicTemplate1')"
+                  >
+                    ส่วนตัว 1
+                  </button>
+                </li>
+                <li>
+                  <button
+                    class="dropdown-item"
+                    type="button"
+                    (click)="loadTemplate('basicTemplate1')"
+                  >
+                    ส่วนตัว 2
+                  </button>
+                </li>
+              </ul>
+            </li>
+            <li class="dropdown-item-container">
+              <button
+                class="dropdown-item"
+                type="button"
+                (click)="$event.stopPropagation()"
+              >
+                กำหนดค่าเริ่มต้น
+              </button>
+              <ul class="dropdown-submenu">
+                <li><a class="dropdown-item" href="#">พื้นฐาน 1</a></li>
+                <li><a class="dropdown-item" href="#">พื้นฐาน 2</a></li>
+                <li><a class="dropdown-item" href="#">ส่วนตัว 1</a></li>
+                <li><a class="dropdown-item" href="#">ส่วนตัว 2</a></li>
+              </ul>
+            </li>
+            <li class="dropdown-item-container">
+              <button class="dropdown-item" type="button">
+                <i
+                  class="bi bi-file-earmark-plus-fill"
+                  style="font-size: 1rem; color: var(--grey-color)"
+                ></i>
+                บันทึกร่างเป็นเทมเพลต
+              </button>
+            </li>
+            <li class="dropdown-item-container">
+              <button class="dropdown-item" type="button">
+                <i
+                  class="bi bi-file-earmark-x-fill"
+                  style="font-size: 1rem; color: var(--grey-color)"
+                ></i>
+                ลบเทมเพลต
+              </button>
+            </li>
+          </ul>
+        </div>
+
+        <div class="d-flex gap-2">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            Close
+          </button>
+          <button type="button" class="btn btn-primary">
+            <i
+              class="bi bi-send-fill"
+              style="font-size: 1rem; color: var(--white-color)"
+            ></i>
+            Send
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

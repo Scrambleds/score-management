@@ -45,6 +45,7 @@ import { AuthLayoutComponent } from './layout/auth-layout/auth-layout.component'
 import { AutocompleteComponent } from './components/autocomplete/autocomplete.component';
 import { RequiredMarkerDirective } from '../../src/app/components/required-marker/required-marker.directive';
 import { AddUserComponent } from '../../src/app/components/add-user/add-user.component';
+import { ModalSendMailComponent } from './components/modal-send-mail/modal-send-mail.component';
 
 
 @NgModule({
@@ -70,7 +71,8 @@ import { AddUserComponent } from '../../src/app/components/add-user/add-user.com
     AuthLayoutComponent,
     AutocompleteComponent,
     AddUserComponent,
-    AddUserRoute
+    AddUserRoute,
+    ModalSendMailComponent
     ],
   imports: [
     BrowserModule,
