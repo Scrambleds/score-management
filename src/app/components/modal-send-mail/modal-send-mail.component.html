@@ -7,6 +7,7 @@
   tabindex="-1"
   aria-labelledby="announceScoreLabel"
   aria-hidden="true"
+  style=""
 >
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
     <div class="modal-content">
@@ -189,6 +190,37 @@
                 ></i>
                 บันทึกร่างเป็นเทมเพลต
               </button>
+              <ul class="dropdown-submenu">
+                <li><h6 class="dropdown-header">เขียนทับเทเพลต</h6></li>
+                <li>
+                  <button
+                    class="dropdown-item"
+                    type="button"
+                    (click)="loadTemplate('basicTemplate1')"
+                  >
+                    ส่วนตัว 1
+                  </button>
+                </li>
+                <li>
+                  <button
+                    class="dropdown-item"
+                    type="button"
+                    (click)="loadTemplate('basicTemplate1')"
+                  >
+                    ส่วนตัว 2
+                  </button>
+                </li>
+                <li><hr class="dropdown-divider" /></li>
+                <li>
+                  <button
+                    class="dropdown-item"
+                    type="button"
+                    (click)="loadTemplate('basicTemplate1')"
+                  >
+                    บันทึกเทมเพลตใหม่
+                  </button>
+                </li>
+              </ul>
             </li>
             <li class="dropdown-item-container">
               <button class="dropdown-item" type="button">
@@ -198,6 +230,27 @@
                 ></i>
                 ลบเทมเพลต
               </button>
+              <ul class="dropdown-submenu">
+                <li><h6 class="dropdown-header">ลบเทมเพลต</h6></li>
+                <li>
+                  <button
+                    class="dropdown-item"
+                    type="button"
+                    (click)="loadTemplate('basicTemplate1')"
+                  >
+                    ส่วนตัว 1
+                  </button>
+                </li>
+                <li>
+                  <button
+                    class="dropdown-item"
+                    type="button"
+                    (click)="loadTemplate('basicTemplate1')"
+                  >
+                    ส่วนตัว 2
+                  </button>
+                </li>
+              </ul>
             </li>
           </ul>
         </div>
