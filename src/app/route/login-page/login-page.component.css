@@ -122,6 +122,17 @@ body.login-page .custom-card {
   }
 }
 
+@media (max-width: 1600px) {
+  /* Large desktop screens */
+  .custom-card {
+    background-image: url("/assets/other/scenery/lg-screen.png");
+    width: 80%; 
+    background-position: left;
+    background-repeat: no-repeat;
+    height: 95%;
+  }
+}
+
 @media (max-width: 768px) {
   /* Small screens */
   .custom-card {
