@@ -71,3 +71,9 @@ textarea {
     --bs-modal-width: 46.875rem;
   }
 }
+
+/* solve dropdown can't overlay outside container of modal */
+.modal-dialog-scrollable .modal-content {
+  max-height: 100%;
+  overflow: visible;
+}
