@@ -15,7 +15,7 @@
 
         <!-- Right Section: Login Form -->
         <div
-          class="col-lg-6 p-4 d-flex align-items-center justify-content-center mt-4"
+          class="col-12 col-lg-6 p-4 d-flex align-items-center justify-content-center mt-4"
         >
           <div class="w-100 text-center">
             <!-- Logo and Title -->
@@ -24,14 +24,16 @@
               alt="Kasetsart University Logo"
               style="width: 80px"
             />
-            <h4 class="fw-bold title-head mt-4">มหาวิทยาลัยเกษตรศาสตร์</h4>
-            <p class="title">Kasetsart University</p>
+            <h4 class="fw-bold title-head mt-4">
+              มหาวิทยาลัยเกษตรศาสตร์ <br />วิทยาเขต ศรีราชา
+            </h4>
+            <p class="title">Kasetsart University Sriracha Campus</p>
 
             <!-- Form -->
             <p class="mt-8 title-form">ลงชื่อเข้าใช้</p>
             <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
               <div class="row justify-content-center">
-                <div class="col-7">
+                <div class="col-12 col-lg-7">
                   <div class="mb-3">
                     <label for="username" class="form-label text-start w-100"
                       >รหัสผู้ใช้งาน</label
@@ -46,7 +48,7 @@
                 </div>
               </div>
               <div class="row justify-content-center">
-                <div class="col-7">
+                <div class="col-12 col-lg-7">
                   <div class="mb-4">
                     <label
                       for="password"
@@ -65,11 +67,9 @@
                   </div>
                 </div>
               </div>
-              <div class="row justify-content-start">
-                
-              </div>
+              <div class="row justify-content-start"></div>
               <div class="row justify-content-center">
-                <div class="col-3">
+                <div class="col-12 col-lg-4 col-xl-3">
                   <button
                     type="submit"
                     class="btn btn-success w-100 rounded-3"
