@@ -7,12 +7,13 @@
   height: 781px;
   width: 1246px;
   max-width: 100%;
-  border-radius: 5%;
-  background-image: url("/assets/other/kusrc.png");
+  border-radius: 20px;
+  background-image: none;
   background-position: left;
   background-repeat: no-repeat;
 }
 
+/* Login Page Styles */
 body.login-page {
   background-size: cover;
   background-position: center;
@@ -34,12 +35,17 @@ body.login-page .custom-card {
 
 /* Buttons */
 .btn-success {
-  background-color: #00755e;
+  background-color: #006664;
   border: none;
 }
 
 .btn-success:hover {
   background-color: #005946;
+}
+
+.btn-success:disabled {
+  background-color: #00755e33;
+  /* color: #666666; */
 }
 
 /* Form Styles */
@@ -78,7 +84,58 @@ body.login-page .custom-card {
   color: #505050;
 }
 
-.error-message{
+/* Error Messages */
+.error-message {
   margin: 0.5rem 0;
   color: red;
+}
+
+/* Responsive Styles */
+@media (max-width: 1024px) {
+  /* Medium screens */
+  .custom-card {
+    background-image: none; 
+    height: auto; 
+    width: 90%; 
+    margin: 0 auto;
+    padding: 1rem; 
+    border-radius: 15px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); 
+  }
+}
+
+@media (min-width: 1024px) and (max-width: 1439px) {
+  /* iPad Pro and medium desktop screens */
+  .custom-card {
+    background-image: url("/assets/other/scenery/md-screen.png");
+    background-position: left;
+    background-repeat: no-repeat;
+  }
+}
+
+@media (min-width: 1366px) {
+  /* Large desktop screens */
+  .custom-card {
+    background-image: url("/assets/other/scenery/lg-screen.png");
+    background-position: left;
+    background-repeat: no-repeat;
+  }
+}
+
+@media (max-width: 768px) {
+  /* Small screens */
+  .custom-card {
+    height: auto;
+    width: 95%; 
+    margin: 0 auto;
+    padding: 1.5rem;
+    border-radius: 10px;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .title-form {
+    margin: 1rem; 
+    font-size: 1.2rem;
+    text-align: center;
+  }
 }
