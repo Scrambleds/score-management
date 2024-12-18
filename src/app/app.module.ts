@@ -72,7 +72,7 @@ import { ModalSendMailComponent } from './components/modal-send-mail/modal-send-
     AutocompleteComponent,
     AddUserComponent,
     AddUserRoute,
-    ModalSendMailComponent
+    ModalSendMailComponent,
     ],
   imports: [
     BrowserModule,
