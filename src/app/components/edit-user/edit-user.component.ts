@@ -138,6 +138,9 @@ onSearch(): void {
     this.searchService.updateSearchCriteria({});  // รีเซ็ต criteria
   }  
 
+  isCurrentRoute(route: string): boolean{
+    return this.router.url === route;
+  }
   // ngOnInit() {
   //   // ดึงข้อมูลทั้งหมดจาก API
   //   this.UserManageService.getUsers().subscribe({
