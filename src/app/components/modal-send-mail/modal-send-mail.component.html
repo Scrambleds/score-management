@@ -48,6 +48,7 @@
             [(ngModel)]="emailSubject"
             (focus)="onSubjectFocus()"
             (blur)="onBlur()"
+            autocomplete="off"
           />
         </div>
 
@@ -57,17 +58,19 @@
             >เพิ่มตัวแปร</label
           >
           <div class="d-flex align-items-center">
-            <select
-              class="form-select"
-              id="variableSelect"
+            <ng-select
+              [items]="placeholderList"
+              bindLabel="desc_th"
+              bindValue="placeholder_key"
               [(ngModel)]="selectedVariable"
+              placeholder="กรุณาเลือก"
+              [searchable]="true"
+              [clearable]="true"
+              [dropdownPosition]="'auto'"
+              class="custom-ng-select"
               style="width: 35%"
             >
-              <option selected disabled>กรุณาเลือก</option>
-              <option value="{!STUDENT_NAME}">ชื่อนักเรียน</option>
-              <option value="{!STUDENT_ID}">รหัสนักเรียน</option>
-              <option value="{!SCORE}">คะแนน</option>
-            </select>
+            </ng-select>
             <button
               type="button"
               class="btn btn-primary ms-2"
@@ -86,9 +89,18 @@
             class="form-control"
             id="emailMessage"
             rows="10"
+            cols="50"
             (focus)="onTextareaFocus()"
+            (keydown)="insertTab($event)"
             (blur)="onBlur()"
             [(ngModel)]="messageText"
+            autocomplete="off"
+            style="
+              tab-size: 6;
+              font-family: monospace;
+              font-size: 13px;
+              white-space: pre;
+            "
           ></textarea>
         </div>
       </div>
@@ -261,14 +273,14 @@
             class="btn btn-secondary"
             data-bs-dismiss="modal"
           >
-            Close
+            ปิด
           </button>
-          <button type="button" class="btn btn-primary">
+          <button type="button" class="btn btn-primary" (click)="sendEmail()">
             <i
               class="bi bi-send-fill"
               style="font-size: 1rem; color: var(--white-color)"
             ></i>
-            Send
+            ส่งอีเมล
           </button>
         </div>
       </div>

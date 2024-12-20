@@ -1,4 +1,7 @@
-import { Component } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Component, OnInit } from '@angular/core';
+import { environment } from '../../../environments/environment';
+import { ScoreAnnouncementService } from '../../services/score-announcement/score-announcement.service';
 
 @Component({
   selector: 'app-modal-send-mail',
@@ -7,12 +10,37 @@ import { Component } from '@angular/core';
   templateUrl: './modal-send-mail.component.html',
   styleUrl: './modal-send-mail.component.css',
 })
-export class ModalSendMailComponent {
+export class ModalSendMailComponent implements OnInit {
   messageText: string = ''; // ข้อความใน textarea
   emailSubject: string = ''; // ข้อความใน input subject
   selectedVariable: string = ''; // ตัวแปรที่เลือกจาก select
   canAddVariable: boolean = false; // ควบคุมการ enabled ปุ่ม
   focusedField: 'textarea' | 'subject' | null = null; // ฟิลด์ที่กำลัง focus อยู่
+  language: string = 'th'; // ค่าภาษาเริ่มต้น
+
+  placeholderList: any[] = [];
+
+  constructor(
+    private http: HttpClient,
+    private scoreAnnouncementService: ScoreAnnouncementService
+  ) {}
+
+  ngOnInit(): void {
+    // ดึงค่า language จาก localStorage
+    const savedLanguage = localStorage.getItem('language');
+    if (savedLanguage) {
+      this.language = savedLanguage; // กำหนดภาษาจาก localStorage
+    }
+    this.loadEmailPlaceholder();
+  }
+
+  //load MasterData
+  loadEmailPlaceholder(): void {
+    this.scoreAnnouncementService.loadEmailPlaceholder().subscribe((resp) => {
+      console.log(resp);
+      this.placeholderList = resp;
+    });
+  }
 
   // เมื่อ textarea ได้ focus
   onTextareaFocus(): void {
@@ -95,39 +123,11 @@ export class ModalSendMailComponent {
   // เทมเพลต mockup
   templates: { [key: string]: { subject: string; body: string } } = {
     basicTemplate1: {
-      subject: `ประกาศคะแนนเก็บวิชา {!SUBJECT_ID} {!SUBJECT_NAME} ปีการศึกษา {!SUBJECT_ACAD_YEAR}`,
-      body: `ถึง {!STUDENT_PREFIX}{!STUDENT_NAME}
-
-อีเมลฉบับนี้ถูกส่งโดยระบบจัดการคะแนน
-วิชา: {!SUBJECT_NAME}
-ชื่อ: {!STUDENT_PREFIX}{!STUDENT_NAME}
-รหัสนิสิต: {!STUDENT_ID}
-หมู่เรียน: {!SECTION_ID}
-
-ได้คะแนนรายละเอียดดังนี้
-	ประเภทคะแนน											คะแนน
-	คะแนนเก็บ											{!ACCUMULATED_SCORE}
-	คะแนนกลางภาค										{!MIDTERM_SCORE}
-	คะแนนปลายภาค										{!FINAL_SCORE}
-	รวมคะแนนทั้งหมด										{!TOTAL_SCORE}
-
-คะแนนเฉลี่ย: {!MEAN_SCORE}/100
-คะแนนสูงสุด: {!MAX_SCORE}/100
-คะแนนต่ำสุด: {!MIN_SCORE}/100
-
-หากมีคำถาม กรุณาติดต่ออาจารย์ผู้สอนโดยตรง
-
-{!TEACHER_NAME}`,
+      subject: `ประกาศคะแนนเก็บวิชา {!SUBJECT_ID} {!SUBJECT_NAME} ปีการศึกษา {!ACADEMIC_YEAR}`,
+      body: `ถึง {!STUDENT_PREFIX}{!STUDENT_NAME}\nอีเมลฉบับนี้ถูกส่งโดยระบบจัดการคะแนน\nวิชา: {!SUBJECT_NAME}\nชื่อ: {!STUDENT_PREFIX}{!STUDENT_NAME}\nรหัสนิสิต: {!STUDENT_ID}\nหมู่เรียน: {!SECTION_ID}\n\nได้คะแนนรายละเอียดดังนี้\n\tประเภทคะแนน \t\t\tคะแนน\n\tคะแนนเก็บ    \t\t\t{!ACCUMULATED_SCORE}\n\tคะแนนกลางภาค\t\t\t{!MIDTERM_SCORE}\n\tคะแนนปลายภาค\t\t\t{!FINAL_SCORE}\n\tรวมคะแนนทั้งหมด\t\t\t{!TOTAL_SCORE}\n\nคะแนนเฉลี่ย: {!MEAN_SCORE}/100\nคะแนนสูงสุด: {!MAX_SCORE}/100\nคะแนนต่ำสุด: {!MIN_SCORE}/100\n\nหากมีคำถาม กรุณาติดต่ออาจารย์ผู้สอนโดยตรง\n\n{!TEACHER_NAME}`,
     },
   };
 
-  // ฟังก์ชันเลือกเทมเพลต
-  // loadTemplate(templateKey: string): void {
-  //   const template = this.templates[templateKey];
-  //   if (template) {
-  //     this.messageText = template;
-  //   }
-  // }
   loadTemplate(templateKey: string): void {
     const template = this.templates[templateKey];
     if (template) {
@@ -137,5 +137,61 @@ export class ModalSendMailComponent {
       // แทนที่ค่าใน body
       this.messageText = template.body;
     }
+  }
+
+  //email placeholder
+  // ฟังก์ชันสำหรับแสดงข้อความตามภาษา
+  getDisplayText(item: any): string {
+    return this.language === 'en' ? item.desc_en : item.desc_th;
+  }
+
+  insertTab(event: KeyboardEvent): void {
+    if (event.key === 'Tab') {
+      event.preventDefault(); // ป้องกันการเปลี่ยน focus
+      const textarea = event.target as HTMLTextAreaElement;
+      const start = textarea.selectionStart;
+      const end = textarea.selectionEnd;
+
+      // เพิ่ม tab (หรือ whitespace) ในตำแหน่งที่ cursor อยู่
+      textarea.value =
+        textarea.value.substring(0, start) +
+        '\t' +
+        textarea.value.substring(end);
+
+      // เลื่อน cursor ไปที่ตำแหน่งหลังจาก tab ที่เพิ่มเข้าไป
+      textarea.selectionStart = textarea.selectionEnd = start + 1;
+    }
+  }
+
+  // Method ที่ถูกเรียกเมื่อกดปุ่ม "ส่งอีเมล"
+  sendEmail() {
+    const payload = {
+      subjectDetail: {
+        subject_id: '01418442-60',
+        subject_name: 'Web service and Web api I',
+        academic_year: '2024',
+        semester: '1',
+        section: '800',
+        student_id: ['6430250229'],
+      },
+      //username teacher
+      username: 'pamornpon',
+      emailDetail: {
+        subjectEmail: this.emailSubject,
+        contentEmail: this.messageText,
+      },
+    };
+
+    console.log('Email Payload:', payload); // แสดงค่าใน console
+
+    this.http
+      .post(`${environment.apiUrl}/api/StudentScore/SendStudentScore`, payload)
+      .subscribe((response: any) => {
+        if (response.isSuccess) {
+          console.log(response);
+        } else {
+          console.log(response);
+        }
+      });
   }
 }
