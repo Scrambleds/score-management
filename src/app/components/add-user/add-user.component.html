@@ -28,15 +28,17 @@
           class="d-flex justify-content-start align-items-start flex-column w-100"
         >
             <div
-              class="d-flex align-items-end"
+              class="d-flex align-items-center fw-bold text-start ms-3"
               style="width: 25%; height: 68px"
             >
+            ตารางข้อมูลผู้ใช้งาน
             </div>
         </div>
       </div>
       <div
         class="col-12 col-md ms-auto d-flex justify-content-end align-items-end"
       >
+
         <div class="button-container mb-2 d-flex gap-2">
           <!-- 1. click save data -->
           <button class="btn btn-primary">
@@ -53,11 +55,11 @@
             ></i>
             ลบข้อมูล
           </button>
-        </div>
       </div>
     </div>
+  </div>
     <!-- ag-Grid -->
-    <ag-grid-angular
+    <ag-grid-angular 
       *ngIf="isFileUploaded"
       style="width: 100%; height: 30.375rem"
       class="ag-theme-quartz"

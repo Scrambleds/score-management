@@ -11,6 +11,7 @@
   background-image: none;
   background-position: left;
   background-repeat: no-repeat;
+  border: 0px;
 }
 
 /* Login Page Styles */
@@ -24,7 +25,6 @@ body.login-page {
 
 body.login-page .custom-card {
   background-color: rgba(255, 255, 255, 0.9);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 /* Text Overlay */
@@ -86,7 +86,7 @@ body.login-page .custom-card {
 
 /* Error Messages */
 .error-message {
-  margin: 0.5rem 0;
+  margin: 0.5rem 0 0 0;
   color: red;
 }
 
@@ -94,13 +94,13 @@ body.login-page .custom-card {
 @media (max-width: 1024px) {
   /* Medium screens */
   .custom-card {
-    background-image: none; 
-    height: auto; 
-    width: 90%; 
+    background-image: none;
+    height: auto;
+    width: 90%;
     margin: 0 auto;
-    padding: 1rem; 
-    border-radius: 15px;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); 
+    padding: 1rem;
+    border-radius: 15px; /* Only rounded corners */
+    box-shadow: none; /* Remove shadow */
   }
 }
 
@@ -126,7 +126,7 @@ body.login-page .custom-card {
   /* Large desktop screens */
   .custom-card {
     background-image: url("/assets/other/scenery/lg-screen.png");
-    width: 80%; 
+    width: 80%;
     background-position: left;
     background-repeat: no-repeat;
     height: 95%;
@@ -137,16 +137,73 @@ body.login-page .custom-card {
   /* Small screens */
   .custom-card {
     height: auto;
-    width: 95%; 
+    width: 95%;
     margin: 0 auto;
     padding: 1.5rem;
-    border-radius: 10px;
-    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 10px; /* Only rounded corners */
+    box-shadow: none; /* Remove shadow */
   }
 
   .title-form {
-    margin: 1rem; 
+    margin: 1rem;
     font-size: 1.2rem;
     text-align: center;
   }
 }
+.input-group .form-control {
+  border-right: none;
+}
+
+.input-group .btn {
+  border-left: none;
+}
+
+.custom-input {
+  border-radius: 10px 0 0 10px;
+  padding: 10px;
+}
+
+.custom-input:focus {
+  border-color: #006c68;
+}
+
+.custom-input {
+  border-radius: 10px 0 0 10px;
+}
+
+.input-group-text {
+  border-radius: 0 10px 10px 0;
+  cursor: pointer;
+}
+
+.input-group .form-control,
+.input-group .input-group-text {
+  height: 39px;
+  line-height: 1.5;
+  padding: 6px 12px;
+}
+
+.input-group .form-control {
+  border-right: 0;
+  border-color: #006c68;
+}
+
+.input-group .input-group-text {
+  border-left: 0;
+  border-color: #006c68;
+}
+
+input::-ms-reveal,
+input::-ms-clear,
+input::-webkit-credentials-auto-fill-button,
+input::-webkit-contacts-auto-fill-button {
+  display: none;
+}
+
+.dropdown-item:not(.disabled).active,
+.dropdown-item:not(.disabled):active {
+  background-color: #005946;
+  color: black;
+}
+
+

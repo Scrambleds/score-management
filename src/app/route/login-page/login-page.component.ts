@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { environment } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { TranslationService } from '../../core/services/translation.service';
 
 @Component({
   selector: 'app-login-page',
@@ -15,22 +16,33 @@ export class LoginPageComponent {
   password: string = '';
   errorMessage: string = '';
   loginForm: FormGroup;
+  currentLang = '';
   constructor(
     private http: HttpClient,
     private router: Router,
     private activatedRoute: ActivatedRoute,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private translationService: TranslationService
   ) {
     this.loginForm = this.fb.group({
       username: ['', Validators.required],
       password: ['', Validators.required],
     });
   }
+  isPasswordVisible: boolean = false;
+
+  togglePasswordVisibility() {
+    this.isPasswordVisible = !this.isPasswordVisible;
+  }
 
   ngOnInit(): void {
     // Check token expiration on direct access to login page
     let token = '';
     let tokenExpiration = '';
+    if (typeof window !== 'undefined') {
+      const savedLang = localStorage.getItem(`language`) || 'th';
+      this.currentLang = savedLang;
+    }
     if (typeof window !== 'undefined') {
       token = localStorage.getItem('token') || '';
       tokenExpiration = localStorage.getItem('tokenExpiration') || '';
@@ -82,7 +94,7 @@ export class LoginPageComponent {
               console.log('Successfully navigated to:', redirectUrl);
             });
           } else {
-            this.errorMessage = response.message.messageDescription;
+            this.errorMessage = response.message.messageKey;
           }
         },
         (error) => {
@@ -97,5 +109,12 @@ export class LoginPageComponent {
       return new Date() > new Date(expiration);
     }
     return true;
+  }
+
+  changeLanguage(event: Event, lang: string): void {
+    event.preventDefault(); // ป้องกันไม่ให้เกิดการ reload หน้า
+    this.translationService.changeLanguage(lang); // ใช้ฟังก์ชันจาก TranslationService
+    this.currentLang = lang; // อัปเดตภาษาปัจจุบัน
+    localStorage.setItem('language', lang); // เก็บภาษาลงใน localStorage
   }
 }

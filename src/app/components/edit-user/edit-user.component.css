@@ -76,6 +76,48 @@
 .card {
   z-index: 1;
 }
+
+.breadcrumb {
+  border-radius: 0.25rem;
+  padding: 0.5rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.breadcrumb-item a {
+  color: #000; /* สีดำ */
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s;
+}
+
+.breadcrumb-item a:hover {
+  color: #555; /* สีเทาเข้ม */
+  /* text-decoration: underline; */
+}
+
+.breadcrumb-item.active a {
+  font-weight: bold;
+  color: #03a96b; /* สีเขียว */
+}
+
+.breadcrumb-separator {
+  color: #555;
+  font-size: 1rem;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+}
+
+.breadcrumb-separator i {
+  font-size: 1.8rem;
+  color: #03a96b;
+  transform: scale(0.8);
+  /* text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3); */
+  /* margin: 0 0.5rem; */
+}
+
 /* 
 .ng-select .ng-select-container {
   position: relative;

@@ -4,7 +4,6 @@ import { SearchService } from '../../services/search-service/seach.service'
 import { Router } from '@angular/router';
 import { UserManageService } from '../../services/user-manage/user-manage.service';
 
-
 @Component({
   selector: 'app-edit-user',
   templateUrl: './edit-user.component.html',
@@ -20,6 +19,7 @@ export class EditUserComponent {
   roleOption = [{ id: 'ผู้ดูแลระบบ', title: 'ผู้ดูแลระบบ' }, { id: 'อาจารย์', title: 'อาจารย์' }];
   statusOption = [{ id: 'active', title: 'active' }, { id: 'inactive', title: 'inactive' }];
 
+  rowData: any[] = [];
   originalData: any[] = [];
   filteredData: any[] = [];
   
@@ -53,43 +53,94 @@ private splitFullname(fullname: string): { prefix: string, firstname: string, la
 }
 
 // ฟังก์ชันในการค้นหาข้อมูล
+// onSearch(): void {
+//   if (this.form.valid) {
+//     const searchCriteria = this.form.value;
+//     const fullname = searchCriteria.fullname ? searchCriteria.fullname.trim() : '';
+//     // this.searchEvent.emit(searchCriteria);
+
+//     this.searchService.updateSearchCriteria(this.form.value);
+//     // อัพเดต search criteria โดยใช้ fullname ในการค้นหาคำ
+//     this.searchService.updateSearchCriteria({
+//       teacher_code: searchCriteria.teacher_code,
+//       fullname: fullname,  // ส่ง fullname ไปยัง searchCriteria
+//       email: searchCriteria.email,
+//       role: searchCriteria.role,
+//       active_status: searchCriteria.active_status
+//     });
+
+//     // ฟิลเตอร์ข้อมูลจาก originalData
+//     this.filteredData = this.filterData(this.originalData, {
+//       ...searchCriteria,
+//       fullname
+//     });
+
+//     console.log('ส่งข้อมูล:', searchCriteria);
+//   } else {
+//     console.log('กรุณากรอกข้อมูลให้ครบถ้วน');
+//     this.searchService.updateSearchCriteria({});
+//   }
+// }
+
+// onSearch(): void {
+//   if (this.form.valid) {
+//     const searchCriteria = this.form.value;
+//     const fullname = searchCriteria.fullname ? searchCriteria.fullname.trim() : '';
+//     this.searchService.updateSearchCriteria({
+//       ...searchCriteria,
+//       fullname,
+//     });
+//     console.log('Search criteria updated:', searchCriteria);
+
+//   } else {
+//     console.log('กรุณากรอกข้อมูลให้ครบถ้วน');
+//   }
+// }
+
+// เมื่อทำการค้นหาใน edit-user
+
 onSearch(): void {
   if (this.form.valid) {
     const searchCriteria = this.form.value;
-    const fullname = searchCriteria.fullname ? searchCriteria.fullname.trim() : '';
 
-    // อัพเดต search criteria โดยใช้ fullname ในการค้นหาคำ
-    this.searchService.updateSearchCriteria({
-      teacher_code: searchCriteria.teacher_code,
-      fullname: fullname,  // ส่ง fullname ไปยัง searchCriteria
-      email: searchCriteria.email,
-      role: searchCriteria.role,
-      active_status: searchCriteria.active_status
-    });
+    // แปลงคีย์จาก form ให้ตรงกับ data
+    const cleanedCriteria = {
+      teacher_code: searchCriteria.teacher_code || '',
+      fullname: searchCriteria.fullname?.trim() || '',
+      email: searchCriteria.email || '',
+      role: searchCriteria.role || '',
+      active_status: searchCriteria.active_status || '',
+    };
 
-    // ฟิลเตอร์ข้อมูลจาก originalData
-    this.filteredData = this.filterData(this.originalData, {
-      ...searchCriteria,
-      fullname
-    });
-
-    console.log('ส่งข้อมูล:', searchCriteria);
+    // อัปเดต criteria ที่ใช้ในการกรอง
+    this.searchService.updateSearchCriteria(cleanedCriteria);
+    console.log('Updated search criteria:', cleanedCriteria);
   } else {
     console.log('กรุณากรอกข้อมูลให้ครบถ้วน');
-    this.searchService.updateSearchCriteria({});
+    this.searchService.updateSearchCriteria({}); // รีเซ็ต criteria ถ้าฟอร์มไม่ครบ
   }
 }
 
   // ฟังก์ชันรีเซ็ตฟอร์ม
+  // onReset(): void {
+  //   this.router.navigate(['/UserManagement']);  // กลับไปที่หน้าเดิม
+  //   this.form.reset();  // รีเซ็ตฟอร์ม
+
+  //   // คืนค่าข้อมูลทั้งหมด
+  //   this.filteredData = [...this.originalData];  // ใช้ข้อมูลต้นฉบับ
+  //   this.searchService.updateSearchCriteria({});  // รีเซ็ต criteria
+  // }
+
   onReset(): void {
-    this.router.navigate(['/UserManagement']);  // กลับไปที่หน้าเดิม
-    this.form.reset();  // รีเซ็ตฟอร์ม
-
-    // คืนค่าข้อมูลทั้งหมด
-    this.filteredData = [...this.originalData];  // ใช้ข้อมูลต้นฉบับ
+    this.form.reset();
+    this.filteredData = [...this.originalData]; // คืนค่าข้อมูลทั้งหมด
+    this.rowData = [...this.originalData];
     this.searchService.updateSearchCriteria({});  // รีเซ็ต criteria
-  }
+  }  
 
+  isCurrentRoute(route: string): boolean{
+    return this.router.url === route;
+  }
   // ngOnInit() {
   //   // ดึงข้อมูลทั้งหมดจาก API
   //   this.UserManageService.getUsers().subscribe({
@@ -109,17 +160,28 @@ onSearch(): void {
 
   // ฟังก์ชันฟิลเตอร์ข้อมูล
   filterData(data: any[], criteria: any): any[] {
-    return data.filter(item => {
-      const searchString = criteria.fullname?.toLowerCase() || '';
-      return (
-        (!criteria.teacher_code || item.teacher_code?.includes(criteria.teacher_code)) &&
-        (!criteria.email || item.email?.includes(criteria.email)) &&
-        (!criteria.role || item.role === criteria.role) &&
-        (!criteria.active_status || item.active_status === criteria.active_status) &&
-        (!searchString || this.matchAnyField(searchString, item)) // เปลี่ยนการค้นหาตาม fullname ทั้งหมด
-      );
+    console.log('Data being filtered:', data);
+    console.log('Filtering criteria:', criteria);
+  
+    // หาก criteria เป็นค่าว่างทั้งหมดยังไม่ทำการกรอง
+    if (!criteria.teacher_code && !criteria.fullname && !criteria.email && !criteria.role && !criteria.active_status) {
+      return data;
+    }
+  
+    return data.filter((item) => {
+      const fullname = `${item['คำนำหน้า'] || ''} ${item['ชื่อ'] || ''} ${item['นามสกุล'] || ''}`.toLowerCase();
+  
+      const isMatching =
+        (!criteria.teacher_code || (item['รหัสอาจารย์']?.toLowerCase().includes(criteria.teacher_code?.toLowerCase()))) &&
+        (!criteria.email || (item['อีเมล']?.toLowerCase().includes(criteria.email?.toLowerCase()))) &&
+        (!criteria.role || item['หน้าที่'] === criteria.role) &&
+        (!criteria.active_status || item['สถานะการใช้งาน'] === criteria.active_status) &&
+        (!criteria.fullname || fullname.includes(criteria.fullname?.toLowerCase()));
+  
+      return isMatching;
     });
   }
+  
   
   matchAnyField(searchString: string, item: any): boolean {
     const lowerCaseSearchString = searchString.toLowerCase();
