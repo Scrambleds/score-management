@@ -2,14 +2,51 @@
   class="container-fluid vh-100 d-flex align-items-center justify-content-center custom-bg"
 >
   <div class="col-lg-12 d-flex align-items-center justify-content-center">
-    <div class="card p-4 shadow-sm custom-card overflow-hidden">
+    <div class="card p-4 shadow-sm custom-card">
+      <div class="dropdown d-flex align-items-center justify-content-end">
+        <a
+          class="btn btn-link dropdown-toggle"
+          href="#"
+          role="button"
+          id="languageMenu"
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
+          style="color: #005946; text-decoration: none"
+        >
+          <span id="currentLanguage">{{ currentLang.toUpperCase() }}</span>
+          <!-- <i
+            class="bi bi-chevron-bar-down"
+            style="font-size: var(--icon-size); color: var(--white-color)"
+          ></i> -->
+        </a>
+        <ul class="dropdown-menu" aria-labelledby="languageMenu">
+          <li>
+            <a
+              class="dropdown-item d-flex justify-content-center"
+              href="#"
+              (click)="changeLanguage($event, 'en')"
+              >EN</a
+            >
+          </li>
+          <li>
+            <a
+              class="dropdown-item d-flex justify-content-center"
+              href="#"
+              (click)="changeLanguage($event, 'th')"
+              >TH</a
+            >
+          </li>
+        </ul>
+      </div>
       <div class="row g-0">
         <!-- Left Section: Image with Overlay Text -->
         <div class="col-lg-6 position-relative d-none d-lg-block">
           <div
             class="position-absolute mt-4 top-0 start-0 w-100 h-100 d-flex align-items-start justify-content-center text-white text-overlay"
           >
-            <h1 class="fw-bold">ระบบจัดการคะแนน</h1>
+            <h1 class="fw-bold">
+              {{ "score_management_system_title" | translate }}
+            </h1>
           </div>
         </div>
 
@@ -24,20 +61,21 @@
               alt="Kasetsart University Logo"
               style="width: 80px"
             />
+
             <h4 class="fw-bold title-head mt-4">
               มหาวิทยาลัยเกษตรศาสตร์ <br />วิทยาเขต ศรีราชา
             </h4>
             <p class="title">Kasetsart University Sriracha Campus</p>
 
             <!-- Form -->
-            <p class="mt-8 title-form">ลงชื่อเข้าใช้</p>
+            <p class="mt-8 title-form">{{ "signin" | translate }}</p>
             <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
               <div class="row justify-content-center">
                 <div class="col-12 col-lg-7">
                   <div class="mb-3">
-                    <label for="username" class="form-label text-start w-100"
-                      >รหัสผู้ใช้งาน</label
-                    >
+                    <label for="username" class="text-start w-100">{{
+                      "username" | translate
+                    }}</label>
                     <input
                       type="text"
                       id="username"
@@ -49,7 +87,32 @@
               </div>
               <div class="row justify-content-center">
                 <div class="col-12 col-lg-7">
-                  <div class="mb-4">
+                  <label for="password" class="text-start w-100">{{
+                    "password" | translate
+                  }}</label>
+                  <div class="input-group">
+                    <input
+                      type="{{ isPasswordVisible ? 'text' : 'password' }}"
+                      class="form-control custom-input"
+                      id="password"
+                      [(ngModel)]="password"
+                      formControlName="password"
+                    />
+                    <span
+                      class="input-group-text"
+                      (click)="togglePasswordVisibility()"
+                    >
+                      <i
+                        class="bi"
+                        [class.bi-eye]="!isPasswordVisible"
+                        [class.bi-eye-slash]="isPasswordVisible"
+                      ></i>
+                    </span>
+                  </div>
+                  <div *ngIf="errorMessage" class="error-message text-start">
+                    {{ errorMessage | translate }}
+                  </div>
+                  <!-- <div class="mb-4">
                     <label
                       for="password"
                       class="form-label text-start w-100 text-muted"
@@ -61,21 +124,18 @@
                       class="form-control rounded-3"
                       formControlName="password"
                     />
-                    <div *ngIf="errorMessage" class="error-message text-start">
-                      {{ errorMessage }}
-                    </div>
-                  </div>
+                    
+                  </div> -->
                 </div>
               </div>
-              <div class="row justify-content-start"></div>
-              <div class="row justify-content-center">
+              <div class="row justify-content-center mt-4">
                 <div class="col-12 col-lg-4 col-xl-3">
                   <button
                     type="submit"
                     class="btn btn-success w-100 rounded-3"
                     [disabled]="loginForm.invalid"
                   >
-                    เข้าสู่ระบบ
+                    {{ "login" | translate }}
                   </button>
                 </div>
               </div>
