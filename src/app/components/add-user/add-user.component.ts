@@ -36,14 +36,12 @@ export class AddUserComponent implements OnInit {
   filteredData: any[] = [];
   isFileUploaded = false; // ตรวจสอบว่าไฟล์อัปโหลดแล้วหรือยัง
   requiredFields = [
-    'row_id',
     'email',
     'teacher_code',
     'prefix',
     'firstname',
     'lastname',
     'role',
-    'active_status',
   ];
 
   defaultColDef = {
@@ -61,11 +59,11 @@ export class AddUserComponent implements OnInit {
   ) {
     // Initialize form here
     this.form = this.fb.group({
-      teacher_code: ['', Validators.required],
-      fullname: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
-      role: ['', Validators.required],
-      active_status: ['', Validators.required],
+      // teacher_code: ['', Validators.required],
+      // fullname: ['', Validators.required],
+      // email: ['', [Validators.required, Validators.email]],
+      // role: ['', Validators.required],
+      // active_status: ['', Validators.required],
     });
   }
 
@@ -120,8 +118,8 @@ export class AddUserComponent implements OnInit {
       !criteria.teacher_code &&
       !criteria.fullname &&
       !criteria.email &&
-      !criteria.role &&
-      !criteria.active_status
+      !criteria.role
+      // !criteria.active_status
     ) {
       return data;
     }
@@ -141,8 +139,8 @@ export class AddUserComponent implements OnInit {
             ?.toLowerCase()
             .includes(criteria.email?.toLowerCase())) &&
         (!criteria.role || item['role'] === criteria.role) &&
-        (!criteria.active_status ||
-          item['active_status'] === criteria.active_status) &&
+        // (!criteria.active_status ||
+        //   item['active_status'] === criteria.active_status) &&
         (!criteria.fullname ||
           fullname.includes(criteria.fullname?.toLowerCase()));
 
@@ -193,16 +191,15 @@ export class AddUserComponent implements OnInit {
   processData(data: any[]): any[] {
     return data.map((row, index) => ({
       row_id: index + 1,
-      role: row['role'],
-      teacher_code: row['teacher_code'],
-      prefix: row['prefix'],
-      firstname: row['firstname'],
-      lastname: row['lastname'],
-      email: row['email'],
-      active_status: row['active_status']
+      email: row['อีเมล'] || row['email'] || null,
+      teacher_code: row['รหัสอาจารย์'] || row['teacher_code'] || null,
+      prefix: row['คำนำหน้า'] || row['prefix'] || null,
+      firstname: row['ชื่อ'] || row['firstname'] || null,
+      lastname: row['นามสกุล'] || row['lastname'] || null,
+      role: row['หน้าที่'] || row['role'] || null,      
     }));
-  }
-
+  }  
+  
   LoadGridData(data: any[]) {
     if (data.length > 0) {
       console.log('Original data: ', data);
@@ -251,12 +248,12 @@ export class AddUserComponent implements OnInit {
             flexValue = 0.8;
             cellClass = 'text-end';
             break;
-          case 'active_status':
-            headerName = 'สถานะการใช้งาน';
-            customWidth = 70;
-            flexValue = 0.8;
-            cellClass = 'text-end';
-            break;
+          // case 'active_status':
+          //   headerName = 'สถานะการใช้งาน';
+          //   customWidth = 70;
+          //   flexValue = 0.8;
+          //   cellClass = 'text-end';
+          //   break;
           default:
             headerName = key;
             customWidth = 160;
@@ -313,38 +310,43 @@ export class AddUserComponent implements OnInit {
       });
       return;
     }
+  
+// ตรวจสอบฟิลด์ที่ว่างเปล่าในแต่ละแถว
+const missingFieldsGrouped = this.rowData
+  .map((row, index) => {
+    const missingFields = this.requiredFields.filter(
+      (field) =>
+        !row[field] ||
+        row[field].toString().trim() === '' ||
+        row[field].toString().trim().toUpperCase() === 'NULL'
+    );
+    return missingFields.length > 0
+      ? `แถวที่ ${index + 1}: ${missingFields.join(', ')}`
+      : null;
+  })
+  .filter((item) => item !== null);
 
-    // ตรวจสอบฟิลด์ที่ว่างเปล่าในแต่ละแถว
-    const missingFields: string[] = [];
-    this.rowData.forEach((row, index) => {
-      this.requiredFields.forEach((field) => {
-        if (
-          !row[field] ||
-          row[field].toString().trim() === '' ||
-          row[field].toString().trim() === 'NULL'
-        ) {
-          missingFields.push(`แถวที่ ${index + 1}: ${field}`);
-        }
-      });
-    });
+// หากมีฟิลด์ที่ว่างเปล่า แสดงการแจ้งเตือน
+if (missingFieldsGrouped.length > 0) {
+  Swal.fire({
+    title: 'ข้อมูลไม่ครบถ้วน',
+    html: `พบฟิลด์ที่ยังไม่ได้กรอก:<br>${missingFieldsGrouped.join('<br>')}`,
+    icon: 'warning',
+    confirmButtonText: 'ตกลง',
+  });
+  return;
+}
 
-    // หากมีฟิลด์ที่ว่างเปล่า แสดงการแจ้งเตือน
-    if (missingFields.length > 0) {
-      Swal.fire({
-        title: 'ข้อมูลไม่ครบถ้วน',
-        html: `พบฟิลด์ที่ยังไม่ได้กรอก:<br>${missingFields.join('<br>')}`,
-        icon: 'warning',
-        confirmButtonText: 'ตกลง',
-      });
-      return;
-    }
+  
     const createBy = localStorage.getItem('username') || 'admin'; // ค่า default เป็น 'admin' ถ้าไม่พบค่าใน localStorage
-
+  
+    // กำหนดข้อมูลที่ต้องการส่ง
     const dataToSend = this.rowData.map((row) => {
       const { create_date, ...filteredRow } = row;
       return { ...filteredRow, create_by: createBy };
     });
-
+  
+    // ส่งข้อมูลไปยัง API
     this.addUserService.insertUser(dataToSend).subscribe(
       (response) => {
         Swal.fire({
@@ -366,7 +368,7 @@ export class AddUserComponent implements OnInit {
         });
       }
     );
-  }
+  }  
 
   onDelete() {
     Swal.fire({
@@ -394,16 +396,19 @@ export class AddUserComponent implements OnInit {
   }
 
   validateFields(data: any[]): boolean {
-    const requiredFields = [
-      'row_id',
-      'email',
-      'teacher_code',
-      'prefix',
-      'firstname',
-      'lastname',
-      'role',
-      'active_status',
-    ];
-    return requiredFields.every((field) => field in data[0]);
-  }
+    const requiredFields = ['อีเมล', 'รหัสอาจารย์', 'คำนำหน้า', 'ชื่อ', 'นามสกุล', 'หน้าที่'];
+    const fileFields = Object.keys(data[0]);
+  
+    const missingFields = requiredFields.filter((field) => !fileFields.includes(field));
+    if (missingFields.length > 0) {
+      Swal.fire({
+        title: 'หัวคอลัมน์ไม่ถูกต้อง',
+        html: `กรุณาแก้ไขไฟล์ Excel ให้มีคอลัมน์ดังนี้:<br>${missingFields.join('<br>')}`,
+        icon: 'warning',
+        confirmButtonText: 'ตกลง',
+      });
+      return false;
+    }
+    return true;
+  }  
 }
