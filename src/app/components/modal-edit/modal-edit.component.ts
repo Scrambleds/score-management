@@ -3,6 +3,8 @@ import { AbstractControl, FormBuilder, FormGroup, ValidatorFn, Validators } from
 import { passwordStrengthValidator } from '../validators/password-strength.validator';
 import Swal from 'sweetalert2';
 import { Modal } from 'bootstrap';
+import { UserEditService } from '../../services/edit-user/edit-user.service'
+import { response } from 'express';
 
 @Component({
   selector: 'app-modal-edit',
@@ -26,7 +28,7 @@ export class ModalEditComponent {
   submitted = false;
   
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private userEditService: UserEditService) {
     this.form = this.fb.group({
       row_id: [null],
       teacher_code: [{value: null , disabled: this.isDisabled}, Validators.required],
@@ -90,9 +92,9 @@ export class ModalEditComponent {
     if (this.modalInstance) {
       this.modalInstance.hide();
     }
-    this.hide.emit(); // Emit hide event
-    this.form.reset(); // Reset the form fields
-    this.removeConditionalFields(); // Remove confirm_password field
+    this.hide.emit(); 
+    this.form.reset(); 
+    this.removeConditionalFields(); 
   }
 
   ngOnChanges() {
@@ -190,27 +192,49 @@ export class ModalEditComponent {
     this.submitted = true;
     this.form.markAllAsTouched();
     this.form.updateValueAndValidity();
-
+  
     if (this.form.valid && ((!this.form.value.password && !this.form.value.confirm_password) || (this.form.value.password === this.form.value.confirm_password))) {
-    
-      console.log("ฟอร์มถูกต้อง ข้อมูลที่ส่ง: ", this.form.getRawValue());
-      this.submit.emit(this.form.value);
-
-      Swal.fire({
-        title: 'สำเร็จ',
-        text: 'บันทึกข้อมูลเรียบร้อยแล้ว',
-        icon: 'success',
-        confirmButtonText: 'ตกลง',
-        confirmButtonColor: '#007bff'
+      
+      const update_by = localStorage.getItem('username') || 'admin';
+      const userData = this.form.getRawValue();
+      userData.update_by = update_by;
+      console.log("ฟอร์มถูกต้อง ข้อมูลที่ส่ง: ", userData);
+      this.userEditService.editUser(userData).subscribe((response: any) => {
+        console.log("Response from API:", response);
+        this.submit.emit(this.form.getRawValue()); 
+  
+        Swal.fire({
+          title: 'สำเร็จ',
+          text: 'บันทึกข้อมูลเรียบร้อยแล้ว',
+          icon: 'success',
+          confirmButtonText: 'ตกลง',
+          confirmButtonColor: '#007bff'
+        }).then(() => {
+          // เมื่อกด "ตกลง" ใน Swal, ปิด modal
+          if (this.modalInstance) {
+            this.modalInstance.hide();
+          }
+        });
+  
+        this.form.reset();
+        this.removeConditionalFields();
+        
+      }, (error: any) => {
+        Swal.fire({
+          title: 'เกิดข้อผิดพลาด',
+          text: 'การอัปเดตข้อมูลผู้ใช้ล้มเหลว',
+          icon: 'error',
+          confirmButtonText: 'ตกลง',
+          confirmButtonColor: '#ff0000',
+        });
+        this.form.reset();
+        this.removeConditionalFields();
       });
-
-      this.form.reset();
-      this.removeConditionalFields();
     } else {
       console.log("ฟอร์มไม่ถูกต้อง ข้อผิดพลาด: ", this.form.errors);
     }
   }
-
+  
   onBlurConfirmPassword() {
     const confirmPasswordControl = this.form.get('confirm_password');
     confirmPasswordControl?.updateValueAndValidity(); 
