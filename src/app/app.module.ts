@@ -34,7 +34,12 @@ import { ScoreAnnouncementComponent } from './route/score-announcement/score-ann
 import { DashboardComponent } from './route/dashboard/dashboard.component';
 import { AddUserRoute } from './route/add-user/add-user.component';
 
-import { provideHttpClient } from '@angular/common/http';
+import {
+  HTTP_INTERCEPTORS,
+  HttpClientModule,
+  provideHttpClient,
+  withInterceptorsFromDi,
+} from '@angular/common/http';
 import { TranslatePipe } from './shared/pipes/translate.pipe';
 import { UploadScoreHeaderComponent } from './components/upload-score-header/upload-score-header.component';
 import { UploadExcelContainerComponent } from './components/upload-excel-container/upload-excel-container.component';
@@ -47,6 +52,8 @@ import { RequiredMarkerDirective } from '../../src/app/components/required-marke
 import { AddUserComponent } from '../../src/app/components/add-user/add-user.component';
 import { ModalSendMailComponent } from './components/modal-send-mail/modal-send-mail.component';
 import { TranslateDropdownPipe } from './shared/pipes/translateDropdown.pipe';
+import { CachingInterceptor } from './core/interceptors/caching.interceptor';
+import { ScoreAnnouncementService } from './services/score-announcement/score-announcement.service';
 
 @NgModule({
   declarations: [
@@ -93,8 +100,12 @@ import { TranslateDropdownPipe } from './shared/pipes/translateDropdown.pipe';
     RequiredMarkerDirective,
   ],
   providers: [
-    provideHttpClient(),
-    // provideClientHydration(withEventReplay()),
+    provideHttpClient(withInterceptorsFromDi()),
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: CachingInterceptor,
+      multi: true,
+    },
   ],
   bootstrap: [AppComponent],
 })

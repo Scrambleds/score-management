@@ -33,33 +33,33 @@ export class TranslationService {
   loadTranslations(language: string): void {
     // เช็คว่าโค้ดนี้ทำงานใน browser หรือไม่
     if (typeof window !== 'undefined') {
-      const savedTranslations = localStorage.getItem(
-        `translations_${language}`
-      );
+      // const savedTranslations = localStorage.getItem(
+      //   `translations_${language}`
+      // );
 
-      if (savedTranslations) {
-        // ถ้ามีคำแปลใน localStorage ใช้คำแปลเหล่านั้นเลย
-        this.translations.next(JSON.parse(savedTranslations));
-      } else {
-        // ถ้าไม่มีคำแปลใน localStorage ให้ดึงจาก API
-        this.http
-          .get<Record<string, string>>(
-            `${environment.apiUrl}/api/MasterData/Language?language=${language}`
-          )
-          .subscribe((data: any) => {
-            const translations = data.objectResponse;
-            this.translations.next(translations);
+      // if (savedTranslations) {
+      //   // ถ้ามีคำแปลใน localStorage ใช้คำแปลเหล่านั้นเลย
+      //   this.translations.next(JSON.parse(savedTranslations));
+      // } else {
+      // ถ้าไม่มีคำแปลใน localStorage ให้ดึงจาก API
+      this.http
+        .get<Record<string, string>>(
+          `${environment.apiUrl}/api/MasterData/Language?language=${language}`
+        )
+        .subscribe((data: any) => {
+          const translations = data.objectResponse;
+          this.translations.next(translations);
 
-            // เก็บคำแปลที่ได้รับจาก API ไว้ใน localStorage
-            if (this.isBrowser()) {
-              localStorage.setItem(
-                `translations_${language}`,
-                JSON.stringify(translations)
-              );
-              localStorage.setItem('language', language); // เก็บภาษาปัจจุบัน
-            }
-          });
-      }
+          // เก็บคำแปลที่ได้รับจาก API ไว้ใน localStorage
+          if (this.isBrowser()) {
+            // localStorage.setItem(
+            //   `translations_${language}`,
+            //   JSON.stringify(translations)
+            // );
+            localStorage.setItem('language', language); // เก็บภาษาปัจจุบัน
+          }
+        });
+      // }
     }
   }
 

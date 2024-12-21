@@ -21,7 +21,7 @@ export class ModalSendMailComponent implements OnInit {
   placeholderList: any[] = [];
 
   constructor(
-    private http: HttpClient,
+    // private http: HttpClient,
     private scoreAnnouncementService: ScoreAnnouncementService
   ) {}
 
@@ -184,14 +184,14 @@ export class ModalSendMailComponent implements OnInit {
 
     console.log('Email Payload:', payload); // แสดงค่าใน console
 
-    this.http
-      .post(`${environment.apiUrl}/api/StudentScore/SendStudentScore`, payload)
-      .subscribe((response: any) => {
-        if (response.isSuccess) {
-          console.log(response);
-        } else {
-          console.log(response);
-        }
-      });
+    // this.http
+    //   .post(`${environment.apiUrl}/api/StudentScore/SendStudentScore`, payload)
+    //   .subscribe((response: any) => {
+    //     if (response.isSuccess) {
+    //       console.log(response);
+    //     } else {
+    //       console.log(response);
+    //     }
+    //   });
   }
 }
