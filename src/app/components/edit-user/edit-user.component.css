@@ -79,10 +79,10 @@
 
 .breadcrumb {
   border-radius: 0.25rem;
-  padding: 0.5rem 1rem;
+  /* padding: 0.5rem 1rem; */
   display: flex;
   align-items: center;
-  gap: 0.4rem;
+  /* gap: 0.4rem; */
 }
 
 .breadcrumb-item a {

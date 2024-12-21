@@ -7,9 +7,8 @@ import { environment } from '../../../environments/environment';
 @Injectable({
   providedIn: 'root',
 })
-
-export class UserManageService {
-  private apiUrl = `${environment.apiUrl}/api/EditUser/GetAllUser`;
+export class AddUserService {
+  private apiUrlInsert = `${environment.apiUrl}/api/EditUser/InsertUser`;
 
   constructor(private http: HttpClient) {}
 
@@ -31,17 +30,17 @@ export class UserManageService {
     return new HttpHeaders().set('Authorization', `Bearer ${token}`);
   }
 
-  getUsers(): Observable<any[]> {
+  insertUser(data: any[]): Observable<any> {
     const headers = this.getAuthHeaders();
     if (!headers) {
       return throwError(() => new Error('Authorization token is missing or invalid'));
     }
 
     console.log('Making request with headers:', headers);
-    return this.http.get<any[]>(this.apiUrl, { headers, withCredentials: true }).pipe(
+    return this.http.post<any>(this.apiUrlInsert, data, { headers, withCredentials: true }).pipe(
       catchError((error) => {
-        console.error('Error occurred while fetching users:', error);
-        return throwError(() => new Error('Failed to fetch users. Please try again.'));
+        console.error('Error occurred while inserting user data:', error);
+        return throwError(() => new Error('Failed to insert user data. Please try again.'));
       })
     );
   }
