@@ -71,22 +71,33 @@
             <p class="mt-8 title-form">{{ "signin" | translate }}</p>
             <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
               <div class="row justify-content-center">
-                <div class="col-12 col-lg-7">
+                <div class="col-12 col-md-12 col-lg-8 col-xl-7">
                   <div class="mb-3">
                     <label for="username" class="text-start w-100">{{
                       "username" | translate
                     }}</label>
-                    <input
+                    <!-- <input
                       type="text"
                       id="username"
                       class="form-control rounded-3"
                       formControlName="username"
-                    />
+                    /> -->
+                    <div class="input-group">
+                      <input
+                        type="{{ isPasswordVisible ? 'text' : 'username' }}"
+                        class="form-control custom-input"
+                        id="username"
+                        formControlName="username"
+                      />
+                      <span class="input-group-text" id="basic-addon2"
+                        >&commat;ku.th</span
+                      >
+                    </div>
                   </div>
                 </div>
               </div>
               <div class="row justify-content-center">
-                <div class="col-12 col-lg-7">
+                <div class="col-12 col-md-12 col-lg-8 col-xl-7">
                   <label for="password" class="text-start w-100">{{
                     "password" | translate
                   }}</label>
@@ -112,20 +123,6 @@
                   <div *ngIf="errorMessage" class="error-message text-start">
                     {{ errorMessage | translate }}
                   </div>
-                  <!-- <div class="mb-4">
-                    <label
-                      for="password"
-                      class="form-label text-start w-100 text-muted"
-                      >รหัสผ่าน</label
-                    >
-                    <input
-                      type="password"
-                      id="password"
-                      class="form-control rounded-3"
-                      formControlName="password"
-                    />
-                    
-                  </div> -->
                 </div>
               </div>
               <div class="row justify-content-center mt-4">

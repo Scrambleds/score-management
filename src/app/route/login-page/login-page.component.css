@@ -8,10 +8,10 @@
   width: 1246px;
   max-width: 100%;
   border-radius: 20px;
+  border: 0;
   background-image: none;
   background-position: left;
   background-repeat: no-repeat;
-  border: 0px;
 }
 
 /* Login Page Styles */
@@ -29,7 +29,7 @@ body.login-page .custom-card {
 
 /* Text Overlay */
 .text-overlay {
-  color: #ffffff;
+  color: #fff;
   text-align: center;
 }
 
@@ -45,7 +45,6 @@ body.login-page .custom-card {
 
 .btn-success:disabled {
   background-color: #00755e33;
-  /* color: #666666; */
 }
 
 /* Form Styles */
@@ -72,76 +71,66 @@ body.login-page .custom-card {
   font-size: 18px;
 }
 
-.title-form {
-  font-size: 18px;
-  margin-bottom: 0;
-  margin-top: 2.5rem;
-  color: #505050;
-}
-
+.title-form,
 .form-label {
   font-size: 18px;
   color: #505050;
 }
 
-/* Error Messages */
+.title-form {
+  margin: 2.5rem 0 0;
+}
+
 .error-message {
-  margin: 0.5rem 0 0 0;
+  margin: 0.5rem 0 0;
   color: red;
 }
 
-/* Responsive Styles */
-@media (max-width: 1024px) {
-  /* Medium screens */
-  .custom-card {
-    background-image: none;
-    height: auto;
-    width: 90%;
-    margin: 0 auto;
-    padding: 1rem;
-    border-radius: 15px; /* Only rounded corners */
-    box-shadow: none; /* Remove shadow */
-  }
-}
+/* Extra-large desktop screens (min-width: 1366px) */
 
-@media (min-width: 1024px) and (max-width: 1439px) {
-  /* iPad Pro and medium desktop screens */
-  .custom-card {
-    background-image: url("/assets/other/scenery/md-screen.png");
-    background-position: left;
-    background-repeat: no-repeat;
-  }
-}
-
-@media (min-width: 1366px) {
-  /* Large desktop screens */
-  .custom-card {
-    background-image: url("/assets/other/scenery/lg-screen.png");
-    background-position: left;
-    background-repeat: no-repeat;
-  }
-}
-
+/* Large desktop screens (max-width: 1600px) */
 @media (max-width: 1600px) {
-  /* Large desktop screens */
   .custom-card {
-    background-image: url("/assets/other/scenery/lg-screen.png");
     width: 80%;
-    background-position: left;
-    background-repeat: no-repeat;
     height: 95%;
   }
 }
 
+/* iPad Pro and medium desktop screens (min-width: 1024px and max-width: 1439px) */
+@media (min-width: 1024px) and (max-width: 1439px) {
+  .custom-card {
+    background-image: url("/assets/other/scenery/md-screen.png");
+    background-size: 50% 100%;
+  }
+}
+@media (min-width: 1366px) {
+  .custom-card {
+    background-image: url("/assets/other/scenery/lg-screen.png");
+    background-size: 50% 100%;
+  }
+}
+
+/* Medium screens (max-width: 1024px) */
+@media (max-width: 1024px) {
+  .custom-card {
+    height: auto;
+    width: 90%;
+    margin: 0 auto;
+    padding: 1rem;
+    border-radius: 15px;
+    box-shadow: none;
+  }
+}
+
+/* Small screens (max-width: 768px) */
 @media (max-width: 768px) {
-  /* Small screens */
   .custom-card {
     height: auto;
     width: 95%;
     margin: 0 auto;
     padding: 1.5rem;
-    border-radius: 10px; /* Only rounded corners */
-    box-shadow: none; /* Remove shadow */
+    border-radius: 10px;
+    box-shadow: none;
   }
 
   .title-form {
@@ -150,8 +139,11 @@ body.login-page .custom-card {
     text-align: center;
   }
 }
+
+/* Input Group */
 .input-group .form-control {
   border-right: none;
+  border-color: #006c68;
 }
 
 .input-group .btn {
@@ -167,13 +159,10 @@ body.login-page .custom-card {
   border-color: #006c68;
 }
 
-.custom-input {
-  border-radius: 10px 0 0 10px;
-}
-
 .input-group-text {
   border-radius: 0 10px 10px 0;
   cursor: pointer;
+  border-color: #006c68;
 }
 
 .input-group .form-control,
@@ -183,16 +172,7 @@ body.login-page .custom-card {
   padding: 6px 12px;
 }
 
-.input-group .form-control {
-  border-right: 0;
-  border-color: #006c68;
-}
-
-.input-group .input-group-text {
-  border-left: 0;
-  border-color: #006c68;
-}
-
+/* Remove auto-fill and clear buttons in inputs */
 input::-ms-reveal,
 input::-ms-clear,
 input::-webkit-credentials-auto-fill-button,
@@ -200,10 +180,9 @@ input::-webkit-contacts-auto-fill-button {
   display: none;
 }
 
+/* Dropdown */
 .dropdown-item:not(.disabled).active,
 .dropdown-item:not(.disabled):active {
   background-color: #005946;
   color: black;
 }
-
-
