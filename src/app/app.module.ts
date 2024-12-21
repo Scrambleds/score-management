@@ -46,7 +46,7 @@ import { AutocompleteComponent } from './components/autocomplete/autocomplete.co
 import { RequiredMarkerDirective } from '../../src/app/components/required-marker/required-marker.directive';
 import { AddUserComponent } from '../../src/app/components/add-user/add-user.component';
 import { ModalSendMailComponent } from './components/modal-send-mail/modal-send-mail.component';
-
+import { TranslateDropdownPipe } from './shared/pipes/translateDropdown.pipe';
 
 @NgModule({
   declarations: [
@@ -73,7 +73,8 @@ import { ModalSendMailComponent } from './components/modal-send-mail/modal-send-
     AddUserComponent,
     AddUserRoute,
     ModalSendMailComponent,
-    ],
+    TranslateDropdownPipe,
+  ],
   imports: [
     BrowserModule,
     AppRoutingModule,

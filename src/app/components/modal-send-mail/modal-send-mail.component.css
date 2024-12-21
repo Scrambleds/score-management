@@ -63,7 +63,7 @@
 }
 
 textarea {
-  font-size: 0.8rem;
+  font-size: 13px;
 }
 
 @media (min-width: 992px) {
@@ -76,4 +76,9 @@ textarea {
 .modal-dialog-scrollable .modal-content {
   max-height: 100%;
   overflow: visible;
+}
+
+.custom-select {
+  max-height: 150px; /* หรือความสูงที่คุณต้องการ */
+  overflow-y: auto !important; /* ทำให้มี scroll bar */
 }
