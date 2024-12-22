@@ -13,15 +13,18 @@ import { ScoreAnnouncementService } from '../../services/score-announcement/scor
 export class ModalSendMailComponent implements OnInit {
   messageText: string = ''; // ข้อความใน textarea
   emailSubject: string = ''; // ข้อความใน input subject
-  selectedVariable: string = ''; // ตัวแปรที่เลือกจาก select
+  selectedVariable: any = null; // ตัวแปรที่เลือกจาก select กำหนดเป็น null เพื่อแสดง placeholder
   canAddVariable: boolean = false; // ควบคุมการ enabled ปุ่ม
   focusedField: 'textarea' | 'subject' | null = null; // ฟิลด์ที่กำลัง focus อยู่
   language: string = 'th'; // ค่าภาษาเริ่มต้น
 
   placeholderList: any[] = [];
+  privateTemplateList: any[] = [];
+  defaultTemplateList: any[] = [];
+  allTemplateList: any[] = [];
 
   constructor(
-    // private http: HttpClient,
+    private http: HttpClient,
     private scoreAnnouncementService: ScoreAnnouncementService
   ) {}
 
@@ -32,6 +35,7 @@ export class ModalSendMailComponent implements OnInit {
       this.language = savedLanguage; // กำหนดภาษาจาก localStorage
     }
     this.loadEmailPlaceholder();
+    this.loadEmailTemplate();
   }
 
   //load MasterData
@@ -40,6 +44,20 @@ export class ModalSendMailComponent implements OnInit {
       console.log(resp);
       this.placeholderList = resp;
     });
+  }
+  loadEmailTemplate(): void {
+    this.scoreAnnouncementService
+      .loadEmailTemplate('pamornpon')
+      .subscribe((resp: any) => {
+        this.defaultTemplateList = resp.defaultTemplates;
+        this.privateTemplateList = resp.privateTemplates;
+        this.allTemplateList = [
+          ...this.privateTemplateList,
+          ...this.defaultTemplateList,
+        ];
+        console.log(this.defaultTemplateList);
+        console.log(this.privateTemplateList);
+      });
   }
 
   // เมื่อ textarea ได้ focus
@@ -127,7 +145,6 @@ export class ModalSendMailComponent implements OnInit {
       body: `ถึง {!STUDENT_PREFIX}{!STUDENT_NAME}\nอีเมลฉบับนี้ถูกส่งโดยระบบจัดการคะแนน\nวิชา: {!SUBJECT_NAME}\nชื่อ: {!STUDENT_PREFIX}{!STUDENT_NAME}\nรหัสนิสิต: {!STUDENT_ID}\nหมู่เรียน: {!SECTION_ID}\n\nได้คะแนนรายละเอียดดังนี้\n\tประเภทคะแนน \t\t\tคะแนน\n\tคะแนนเก็บ    \t\t\t{!ACCUMULATED_SCORE}\n\tคะแนนกลางภาค\t\t\t{!MIDTERM_SCORE}\n\tคะแนนปลายภาค\t\t\t{!FINAL_SCORE}\n\tรวมคะแนนทั้งหมด\t\t\t{!TOTAL_SCORE}\n\nคะแนนเฉลี่ย: {!MEAN_SCORE}/100\nคะแนนสูงสุด: {!MAX_SCORE}/100\nคะแนนต่ำสุด: {!MIN_SCORE}/100\n\nหากมีคำถาม กรุณาติดต่ออาจารย์ผู้สอนโดยตรง\n\n{!TEACHER_NAME}`,
     },
   };
-
   loadTemplate(templateKey: string): void {
     const template = this.templates[templateKey];
     if (template) {
@@ -137,6 +154,42 @@ export class ModalSendMailComponent implements OnInit {
       // แทนที่ค่าใน body
       this.messageText = template.body;
     }
+  }
+
+  loadDefaultTemplate(templateKey: string): void {
+    let template = this.defaultTemplateList.find(
+      (t) => t.templateName === templateKey
+    );
+    console.log(template);
+    if (template) {
+      // แทนที่ค่าใน subject
+      this.emailSubject = template.detail.subject;
+
+      // แทนที่ค่าใน body
+      this.messageText = template.detail.body;
+    }
+  }
+  loadPrivateTemplate(templateKey: string): void {
+    let template = this.privateTemplateList.find(
+      (t) => t.templateName === templateKey
+    );
+    if (template) {
+      // แทนที่ค่าใน subject
+      this.emailSubject = template.detail.subject;
+
+      // แทนที่ค่าใน body
+      this.messageText = template.detail.body;
+    }
+  }
+  setDefaultTemplate(templateKey: string): void {
+    console.log(`setDefault template : ${templateKey}`);
+  }
+  createTemplate() {}
+  updateTemplate(templateKey: string) {
+    console.log(`update Template : ${templateKey}`);
+  }
+  deleteTemplate(templateKey: string) {
+    console.log(`deleteTemplate : ${templateKey}`);
   }
 
   //email placeholder
@@ -172,7 +225,7 @@ export class ModalSendMailComponent implements OnInit {
         academic_year: '2024',
         semester: '1',
         section: '800',
-        student_id: ['6430250229'],
+        student_id: '6430250229',
       },
       //username teacher
       username: 'pamornpon',
@@ -184,14 +237,14 @@ export class ModalSendMailComponent implements OnInit {
 
     console.log('Email Payload:', payload); // แสดงค่าใน console
 
-    // this.http
-    //   .post(`${environment.apiUrl}/api/StudentScore/SendStudentScore`, payload)
-    //   .subscribe((response: any) => {
-    //     if (response.isSuccess) {
-    //       console.log(response);
-    //     } else {
-    //       console.log(response);
-    //     }
-    //   });
+    this.http
+      .post(`${environment.apiUrl}/api/StudentScore/SendStudentScore`, payload)
+      .subscribe((response: any) => {
+        if (response.isSuccess) {
+          console.log(response);
+        } else {
+          console.log(response);
+        }
+      });
   }
 }

@@ -96,7 +96,7 @@
             [(ngModel)]="messageText"
             autocomplete="off"
             style="
-              tab-size: 6;
+              tab-size: 8;
               font-family: monospace;
               font-size: 13px;
               white-space: pre;
@@ -130,22 +130,13 @@
                 เทมเพลตพื้นฐาน
               </button>
               <ul class="dropdown-submenu">
-                <li>
+                <li *ngFor="let template of defaultTemplateList">
                   <button
                     class="dropdown-item"
                     type="button"
-                    (click)="loadTemplate('basicTemplate1')"
+                    (click)="loadDefaultTemplate(template.templateName)"
                   >
-                    พื้นฐาน 1
-                  </button>
-                </li>
-                <li>
-                  <button
-                    class="dropdown-item"
-                    type="button"
-                    (click)="loadTemplate('basicTemplate1')"
-                  >
-                    พื้นฐาน 2
+                    {{ template.templateName }}
                   </button>
                 </li>
               </ul>
@@ -159,22 +150,13 @@
                 เทมเพลตส่วนตัว
               </button>
               <ul class="dropdown-submenu">
-                <li>
+                <li *ngFor="let template of privateTemplateList">
                   <button
                     class="dropdown-item"
                     type="button"
-                    (click)="loadTemplate('basicTemplate1')"
+                    (click)="loadPrivateTemplate(template.templateName)"
                   >
-                    ส่วนตัว 1
-                  </button>
-                </li>
-                <li>
-                  <button
-                    class="dropdown-item"
-                    type="button"
-                    (click)="loadTemplate('basicTemplate1')"
-                  >
-                    ส่วนตัว 2
+                    {{ template.templateName }}
                   </button>
                 </li>
               </ul>
@@ -188,10 +170,15 @@
                 กำหนดค่าเริ่มต้น
               </button>
               <ul class="dropdown-submenu">
-                <li><a class="dropdown-item" href="#">พื้นฐาน 1</a></li>
-                <li><a class="dropdown-item" href="#">พื้นฐาน 2</a></li>
-                <li><a class="dropdown-item" href="#">ส่วนตัว 1</a></li>
-                <li><a class="dropdown-item" href="#">ส่วนตัว 2</a></li>
+                <li *ngFor="let template of allTemplateList">
+                  <button
+                    class="dropdown-item"
+                    type="button"
+                    (click)="setDefaultTemplate(template.templateName)"
+                  >
+                    {{ template.templateName }}
+                  </button>
+                </li>
               </ul>
             </li>
             <li class="dropdown-item-container">
@@ -203,23 +190,14 @@
                 บันทึกร่างเป็นเทมเพลต
               </button>
               <ul class="dropdown-submenu">
-                <li><h6 class="dropdown-header">เขียนทับเทเพลต</h6></li>
-                <li>
+                <li><h6 class="dropdown-header">เขียนทับเทมเพลต</h6></li>
+                <li *ngFor="let template of privateTemplateList">
                   <button
                     class="dropdown-item"
                     type="button"
-                    (click)="loadTemplate('basicTemplate1')"
+                    (click)="updateTemplate(template.templateName)"
                   >
-                    ส่วนตัว 1
-                  </button>
-                </li>
-                <li>
-                  <button
-                    class="dropdown-item"
-                    type="button"
-                    (click)="loadTemplate('basicTemplate1')"
-                  >
-                    ส่วนตัว 2
+                    {{ template.templateName }}
                   </button>
                 </li>
                 <li><hr class="dropdown-divider" /></li>
@@ -227,7 +205,7 @@
                   <button
                     class="dropdown-item"
                     type="button"
-                    (click)="loadTemplate('basicTemplate1')"
+                    (click)="createTemplate()"
                   >
                     บันทึกเทมเพลตใหม่
                   </button>
@@ -244,22 +222,13 @@
               </button>
               <ul class="dropdown-submenu">
                 <li><h6 class="dropdown-header">ลบเทมเพลต</h6></li>
-                <li>
+                <li *ngFor="let template of privateTemplateList">
                   <button
                     class="dropdown-item"
                     type="button"
-                    (click)="loadTemplate('basicTemplate1')"
+                    (click)="deleteTemplate(template.templateName)"
                   >
-                    ส่วนตัว 1
-                  </button>
-                </li>
-                <li>
-                  <button
-                    class="dropdown-item"
-                    type="button"
-                    (click)="loadTemplate('basicTemplate1')"
-                  >
-                    ส่วนตัว 2
+                    {{ template.templateName }}
                   </button>
                 </li>
               </ul>
