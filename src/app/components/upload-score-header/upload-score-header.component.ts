@@ -273,7 +273,7 @@ export class UploadScoreHeaderComponent implements OnInit, AfterViewInit {
 
     if (this.form.valid) {
       console.log('ฟอร์มถูกต้อง ข้อมูลที่ส่ง: ', this.form.getRawValue());
-      const formData = this.form.value;
+      const formData = this.form.getRawValue();
       //send formData to parent with event emitter
       this.formSubmitted.emit(formData);
       Swal.fire({

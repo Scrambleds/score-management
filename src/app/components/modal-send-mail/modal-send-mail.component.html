@@ -134,7 +134,7 @@
                   <button
                     class="dropdown-item"
                     type="button"
-                    (click)="loadDefaultTemplate(template.templateName)"
+                    (click)="loadDefaultTemplate(template.templateId)"
                   >
                     {{ template.templateName }}
                   </button>
@@ -154,7 +154,7 @@
                   <button
                     class="dropdown-item"
                     type="button"
-                    (click)="loadPrivateTemplate(template.templateName)"
+                    (click)="loadPrivateTemplate(template.templateId)"
                   >
                     {{ template.templateName }}
                   </button>
@@ -174,7 +174,7 @@
                   <button
                     class="dropdown-item"
                     type="button"
-                    (click)="setDefaultTemplate(template.templateName)"
+                    (click)="setDefaultTemplate(template.templateId)"
                   >
                     {{ template.templateName }}
                   </button>
@@ -195,7 +195,7 @@
                   <button
                     class="dropdown-item"
                     type="button"
-                    (click)="updateTemplate(template.templateName)"
+                    (click)="updateTemplate(template.templateId)"
                   >
                     {{ template.templateName }}
                   </button>
@@ -226,7 +226,7 @@
                   <button
                     class="dropdown-item"
                     type="button"
-                    (click)="deleteTemplate(template.templateName)"
+                    (click)="deleteTemplate(template.templateId)"
                   >
                     {{ template.templateName }}
                   </button>

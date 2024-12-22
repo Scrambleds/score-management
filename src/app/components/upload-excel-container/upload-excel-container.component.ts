@@ -322,7 +322,7 @@ export class UploadExcelContainerComponent {
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#d33',
-      confirmButtonText: 'Delete',
+      confirmButtonText: 'ลบ',
       cancelButtonColor: 'var(--secondary-color)',
       cancelButtonText: 'ยกเลิก',
     }).then((result) => {

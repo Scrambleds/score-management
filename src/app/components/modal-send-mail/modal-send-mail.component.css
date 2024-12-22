@@ -82,3 +82,8 @@ textarea {
   max-height: 150px; /* หรือความสูงที่คุณต้องการ */
   overflow-y: auto !important; /* ทำให้มี scroll bar */
 }
+
+.dropdown-header {
+  padding-bottom: 4px;
+  padding-top: 0;
+}

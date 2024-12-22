@@ -20,7 +20,7 @@ export class ScoreAnnouncementService {
     const url = `${environment.apiUrl}/api/MasterData/EmailPlaceholder`;
     return this.http.get<Record<string, string>>(url, this.httpOptions).pipe(
       map((response: any) => response.objectResponse),
-      tap((_) => console.log('EmailPlaceholder done!!'))
+      tap((_) => console.log('emailPlaceholder done!!'))
     );
   }
 
@@ -31,7 +31,15 @@ export class ScoreAnnouncementService {
       .get<Record<string, string>>(url, { params, ...this.httpOptions })
       .pipe(
         map((response: any) => response.objectResponse),
-        tap((_) => console.log('EmailPlaceholder done!!'))
+        tap((_) => console.log('loadEmailTemplate done!!'))
       );
+  }
+
+  updateEmailTemplate(template: any): Observable<any> {
+    const url = `${environment.apiUrl}/api/StudentScore/UpdateTemplate`;
+    return this.http.post<any>(url, template, { ...this.httpOptions }).pipe(
+      map((response: any) => console.log(response)),
+      tap((_) => console.log('updateEmailTemplate done!!'))
+    );
   }
 }

@@ -121,31 +121,14 @@ export class LoginPageComponent {
         .subscribe(
           (response: any) => {
             if (response.isSuccess) {
-              // Securely store user info excluding sensitive data
-              const {
-                username,
-                firstname,
-                lastname,
-                email,
-                active_status,
-                prefix_description_th,
-                prefix_description_en,
-                role_description_th,
-                role_description_en,
-              } = response.objectResponse;
-              const userInfo = {
-                username,
-                firstname,
-                lastname,
-                email,
-                active_status,
-                prefix_description_th,
-                prefix_description_en,
-                role_description_th,
-                role_description_en,
-              };
-              localStorage.setItem('userInfo', JSON.stringify(userInfo));
-              console.log('User info stored in localStorage:', userInfo);
+              localStorage.setItem(
+                'userInfo',
+                JSON.stringify(response.objectResponse)
+              );
+              console.log(
+                'User info stored in localStorage:',
+                response.objectResponse
+              );
             } else {
               console.error(
                 'Failed to fetch user info:',

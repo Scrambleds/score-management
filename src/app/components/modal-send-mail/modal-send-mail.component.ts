@@ -156,9 +156,9 @@ export class ModalSendMailComponent implements OnInit {
     }
   }
 
-  loadDefaultTemplate(templateKey: string): void {
+  loadDefaultTemplate(templateKey: number): void {
     let template = this.defaultTemplateList.find(
-      (t) => t.templateName === templateKey
+      (t) => t.templateId === templateKey
     );
     console.log(template);
     if (template) {
@@ -169,9 +169,9 @@ export class ModalSendMailComponent implements OnInit {
       this.messageText = template.detail.body;
     }
   }
-  loadPrivateTemplate(templateKey: string): void {
+  loadPrivateTemplate(templateKey: number): void {
     let template = this.privateTemplateList.find(
-      (t) => t.templateName === templateKey
+      (t) => t.templateId === templateKey
     );
     if (template) {
       // แทนที่ค่าใน subject
@@ -181,14 +181,30 @@ export class ModalSendMailComponent implements OnInit {
       this.messageText = template.detail.body;
     }
   }
-  setDefaultTemplate(templateKey: string): void {
+  setDefaultTemplate(templateKey: number): void {
     console.log(`setDefault template : ${templateKey}`);
   }
   createTemplate() {}
-  updateTemplate(templateKey: string) {
+  updateTemplate(templateKey: number) {
     console.log(`update Template : ${templateKey}`);
+    const userInfo = localStorage.getItem('userInfo');
+    console.log(userInfo);
+    const payload = {
+      template_id: templateKey, // Assuming templateKey maps to template_id
+      subject: this.emailSubject,
+      body: this.messageText,
+      username: 'pamornpon', // Replace with actual username
+    };
+    this.scoreAnnouncementService.updateEmailTemplate(payload).subscribe(
+      (response) => {
+        console.log('Response : ', response);
+      },
+      (error) => {
+        console.error('Error updating template:', error);
+      }
+    );
   }
-  deleteTemplate(templateKey: string) {
+  deleteTemplate(templateKey: number) {
     console.log(`deleteTemplate : ${templateKey}`);
   }
 
