@@ -88,6 +88,8 @@ export class LoginPageComponent {
               this.activatedRoute.snapshot.queryParams['redirectUrl'] ||
               '/ScoreAnnouncement';
 
+            const username = this.loginForm.value.username;
+            this.getUserInfo(username);
             // Ensure NavigationEnd is triggered after successful login
             this.router.navigate([redirectUrl]).then(() => {
               // After navigating, the NavigationEnd event will be fired, and top-nav will receive it
@@ -101,6 +103,61 @@ export class LoginPageComponent {
           this.errorMessage = 'Login failed. Please try again.';
         }
       );
+  }
+  getUserInfo(username: string) {
+    // Assuming you need to send the token in the Authorization header and username in the body
+    const token = localStorage.getItem('token');
+    if (token) {
+      this.http
+        .post(
+          `${environment.apiUrl}/api/User/GetUserInfo`,
+          { username: username }, // Send username in the request body
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
+        .subscribe(
+          (response: any) => {
+            if (response.isSuccess) {
+              // Securely store user info excluding sensitive data
+              const {
+                username,
+                firstname,
+                lastname,
+                email,
+                active_status,
+                prefix_description_th,
+                prefix_description_en,
+                role_description_th,
+                role_description_en,
+              } = response.objectResponse;
+              const userInfo = {
+                username,
+                firstname,
+                lastname,
+                email,
+                active_status,
+                prefix_description_th,
+                prefix_description_en,
+                role_description_th,
+                role_description_en,
+              };
+              localStorage.setItem('userInfo', JSON.stringify(userInfo));
+              console.log('User info stored in localStorage:', userInfo);
+            } else {
+              console.error(
+                'Failed to fetch user info:',
+                response.message.messageDescription
+              );
+            }
+          },
+          (error) => {
+            console.error('Error fetching user info:', error);
+          }
+        );
+    }
   }
 
   isTokenExpired(): boolean {
