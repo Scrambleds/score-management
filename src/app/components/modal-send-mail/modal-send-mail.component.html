@@ -205,7 +205,8 @@
                   <button
                     class="dropdown-item"
                     type="button"
-                    (click)="createTemplate()"
+                    data-bs-toggle="modal"
+                    data-bs-target="#saveTemplateModal"
                   >
                     บันทึกเทมเพลตใหม่
                   </button>
@@ -251,6 +252,49 @@
             ></i>
             ส่งอีเมล
           </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal สำหรับกรอกชื่อเทมเพลตใหม่ -->
+<div
+  class="modal fade"
+  id="saveTemplateModal"
+  tabindex="-1"
+  aria-labelledby="saveTemplateModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body">
+        <div class="mb-3">
+          <label for="templateName" class="form-label">ชื่อเทมเพลต</label>
+          <div class="d-flex flex-wrap align-items-center gap-1">
+            <input
+              type="text"
+              class="form-control me-2"
+              id="templateName"
+              [(ngModel)]="templateName"
+              placeholder="กรอกชื่อเทมเพลตใหม่"
+              style="max-width: 300px"
+            />
+            <button
+              type="button"
+              class="btn btn-primary"
+              (click)="createTemplate()"
+            >
+              บันทึก
+            </button>
+            <button
+              type="button"
+              class="btn btn-secondary me-2"
+              data-bs-dismiss="modal"
+            >
+              ยกเลิก
+            </button>
+          </div>
         </div>
       </div>
     </div>

@@ -2,6 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { ScoreAnnouncementService } from '../../services/score-announcement/score-announcement.service';
+import { UserService } from '../../services/sharedService/userService/userService.service';
+import bootstrap from 'bootstrap';
 
 @Component({
   selector: 'app-modal-send-mail',
@@ -17,6 +19,7 @@ export class ModalSendMailComponent implements OnInit {
   canAddVariable: boolean = false; // ควบคุมการ enabled ปุ่ม
   focusedField: 'textarea' | 'subject' | null = null; // ฟิลด์ที่กำลัง focus อยู่
   language: string = 'th'; // ค่าภาษาเริ่มต้น
+  templateName: string = '';
 
   placeholderList: any[] = [];
   privateTemplateList: any[] = [];
@@ -25,7 +28,8 @@ export class ModalSendMailComponent implements OnInit {
 
   constructor(
     private http: HttpClient,
-    private scoreAnnouncementService: ScoreAnnouncementService
+    private scoreAnnouncementService: ScoreAnnouncementService,
+    private userService: UserService
   ) {}
 
   ngOnInit(): void {
@@ -184,16 +188,30 @@ export class ModalSendMailComponent implements OnInit {
   setDefaultTemplate(templateKey: number): void {
     console.log(`setDefault template : ${templateKey}`);
   }
-  createTemplate() {}
+  createTemplate() {
+    console.log('createTemplate');
+    const payload = {
+      template_name: '',
+      subject: this.emailSubject,
+      body: this.messageText,
+      username: this.userService.username, // Replace with actual username
+    };
+    this.scoreAnnouncementService.createEmailTemplate(payload).subscribe(
+      (response) => {
+        console.log('Response : ', response);
+      },
+      (error) => {
+        console.error('Error creating template:', error);
+      }
+    );
+  }
   updateTemplate(templateKey: number) {
     console.log(`update Template : ${templateKey}`);
-    const userInfo = localStorage.getItem('userInfo');
-    console.log(userInfo);
     const payload = {
       template_id: templateKey, // Assuming templateKey maps to template_id
       subject: this.emailSubject,
       body: this.messageText,
-      username: 'pamornpon', // Replace with actual username
+      username: this.userService.username, // Replace with actual username
     };
     this.scoreAnnouncementService.updateEmailTemplate(payload).subscribe(
       (response) => {
@@ -206,6 +224,18 @@ export class ModalSendMailComponent implements OnInit {
   }
   deleteTemplate(templateKey: number) {
     console.log(`deleteTemplate : ${templateKey}`);
+    const payload = {
+      template_id: templateKey, // Assuming templateKey maps to template_id
+      username: this.userService.username, // Replace with actual username
+    };
+    this.scoreAnnouncementService.deleteEmailTemplate(payload).subscribe(
+      (response) => {
+        console.log('Response : ', response);
+      },
+      (error) => {
+        console.error('Error updating template:', error);
+      }
+    );
   }
 
   //email placeholder

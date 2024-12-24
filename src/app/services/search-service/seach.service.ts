@@ -17,7 +17,9 @@ export interface SearchCriteria {
   providedIn: 'root',
 })
 export class SearchService {
-  private searchCriteriaSource = new BehaviorSubject<SearchCriteria | null>(null);
+  private searchCriteriaSource = new BehaviorSubject<SearchCriteria | null>(
+    null
+  );
   currentSearchCriteria = this.searchCriteriaSource.asObservable();
 
   // Method สำหรับอัพเดตข้อมูล search criteria

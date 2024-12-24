@@ -42,4 +42,20 @@ export class ScoreAnnouncementService {
       tap((_) => console.log('updateEmailTemplate done!!'))
     );
   }
+
+  deleteEmailTemplate(template: any): Observable<any> {
+    const url = `${environment.apiUrl}/api/StudentScore/DeleteTemplate`;
+    return this.http.post<any>(url, template, { ...this.httpOptions }).pipe(
+      map((response: any) => console.log(response)),
+      tap((_) => console.log('deleteEmailTemplate done!!'))
+    );
+  }
+
+  createEmailTemplate(template: any): Observable<any> {
+    const url = `${environment.apiUrl}/api/StudentScore/CreateTemplate`;
+    return this.http.post<any>(url, template, { ...this.httpOptions }).pipe(
+      map((response: any) => console.log(response)),
+      tap((_) => console.log('createEmailTemplate done!!'))
+    );
+  }
 }
