@@ -3,6 +3,7 @@ import { Component, EventEmitter, HostListener, Input, output, Output } from '@a
 import { SearchService } from '../../services/search-service/seach.service'
 import { Router } from '@angular/router';
 import { UserManageService } from '../../services/user-manage/user-manage.service';
+import { masterDataService } from '../../services/sharedService/masterDataService/masterDataService';
 
 @Component({
   selector: 'app-edit-user',
@@ -13,18 +14,26 @@ import { UserManageService } from '../../services/user-manage/user-manage.servic
 export class EditUserComponent {
  public form: FormGroup;
   submittedData: any = null;
+  // isOnAdduser = true;
   @Output() searchEvent = new EventEmitter<any>(); 
   @Output() submit = new EventEmitter<any>();
   
-  roleOption = [{ id: 'ผู้ดูแลระบบ', title: 'ผู้ดูแลระบบ' }, { id: 'อาจารย์', title: 'อาจารย์' }];
-  statusOption = [{ id: 'active', title: 'active' }, { id: 'inactive', title: 'inactive' }];
+  // roleOption = [{ id: 'ผู้ดูแลระบบ', title: 'ผู้ดูแลระบบ' }, { id: 'อาจารย์', title: 'อาจารย์' }];
+  // statusOption = [{ id: 'active', title: 'active' }, { id: 'inactive', title: 'inactive' }];
+
+  public roleOption: any[] = []; // ตัวเลือกหน้าที่
+  public statusOption: any[] = []; // ตัวเลือกสถานะ
 
   rowData: any[] = [];
   originalData: any[] = [];
   filteredData: any[] = [];
   
 
-  constructor(private UserManageService: UserManageService ,private fb: FormBuilder, private router: Router, private searchService: SearchService){
+  constructor(private UserManageService: UserManageService ,
+    private fb: FormBuilder, 
+    private router: Router, 
+    private searchService: SearchService,
+    private masterDataService: masterDataService){
     // กำหนดโครงสร้างฟอร์มและ Validation
     this.form = this.fb.group({
       teacher_code: [null],
@@ -36,68 +45,23 @@ export class EditUserComponent {
     });
   }
 
-  // Handle form submission
-  // onSubmit(): void {
-  //   if (this.form.valid) {
-  //     console.log('Form Submitted:', this.form.value);
-  //   } else {
-  //     console.log('Form is invalid');
-  //   }
-  // }
-
-// ฟังก์ชันแยก fullname ออกเป็น prefix, firstname, lastname
-
 private splitFullname(fullname: string): { prefix: string, firstname: string, lastname: string } {
   const [prefix = '', firstname = '', ...rest] = fullname.split(' ').filter(Boolean);
   return { prefix, firstname, lastname: rest.join(' ') };
 }
 
-// ฟังก์ชันในการค้นหาข้อมูล
-// onSearch(): void {
-//   if (this.form.valid) {
-//     const searchCriteria = this.form.value;
-//     const fullname = searchCriteria.fullname ? searchCriteria.fullname.trim() : '';
-//     // this.searchEvent.emit(searchCriteria);
+ngOnInit() {
+  // Subscribe เพื่อติดตามการเปลี่ยนแปลงของ role และ status
+  this.masterDataService.getRoleDataObservable().subscribe((roles) => {
+    this.roleOption = roles || [];
+    console.log('Updated roleOption: ', this.roleOption);
+  });
 
-//     this.searchService.updateSearchCriteria(this.form.value);
-//     // อัพเดต search criteria โดยใช้ fullname ในการค้นหาคำ
-//     this.searchService.updateSearchCriteria({
-//       teacher_code: searchCriteria.teacher_code,
-//       fullname: fullname,  // ส่ง fullname ไปยัง searchCriteria
-//       email: searchCriteria.email,
-//       role: searchCriteria.role,
-//       active_status: searchCriteria.active_status
-//     });
-
-//     // ฟิลเตอร์ข้อมูลจาก originalData
-//     this.filteredData = this.filterData(this.originalData, {
-//       ...searchCriteria,
-//       fullname
-//     });
-
-//     console.log('ส่งข้อมูล:', searchCriteria);
-//   } else {
-//     console.log('กรุณากรอกข้อมูลให้ครบถ้วน');
-//     this.searchService.updateSearchCriteria({});
-//   }
-// }
-
-// onSearch(): void {
-//   if (this.form.valid) {
-//     const searchCriteria = this.form.value;
-//     const fullname = searchCriteria.fullname ? searchCriteria.fullname.trim() : '';
-//     this.searchService.updateSearchCriteria({
-//       ...searchCriteria,
-//       fullname,
-//     });
-//     console.log('Search criteria updated:', searchCriteria);
-
-//   } else {
-//     console.log('กรุณากรอกข้อมูลให้ครบถ้วน');
-//   }
-// }
-
-// เมื่อทำการค้นหาใน edit-user
+  this.masterDataService.getStatusDataObservable().subscribe((statuses) => {
+    this.statusOption = statuses || [];
+    console.log('Updated statusOption: ', this.statusOption);
+  });
+}
 
 onSearch(): void {
   if (this.form.valid) {
@@ -121,16 +85,6 @@ onSearch(): void {
   }
 }
 
-  // ฟังก์ชันรีเซ็ตฟอร์ม
-  // onReset(): void {
-  //   this.router.navigate(['/UserManagement']);  // กลับไปที่หน้าเดิม
-  //   this.form.reset();  // รีเซ็ตฟอร์ม
-
-  //   // คืนค่าข้อมูลทั้งหมด
-  //   this.filteredData = [...this.originalData];  // ใช้ข้อมูลต้นฉบับ
-  //   this.searchService.updateSearchCriteria({});  // รีเซ็ต criteria
-  // }
-
   onReset(): void {
     this.form.reset();
     this.filteredData = [...this.originalData]; // คืนค่าข้อมูลทั้งหมด
@@ -141,22 +95,6 @@ onSearch(): void {
   isCurrentRoute(route: string): boolean{
     return this.router.url === route;
   }
-  // ngOnInit() {
-  //   // ดึงข้อมูลทั้งหมดจาก API
-  //   this.UserManageService.getUsers().subscribe({
-  //     next: (response: any) => {
-  //       if (response.isSuccess) {
-  //         this.originalData = response.objectResponse;  // เก็บข้อมูลทั้งหมด
-  //         this.filteredData = [...this.originalData];  // เริ่มต้นให้แสดงข้อมูลทั้งหมด
-  //       } else {
-  //         console.error('ไม่สามารถดึงข้อมูลได้', response.message);
-  //       }
-  //     },
-  //     error: err => {
-  //       console.error('API Error:', err);
-  //     }
-  //   });
-  // }
 
   // ฟังก์ชันฟิลเตอร์ข้อมูล
   filterData(data: any[], criteria: any): any[] {
@@ -181,7 +119,6 @@ onSearch(): void {
       return isMatching;
     });
   }
-  
   
   matchAnyField(searchString: string, item: any): boolean {
     const lowerCaseSearchString = searchString.toLowerCase();

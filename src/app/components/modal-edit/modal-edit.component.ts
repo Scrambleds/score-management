@@ -5,6 +5,10 @@ import Swal from 'sweetalert2';
 import { Modal } from 'bootstrap';
 import { UserEditService } from '../../services/edit-user/edit-user.service'
 import { response } from 'express';
+import { SelectBoxService } from '../../services/select-box/select-box.service';
+import { UserService } from '../../services/sharedService/userService/userService.service'
+import { UserManageService } from '../../services/user-manage/user-manage.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-modal-edit',
@@ -14,9 +18,13 @@ import { response } from 'express';
 })
 export class ModalEditComponent {
   @Input() show = false; // ควบคุมการแสดงผลของ modal
-  @Input() roleOptions: Array<{ id: string; title: string }> = [];
-  @Input() statusOptions: Array<{ id: string; title: string }> = [];
-  @Input() selectedRowData: any; 
+  @Input() roleData: Array<{ id: string; title: string }> = [];
+  @Input() statusData: Array<{ id: string; title: string }> = [];
+  @Input() prefixData: Array<{ id: string; title: string }> = [];
+  @Input() selectedRowData: any;
+  systemParams: any;
+  // prefixData: any[] = [];W
+  // roleDatas: any[] = [];
 
   @Output() hide = new EventEmitter<void>(); // สัญญาณเมื่อปิด modal
   @Output() submit = new EventEmitter<any>(); // ส่งข้อมูล form กลับไปที่ parent เมื่อ submit
@@ -27,8 +35,12 @@ export class ModalEditComponent {
   isDisabled = true; 
   submitted = false;
   
-
-  constructor(private fb: FormBuilder, private userEditService: UserEditService) {
+  constructor(private fb: FormBuilder, 
+    private userEditService: UserEditService
+    , private SelectBoxService: SelectBoxService
+    , private UserService: UserService
+    , private UserManageService: UserManageService
+    , private Router: Router) {
     this.form = this.fb.group({
       row_id: [null],
       teacher_code: [{value: null , disabled: this.isDisabled}, Validators.required],
@@ -143,6 +155,7 @@ export class ModalEditComponent {
   }
 
   ngOnInit() {
+
     if(this.show){
       this.lockScroll();
     }
@@ -194,10 +207,11 @@ export class ModalEditComponent {
     this.form.updateValueAndValidity();
   
     if (this.form.valid && ((!this.form.value.password && !this.form.value.confirm_password) || (this.form.value.password === this.form.value.confirm_password))) {
-      
-      const update_by = localStorage.getItem('username') || 'admin';
+
+      const UserInfo = this.UserService.username;
+
       const userData = this.form.getRawValue();
-      userData.update_by = update_by;
+      userData.update_by = UserInfo;
       console.log("ฟอร์มถูกต้อง ข้อมูลที่ส่ง: ", userData);
       this.userEditService.editUser(userData).subscribe((response: any) => {
         console.log("Response from API:", response);
@@ -214,8 +228,12 @@ export class ModalEditComponent {
           if (this.modalInstance) {
             this.modalInstance.hide();
           }
+        // window.location.reload();
+        this.Router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+          this.Router.navigate([this.Router.url]);
         });
-  
+      });
+      
         this.form.reset();
         this.removeConditionalFields();
         

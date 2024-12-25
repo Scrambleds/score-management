@@ -13,6 +13,10 @@ import { SearchService } from '../../services/search-service/seach.service';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { AddUserService } from '../../services/add-user/add-user.service';
+import { UserService } from '../../services/sharedService/userService/userService.service';
+import { masterDataService } from '../../services/sharedService/masterDataService/masterDataService';
+import { SelectBoxService } from '../../services/select-box/select-box.service';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-add-user',
@@ -21,6 +25,11 @@ import { AddUserService } from '../../services/add-user/add-user.service';
   styleUrls: ['./add-user.component.css'],
 })
 export class AddUserComponent implements OnInit {
+  // public roleDatas: any[] = [];
+  // public prefixDatas: any[] = [];
+  roleData: any[] = [];
+  prefixData: any[] = [];
+  statusData: any[] = [];
   @Input() criteria: any;
   @Input() titleName: string = 'อัปโหลดไฟล์ข้อมูลบัญชีผู้ใช้';
   @Input() buttonName: string = 'อัปโหลดไฟล์ Excel';
@@ -55,7 +64,10 @@ export class AddUserComponent implements OnInit {
     private router: Router,
     private fb: FormBuilder,
     private searchService: SearchService,
-    private addUserService: AddUserService
+    private addUserService: AddUserService,
+    private UserService: UserService,
+    private masterDataService: masterDataService,
+    private SelectBoxService: SelectBoxService,
   ) {
     // Initialize form here
     this.form = this.fb.group({
@@ -77,6 +89,57 @@ export class AddUserComponent implements OnInit {
   }
 
   ngOnInit() {
+
+        const role = 'role';
+        const prefix = 'prefix';
+        const status = 'active_status';
+
+       // Fetch role, prefix, and status data
+        forkJoin({
+          roleData: this.SelectBoxService.getSystemParamRole(role),
+          prefixData: this.SelectBoxService.getSystemParamPrefix(prefix),
+          statusData: this.SelectBoxService.getSystemParamStatus(status),
+        }).subscribe({
+          next: (results: any) => {
+            console.log('Received role data: ', results.roleData);
+            console.log('Received prefix data: ', results.prefixData);
+            console.log('Received status data: ', results.statusData);
+      
+            // เก็บข้อมูลที่ได้รับจาก API ลงในตัวแปรที่แตกต่างกัน
+            if (results.roleData && results.roleData.objectResponse) {
+              this.roleData = results.roleData.objectResponse.filter(
+                (item: any) => item.byte_code && item.byte_desc_th
+              );
+            }
+      
+            if (results.prefixData && results.prefixData.objectResponse) {
+              this.prefixData = results.prefixData.objectResponse.filter(
+                (item: any) => item.byte_code && item.byte_desc_th
+              );
+            }
+      
+            if (results.statusData && results.statusData.objectResponse) {
+              this.statusData = results.statusData.objectResponse.filter(
+                (item: any) => item.byte_code && item.byte_desc_en
+              );
+            }
+      
+            this.masterDataService.setMasterData(this.roleData, this.prefixData, this.statusData);
+          },
+          error: (err: any) => {
+            console.log('Error fetching master data: ', err);
+          },
+        });
+
+
+    this.masterDataService.getRoleDataObservable().subscribe((data) => {
+      this.roleData = data;
+    });
+
+    this.masterDataService.getPrefixDataObservable().subscribe((data) => {
+      this.prefixData = data;
+    });
+
     this.searchService.currentSearchCriteria.subscribe((criteria) => {
       console.log('Updated criteria:', criteria);
       console.log('Original criteria:', this.originalData);
@@ -210,6 +273,7 @@ export class AddUserComponent implements OnInit {
         let flexValue = 1;
         let cellClass = '';
         let headerName = '';
+        let cellEditor = null;
 
         switch (key) {
           case 'row_id':
@@ -231,6 +295,7 @@ export class AddUserComponent implements OnInit {
             headerName = 'คำนำหน้า';
             customWidth = 70;
             flexValue = 0.6;
+            cellEditor = 'agSelectCellEditor';
             break;
           case 'firstname':
             headerName = 'ชื่อ';
@@ -247,6 +312,7 @@ export class AddUserComponent implements OnInit {
             customWidth = 70;
             flexValue = 0.8;
             cellClass = 'text-end';
+            cellEditor = 'agSelectCellEditor';
             break;
           // case 'active_status':
           //   headerName = 'สถานะการใช้งาน';
@@ -260,8 +326,8 @@ export class AddUserComponent implements OnInit {
         }
 
         return {
-          field: key, // ชื่อฟิลด์ที่ใช้ใน API
-          headerName: headerName, // ชื่อที่แสดงใน ag-Grid
+          field: key, // Field name to be used in the API
+          headerName: headerName, // Column header name
           editable: true,
           flex: flexValue,
           minWidth: customWidth,
@@ -274,6 +340,13 @@ export class AddUserComponent implements OnInit {
             }
             return params.value;
           },
+          // Apply select-box for prefix and role only
+          cellEditorParams: key === 'prefix' ? {
+            values: this.prefixData.map(item => item.byte_desc_th),
+          } : key === 'role' ? {
+            values: this.roleData.map(item => item.byte_desc_th),
+          } : null,
+          cellEditor: cellEditor, // Apply select-box editor
         };
       });
 
@@ -339,14 +412,17 @@ export class AddUserComponent implements OnInit {
       return;
     }
 
-    const createBy = localStorage.getItem('username') || 'admin'; // ค่า default เป็น 'admin' ถ้าไม่พบค่าใน localStorage
-
+    const UserInfo = this.UserService.username;
+    
     // กำหนดข้อมูลที่ต้องการส่ง
     const dataToSend = this.rowData.map((row) => {
       const { create_date, ...filteredRow } = row;
-      return { ...filteredRow, create_by: createBy };
+      return {
+        ...filteredRow,
+        create_by: UserInfo,
+      };
     });
-
+    
     // ส่งข้อมูลไปยัง API
     this.addUserService.insertUser(dataToSend).subscribe(
       (response) => {

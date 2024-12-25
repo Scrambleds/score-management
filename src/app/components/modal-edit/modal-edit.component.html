@@ -40,18 +40,29 @@
 
               <div class="col-6 col-md-4">
                 <label for="role" class="form-label ps-2" [appRequiredMarker]="form.get('role')">หน้าที่</label>
-                <ng-select [items]="roleOptions" bindLabel="title" bindValue="id" placeholder="กรุณาเลือก"
+                <ng-select [items]="roleData" bindLabel="byte_desc_th" bindValue="byte_desc_th" placeholder="กรุณาเลือก"
                   formControlName="role" [searchable]="true"></ng-select>
                 <div *ngIf="form.get('role')?.touched && form.get('role')?.invalid" class="text-danger ps-2">
                   กรุณากรอกข้อมูล
                 </div>
               </div>
 
-              <div class="col-6 col-md-4">
+              <!-- <div class="col-6 col-md-4">
                 <label for="prefix" class="form-label ps-2"
                   [appRequiredMarker]="form.get('prefix')">คำนำหน้าชื่อ</label>
                 <input type="text" id="prefix" class="form-control" formControlName="prefix" placeholder="กรุณากรอก" />
                 <div *ngIf="form.get('prefix')?.touched && form.get('prefix')?.invalid" class="text-danger ps-2">
+                  กรุณากรอกข้อมูล
+                </div>
+              </div> -->
+
+              <div class="col-6 col-md-4">
+                <label for="prefix" class="form-label ps-2"
+                  [appRequiredMarker]="form.get('prefix')">คำนำหน้าชื่อ</label>
+                <ng-select [items]="prefixData" bindLabel="byte_desc_th" bindValue="byte_desc_th" placeholder="กรุณาเลือก"
+                  formControlName="prefix" [searchable]="true"></ng-select>
+                <div *ngIf="form.get('prefix')?.touched && form.get('prefix')?.invalid"
+                  class="text-danger ps-2">
                   กรุณากรอกข้อมูล
                 </div>
               </div>
@@ -120,7 +131,7 @@
               <div class="col-6 col-md-4">
                 <label for="active_status" class="form-label ps-2"
                   [appRequiredMarker]="form.get('active_status')">สถานะการใช้งาน</label>
-                <ng-select [items]="statusOptions" bindLabel="title" bindValue="id" placeholder="กรุณาเลือก"
+                <ng-select [items]="statusData" bindLabel="byte_desc_en" bindValue="byte_desc_en" placeholder="กรุณาเลือก"
                   formControlName="active_status" [searchable]="true"></ng-select>
                 <div *ngIf="form.get('active_status')?.touched && form.get('active_status')?.invalid"
                   class="text-danger ps-2">

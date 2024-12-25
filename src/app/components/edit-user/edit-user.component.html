@@ -106,8 +106,8 @@
                           id="role"
                           formControlName="role"
                           [items]="roleOption"
-                          bindLabel="title"
-                          bindValue="id"
+                          bindLabel="byte_desc_th"
+                          bindValue="byte_desc_th"
                           placeholder="กรุณาเลือก"
                           [clearable]="true">
                         </ng-select>
@@ -118,14 +118,14 @@
                     </div>
                     
                     <!-- Column 5 (Select dropdown) -->
-                    <div class="col-12 col-md-6 col-lg-2">
+                    <div *ngIf="isCurrentRoute('/UserManagement')" class="col-12 col-md-6 col-lg-2">
                         <label for="active_status" class="form-label fw-bold text-truncate ps-2" [appRequiredMarker]="form.get('active_status')">สถานะการใช้งาน</label>
                         <ng-select
                           id="active_status"
                           formControlName="active_status"
                           [items]="statusOption"
-                          bindLabel="title"
-                          bindValue="id"
+                          bindLabel="byte_desc_en"
+                          bindValue="byte_desc_en"
                           placeholder="กรุณาเลือก"
                           [clearable]="true"> 
                         </ng-select>

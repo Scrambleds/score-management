@@ -1,15 +1,16 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
+import { Observable, BehaviorSubject, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
-
 export class UserManageService {
   private apiUrl = `${environment.apiUrl}/api/EditUser/GetAllUser`;
+  private usersSubject: BehaviorSubject<any[]> = new BehaviorSubject<any[]>([]);
+  public users$: Observable<any[]> = this.usersSubject.asObservable();
 
   constructor(private http: HttpClient) {}
 
@@ -31,6 +32,7 @@ export class UserManageService {
     return new HttpHeaders().set('Authorization', `Bearer ${token}`);
   }
 
+  // ดึงข้อมูลผู้ใช้
   getUsers(): Observable<any[]> {
     const headers = this.getAuthHeaders();
     if (!headers) {
@@ -44,5 +46,10 @@ export class UserManageService {
         return throwError(() => new Error('Failed to fetch users. Please try again.'));
       })
     );
+  }
+
+  // ฟังก์ชันในการอัปเดตข้อมูลผู้ใช้ที่ถูกจัดเก็บใน BehaviorSubject
+  updateUsers(users: any[]): void {
+    this.usersSubject.next(users);
   }
 }
