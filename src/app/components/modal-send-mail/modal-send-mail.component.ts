@@ -29,8 +29,9 @@ export class ModalSendMailComponent implements OnInit {
   allTemplateList: any[] = [];
 
   //flg
-  isCreateTemplateSubmited = false;
-  isSendMailSubmited = false;
+  isCreateTemplateSubmited: boolean = false;
+  isSendMailSubmited: boolean = false;
+  isSendPerPerson: boolean = false;
 
   //form
   public createTemplateForm: FormGroup;
@@ -203,6 +204,18 @@ export class ModalSendMailComponent implements OnInit {
   }
   setDefaultTemplate(templateKey: number): void {
     console.log(`setDefault template : ${templateKey}`);
+    const payload = {
+      template_id: templateKey,
+      username: this.userService.username, // Replace with actual username
+    };
+    this.scoreAnnouncementService.setDefaultTemplate(payload).subscribe(
+      (response) => {
+        console.log('Response : ', response);
+      },
+      (error) => {
+        console.error('Error creating template:', error);
+      }
+    );
   }
   createTemplate() {
     console.log('createTemplate');
@@ -230,14 +243,35 @@ export class ModalSendMailComponent implements OnInit {
       body: this.messageText,
       username: this.userService.username, // Replace with actual username
     };
-    this.scoreAnnouncementService.updateEmailTemplate(payload).subscribe(
-      (response) => {
-        console.log('Response : ', response);
-      },
-      (error) => {
-        console.error('Error updating template:', error);
-      }
+    let template = this.privateTemplateList.find(
+      (t) => t.templateId === templateKey
     );
+    Swal.fire({
+      title: `ต้องการเขียนทับเทมเพลต ${template.templateName} ใช่หรือไม่`,
+      text: 'หลังจากเขียนทับแล้วจะไม่สามารถกลับมาแก้ไขได้',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: 'var(--primary-color)',
+      confirmButtonText: 'ตกลง',
+      cancelButtonColor: 'var(--secondary-color)',
+      cancelButtonText: 'ยกเลิก',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // หากคลิก "ตกลง"
+        console.log('ข้อมูลถูกลบแล้ว');
+        this.scoreAnnouncementService.updateEmailTemplate(payload).subscribe(
+          (response) => {
+            console.log('Response : ', response);
+          },
+          (error) => {
+            console.error('Error updating template:', error);
+          }
+        );
+      } else if (result.isDismissed) {
+        // หากคลิก "ยกเลิก"
+        console.log('การบันทึกถูกยกเลิก');
+      }
+    });
   }
   deleteTemplate(templateKey: number) {
     console.log(`deleteTemplate : ${templateKey}`);
@@ -245,14 +279,35 @@ export class ModalSendMailComponent implements OnInit {
       template_id: templateKey, // Assuming templateKey maps to template_id
       username: this.userService.username, // Replace with actual username
     };
-    this.scoreAnnouncementService.deleteEmailTemplate(payload).subscribe(
-      (response) => {
-        console.log('Response : ', response);
-      },
-      (error) => {
-        console.error('Error updating template:', error);
-      }
+    let template = this.privateTemplateList.find(
+      (t) => t.templateId === templateKey
     );
+    Swal.fire({
+      title: `ต้องการลบเทมเพลต ${template.templateName} ใช่หรือไม่`,
+      text: 'หลังจากลบข้อมูลแล้วจะไม่สามารถกลับมาแก้ไขได้',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: 'var(--danger-color)',
+      confirmButtonText: 'ลบ',
+      cancelButtonColor: 'var(--secondary-color)',
+      cancelButtonText: 'ยกเลิก',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // หากคลิก "ตกลง"
+        console.log('ข้อมูลถูกลบแล้ว');
+        this.scoreAnnouncementService.deleteEmailTemplate(payload).subscribe(
+          (response) => {
+            console.log('Response : ', response);
+          },
+          (error) => {
+            console.error('Error updating template:', error);
+          }
+        );
+      } else if (result.isDismissed) {
+        // หากคลิก "ยกเลิก"
+        console.log('การบันทึกถูกยกเลิก');
+      }
+    });
   }
 
   //email placeholder
@@ -299,16 +354,54 @@ export class ModalSendMailComponent implements OnInit {
     };
 
     console.log('Email Payload:', payload); // แสดงค่าใน console
-
-    this.http
-      .post(`${environment.apiUrl}/api/StudentScore/SendStudentScore`, payload)
-      .subscribe((response: any) => {
+    this.scoreAnnouncementService.sendMail(payload).subscribe(
+      (response) => {
+        this.createTemplateForm.reset();
+        this.isTemplateDialogVisible = false;
+        console.log('Success', response);
         if (response.isSuccess) {
-          console.log(response);
+          Swal.fire({
+            title: 'ส่งอีเมลสำเร็จ',
+            icon: 'success',
+            confirmButtonColor: 'var(--primary-color)',
+            confirmButtonText: 'ตกลง',
+          }).then((result) => {
+            if (result.isConfirmed) {
+              // หากคลิก "ตกลง"
+              console.log('success : ', response.messageDesc);
+            }
+          });
         } else {
-          console.log(response);
+          Swal.fire({
+            title: 'เกิดข้อผิดพลาด',
+            text: response.message.messageDescription,
+            icon: 'error',
+            confirmButtonColor: 'var(--secondary-color)',
+            confirmButtonText: 'ปิด',
+          }).then((result) => {
+            if (result.isConfirmed) {
+              // หากคลิก "ตกลง"
+              console.log('error : ', response.messageDesc);
+            }
+          });
         }
-      });
+      },
+      (error) => {
+        console.log('Error', error);
+      },
+      () => {
+        this.isCreateTemplateSubmited = false; // reset flg
+      }
+    );
+    // this.http
+    //   .post(`${environment.apiUrl}/api/StudentScore/SendStudentScore`, payload)
+    //   .subscribe((response: any) => {
+    //     if (response.isSuccess) {
+    //       console.log(response);
+    //     } else {
+    //       console.log(response);
+    //     }
+    //   });
   }
 
   isTemplateDialogVisible = false;

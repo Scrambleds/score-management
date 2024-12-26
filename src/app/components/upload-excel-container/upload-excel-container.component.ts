@@ -321,7 +321,7 @@ export class UploadExcelContainerComponent {
       text: 'หลังจากลบข้อมูลแล้วจะไม่สามารถกลับมาแก้ไขได้',
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonColor: '#d33',
+      confirmButtonColor: 'var(--danger-color)',
       confirmButtonText: 'ลบ',
       cancelButtonColor: 'var(--secondary-color)',
       cancelButtonText: 'ยกเลิก',

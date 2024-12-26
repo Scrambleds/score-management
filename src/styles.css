@@ -8,6 +8,7 @@
   --white-color: #ffffff;
   --body-color: #eef5ff;
   --disabled-color: #e9ecef;
+  --danger-color: #d33;
   --font-size: 1rem;
   --font-color: #3c3c3c;
   --font-menu-color: #9d9fa1;
@@ -17,7 +18,7 @@
 /* layout */
 body,
 html {
-  font-family: 'Prompt', sans-serif;
+  font-family: "Prompt", sans-serif;
   margin: 0;
   padding: 0;
   height: 100%;
@@ -144,25 +145,25 @@ html {
 
 /* ถ้าเกิดปัญหาลบได้ตั้งแต่แถวนี้ */
 @font-face {
-  font-family: 'Prompt';
-  src: url('assets/fonts/Prompt/Prompt-Regular.ttf') format('ttf'),
-       url('assets/fonts/Prompt/Prompt-Regular.ttf') format('ttf');
+  font-family: "Prompt";
+  src: url("assets/fonts/Prompt/Prompt-Regular.ttf") format("ttf"),
+    url("assets/fonts/Prompt/Prompt-Regular.ttf") format("ttf");
   font-weight: 400;
   font-style: normal;
 }
 
 @font-face {
-  font-family: 'Prompt';
-  src: url('assets/fonts/Prompt/Prompt-Bold.ttf') format('ttf'),
-       url('assets/fonts/Prompt/Prompt-Bold.ttf') format('ttf');
+  font-family: "Prompt";
+  src: url("assets/fonts/Prompt/Prompt-Bold.ttf") format("ttf"),
+    url("assets/fonts/Prompt/Prompt-Bold.ttf") format("ttf");
   font-weight: 700;
   font-style: normal;
 }
 
 @font-face {
-  font-family: 'Prompt';
-  src: url('assets/fonts/Prompt/Prompt-Italic.ttf') format('ttf'),
-       url('assets/fonts/Prompt/Prompt-Italic.ttf') format('ttf');
+  font-family: "Prompt";
+  src: url("assets/fonts/Prompt/Prompt-Italic.ttf") format("ttf"),
+    url("assets/fonts/Prompt/Prompt-Italic.ttf") format("ttf");
   font-weight: 400;
   font-style: italic;
 }
@@ -173,3 +174,8 @@ html {
   font-size: 1rem;
   color: var(--font-color);
 } */
+
+/* swal2 */
+.swal2-title {
+  font-size: 1.375rem; /* Adjust font size as needed */
+}
