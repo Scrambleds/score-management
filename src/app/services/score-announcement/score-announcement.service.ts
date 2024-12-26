@@ -54,7 +54,7 @@ export class ScoreAnnouncementService {
   createEmailTemplate(template: any): Observable<any> {
     const url = `${environment.apiUrl}/api/StudentScore/CreateTemplate`;
     return this.http.post<any>(url, template, { ...this.httpOptions }).pipe(
-      map((response: any) => console.log(response)),
+      map((response: any) => response),
       tap((_) => console.log('createEmailTemplate done!!'))
     );
   }

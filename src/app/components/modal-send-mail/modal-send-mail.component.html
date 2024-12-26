@@ -4,6 +4,7 @@
   id="announceScoreModal"
   data-bs-backdrop="static"
   data-bs-keyboard="false"
+  data-bs-focus="false"
   tabindex="-1"
   aria-labelledby="announceScoreLabel"
   aria-hidden="true"
@@ -205,8 +206,7 @@
                   <button
                     class="dropdown-item"
                     type="button"
-                    data-bs-toggle="modal"
-                    data-bs-target="#saveTemplateModal"
+                    (click)="toggleTemplateDialog(true)"
                   >
                     บันทึกเทมเพลตใหม่
                   </button>
@@ -258,45 +258,73 @@
   </div>
 </div>
 
-<!-- Modal สำหรับกรอกชื่อเทมเพลตใหม่ -->
+<!-- dialog create template -->
 <div
-  class="modal fade"
-  id="saveTemplateModal"
-  tabindex="-1"
-  aria-labelledby="saveTemplateModalLabel"
-  aria-hidden="true"
+  class="custom-overlay"
+  *ngIf="isTemplateDialogVisible"
+  id="createTemplateDialog"
+  tabindex="0"
+  (keydown)="trapFocus($event)"
 >
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-body">
-        <div class="mb-3">
-          <label for="templateName" class="form-label">ชื่อเทมเพลต</label>
-          <div class="d-flex flex-wrap align-items-center gap-1">
-            <input
-              type="text"
-              class="form-control me-2"
-              id="templateName"
-              [(ngModel)]="templateName"
-              placeholder="กรอกชื่อเทมเพลตใหม่"
-              style="max-width: 300px"
-            />
-            <button
-              type="button"
-              class="btn btn-primary"
-              (click)="createTemplate()"
-            >
-              บันทึก
-            </button>
-            <button
-              type="button"
-              class="btn btn-secondary me-2"
-              data-bs-dismiss="modal"
-            >
-              ยกเลิก
-            </button>
+  <div class="backdrop"></div>
+  <div
+    class="overlay-content"
+    [ngClass]="{
+      'fade-in': isTemplateDialogVisible,
+      'fade-out': !isTemplateDialogVisible
+    }"
+  >
+    <div class="mb-3">
+      <label for="templateName" class="form-label">ชื่อเทมเพลต</label>
+      <form
+        [formGroup]="createTemplateForm"
+        class="gap-1 d-flex flex-wrap mb-0"
+        style="width: auto"
+      >
+        <!-- Input Container -->
+        <div class="flex-grow-1" style="min-width: 200px">
+          <input
+            formControlName="nameTemplate"
+            name="nameTemplate"
+            type="text"
+            id="templateName"
+            placeholder="กรอกชื่อเทมเพลตใหม่"
+            class="form-control me-2 w-100"
+            autocomplete="off"
+          />
+          <div
+            *ngIf="
+              createTemplateForm.get('nameTemplate')?.touched &&
+              createTemplateForm.get('nameTemplate')?.invalid
+            "
+            class="text-danger ps-2"
+          >
+            {{ "alert_enterData" | translate }}
           </div>
         </div>
-      </div>
+        <!-- Button Container -->
+        <div
+          class="d-flex ms-auto h-auto"
+          style="
+            flex-wrap: wrap;
+            gap: 8px;
+            text-align: right;
+            max-height: 37.6px;
+          "
+        >
+          <button
+            type="button"
+            class="btn btn-primary"
+            [disabled]="createTemplateForm.invalid"
+            (click)="onSave()"
+          >
+            บันทึก
+          </button>
+          <button type="button" class="btn btn-secondary" (click)="onCancel()">
+            ยกเลิก
+          </button>
+        </div>
+      </form>
     </div>
   </div>
 </div>

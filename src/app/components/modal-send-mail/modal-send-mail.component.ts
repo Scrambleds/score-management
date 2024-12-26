@@ -1,9 +1,11 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, Renderer2 } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { ScoreAnnouncementService } from '../../services/score-announcement/score-announcement.service';
 import { UserService } from '../../services/sharedService/userService/userService.service';
 import bootstrap from 'bootstrap';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-modal-send-mail',
@@ -26,11 +28,25 @@ export class ModalSendMailComponent implements OnInit {
   defaultTemplateList: any[] = [];
   allTemplateList: any[] = [];
 
+  //flg
+  isCreateTemplateSubmited = false;
+  isSendMailSubmited = false;
+
+  //form
+  public createTemplateForm: FormGroup;
+
   constructor(
     private http: HttpClient,
     private scoreAnnouncementService: ScoreAnnouncementService,
-    private userService: UserService
-  ) {}
+    private userService: UserService,
+    private renderer: Renderer2,
+    private el: ElementRef,
+    private fb: FormBuilder
+  ) {
+    this.createTemplateForm = this.fb.group({
+      nameTemplate: ['', Validators.required],
+    });
+  }
 
   ngOnInit(): void {
     // ดึงค่า language จาก localStorage
@@ -204,6 +220,7 @@ export class ModalSendMailComponent implements OnInit {
         console.error('Error creating template:', error);
       }
     );
+    this.toggleTemplateDialog(false); // ปิด dialog หลังบันทึก
   }
   updateTemplate(templateKey: number) {
     console.log(`update Template : ${templateKey}`);
@@ -292,5 +309,135 @@ export class ModalSendMailComponent implements OnInit {
           console.log(response);
         }
       });
+  }
+
+  isTemplateDialogVisible = false;
+
+  toggleTemplateDialog(visible: boolean): void {
+    this.isTemplateDialogVisible = visible;
+    const bodyChildren = document.body.children;
+    for (const child of Array.from(bodyChildren)) {
+      if (child.id !== 'createTemplateDialog' && visible) {
+        this.renderer.setAttribute(child, 'aria-hidden', 'true');
+      } else if (child.id !== 'createTemplateDialog' && !visible) {
+        this.renderer.removeAttribute(child, 'aria-hidden');
+      }
+    }
+
+    // Focus first element in the dialog when opened
+    if (visible) {
+      //set delay for avoid DOM can't build it in time
+      setTimeout(() => {
+        const dialog = this.el.nativeElement.querySelector(
+          '#createTemplateDialog'
+        );
+        if (dialog) {
+          const focusableElements = dialog.querySelectorAll(
+            'a[href], button, textarea, input, select, [tabindex]:not([tabindex="-1"])'
+          );
+          //move focus to first element in dialog
+          (focusableElements[0] as HTMLElement)?.focus();
+        }
+      });
+    }
+  }
+
+  // Prevent tab focus outside modal dialog create template
+  trapFocus(event: KeyboardEvent): void {
+    const dialog = this.el.nativeElement.querySelector('#createTemplateDialog');
+    const focusableElements = dialog.querySelectorAll(
+      'a[href], button, textarea, input, select, [tabindex]:not([tabindex="-1"])'
+    );
+    const firstElement = focusableElements[0];
+    const lastElement = focusableElements[focusableElements.length - 1];
+
+    if (event.key === 'Tab') {
+      if (event.shiftKey) {
+        // Shift + Tab: Move focus to the last element if on the first element
+        if (document.activeElement === firstElement) {
+          event.preventDefault();
+          (lastElement as HTMLElement).focus();
+        }
+      } else {
+        // Tab: Move focus to the first element if on the last element
+        if (document.activeElement === lastElement) {
+          event.preventDefault();
+          (firstElement as HTMLElement).focus();
+        }
+      }
+    }
+  }
+
+  onSave(): void {
+    // Logic บันทึกข้อมูล
+    if (this.isCreateTemplateSubmited) {
+      return;
+    }
+    this.isCreateTemplateSubmited = true;
+    if (this.createTemplateForm.valid) {
+      const formData = this.createTemplateForm.value;
+      console.log(formData);
+      console.log('submit name template is: ', formData.nameTemplate);
+      const payload = {
+        template_name: formData.nameTemplate,
+        subject: this.emailSubject,
+        body: this.messageText,
+        username: this.userService.username,
+      };
+      this.scoreAnnouncementService.createEmailTemplate(payload).subscribe(
+        (response) => {
+          this.createTemplateForm.reset();
+          this.isTemplateDialogVisible = false;
+          console.log('Success', response);
+          if (response.isSuccess) {
+            Swal.fire({
+              title: 'บันทึกข้อมูลสำเร็จ',
+              icon: 'success',
+              confirmButtonColor: 'var(--primary-color)',
+              confirmButtonText: 'ตกลง',
+            }).then((result) => {
+              if (result.isConfirmed) {
+                // หากคลิก "ตกลง"
+                console.log('success : ', response.messageDesc);
+              }
+            });
+          } else {
+            Swal.fire({
+              title: 'เกิดข้อผิดพลาด',
+              text: response.message.messageDescription,
+              icon: 'error',
+              confirmButtonColor: 'var(--secondary-color)',
+              confirmButtonText: 'ปิด',
+            }).then((result) => {
+              if (result.isConfirmed) {
+                // หากคลิก "ตกลง"
+                console.log('error : ', response.messageDesc);
+              }
+            });
+          }
+        },
+        (error) => {
+          console.log('Error', error);
+        },
+        () => {
+          this.isCreateTemplateSubmited = false; // reset flg
+        }
+      );
+      // this.createTemplateForm.reset();
+      // this.isTemplateDialogVisible = false;
+    } else {
+      console.log('กรุณากรอกข้อมูลให้ครบถ้วน');
+    }
+  }
+
+  onCancel(): void {
+    this.isTemplateDialogVisible = false;
+    // Logic ยกเลิกการทำงาน
+    this.createTemplateForm.reset();
+    // // this.isTemplateDialogVisible = false;
+    // const delay = 300; // ระยะเวลา animation ใน ms
+    // setTimeout(() => {
+    //   this.createTemplateForm.reset();
+    // }, delay);
   }
 }
