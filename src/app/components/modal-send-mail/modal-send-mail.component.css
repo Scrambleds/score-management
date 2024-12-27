@@ -27,6 +27,7 @@
   z-index: 1000;
   padding: 8px 0;
   list-style: none;
+  /* scroller */
 }
 
 /* แสดง Sub Menu เมื่อ Hover เมนูหลัก */
@@ -81,6 +82,12 @@ textarea {
 .custom-select {
   max-height: 150px; /* หรือความสูงที่คุณต้องการ */
   overflow-y: auto !important; /* ทำให้มี scroll bar */
+}
+
+/* กำหนด max-height และ overflow-y สำหรับรายการ template เท่านั้น */
+.template-list-container {
+  max-height: 178px; /* กำหนดความสูงสูงสุด */
+  overflow-y: auto; /* เปิด scroll bar แนวตั้ง */
 }
 
 .dropdown-header {

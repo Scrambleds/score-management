@@ -6,11 +6,11 @@ import {
   HttpRequest,
 } from '@angular/common/http';
 import { Observable, of, tap } from 'rxjs';
+import { CacheService } from '../services/cache.service';
 
 @Injectable()
 export class CachingInterceptor implements HttpInterceptor {
-  responseCache = new Map();
-  constructor() {}
+  constructor(private cacheService: CacheService) {}
   intercept(
     request: HttpRequest<any>,
     next: HttpHandler
@@ -35,28 +35,19 @@ export class CachingInterceptor implements HttpInterceptor {
     if (!this.canCache(request)) {
       return next.handle(requestinjected);
     }
-    const cache = this.responseCache.get(request.urlWithParams);
+    const cache = this.cacheService.getCache(request.urlWithParams);
     if (cache) {
       return of(cache);
     }
     return next.handle(requestinjected).pipe(
       tap((res) => {
-        this.responseCache.set(request.urlWithParams, res);
+        this.cacheService.setCache(request.urlWithParams, res);
+        console.log('all cache');
       })
     );
   }
 
   canCache(request: HttpRequest<unknown>): boolean {
     return request.urlWithParams.includes('/api/MasterData');
-  }
-
-  // ฟังก์ชันลบแคชสำหรับ URL ที่กำหนด
-  clearCacheForUrl(url: string): void {
-    this.responseCache.delete(url);
-  }
-
-  // ฟังก์ชันลบแคชทั้งหมด
-  clearAllCache(): void {
-    this.responseCache.clear();
   }
 }

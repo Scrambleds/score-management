@@ -38,7 +38,7 @@ export class ScoreAnnouncementService {
   updateEmailTemplate(template: any): Observable<any> {
     const url = `${environment.apiUrl}/api/StudentScore/UpdateTemplate`;
     return this.http.post<any>(url, template, { ...this.httpOptions }).pipe(
-      map((response: any) => console.log(response)),
+      map((response: any) => response),
       tap((_) => console.log('updateEmailTemplate done!!'))
     );
   }
@@ -54,7 +54,7 @@ export class ScoreAnnouncementService {
   deleteEmailTemplate(template: any): Observable<any> {
     const url = `${environment.apiUrl}/api/StudentScore/DeleteTemplate`;
     return this.http.post<any>(url, template, { ...this.httpOptions }).pipe(
-      map((response: any) => console.log(response)),
+      map((response: any) => response),
       tap((_) => console.log('deleteEmailTemplate done!!'))
     );
   }
