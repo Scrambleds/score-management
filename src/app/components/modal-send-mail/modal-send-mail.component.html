@@ -26,7 +26,7 @@
       <!-- Modal Body -->
       <div class="modal-body pt-2">
         <!-- Recipient Email Input -->
-        <div class="mb-2" *ngIg="!isSendPerPerson">
+        <div class="mb-2" *ngIf="isSendPerPerson">
           <label for="recipientEmail" class="form-label">ถึง</label>
           <input
             type="email"
@@ -131,15 +131,18 @@
                 เทมเพลตพื้นฐาน
               </button>
               <ul class="dropdown-submenu">
-                <li *ngFor="let template of defaultTemplateList">
-                  <button
-                    class="dropdown-item"
-                    type="button"
-                    (click)="loadDefaultTemplate(template.templateId)"
-                  >
-                    {{ template.templateName }}
-                  </button>
-                </li>
+                <li><h6 class="dropdown-header">เทมเพลตพื้นฐาน</h6></li>
+                <div class="template-list-container">
+                  <li *ngFor="let template of basicTemplateList">
+                    <button
+                      class="dropdown-item"
+                      type="button"
+                      (click)="loadBasicTemplate(template.templateId)"
+                    >
+                      {{ template.templateName }}
+                    </button>
+                  </li>
+                </div>
               </ul>
             </li>
             <li class="dropdown-item-container">
@@ -151,15 +154,18 @@
                 เทมเพลตส่วนตัว
               </button>
               <ul class="dropdown-submenu">
-                <li *ngFor="let template of privateTemplateList">
-                  <button
-                    class="dropdown-item"
-                    type="button"
-                    (click)="loadPrivateTemplate(template.templateId)"
-                  >
-                    {{ template.templateName }}
-                  </button>
-                </li>
+                <li><h6 class="dropdown-header">เทมเพลตส่วนตัว</h6></li>
+                <div class="template-list-container">
+                  <li *ngFor="let template of privateTemplateList">
+                    <button
+                      class="dropdown-item"
+                      type="button"
+                      (click)="loadPrivateTemplate(template.templateId)"
+                    >
+                      {{ template.templateName }}
+                    </button>
+                  </li>
+                </div>
               </ul>
             </li>
             <li class="dropdown-item-container">
@@ -171,15 +177,18 @@
                 กำหนดค่าเริ่มต้น
               </button>
               <ul class="dropdown-submenu">
-                <li *ngFor="let template of allTemplateList">
-                  <button
-                    class="dropdown-item"
-                    type="button"
-                    (click)="setDefaultTemplate(template.templateId)"
-                  >
-                    {{ template.templateName }}
-                  </button>
-                </li>
+                <li><h6 class="dropdown-header">กำหนดค่าเริ่มต้น</h6></li>
+                <div class="template-list-container">
+                  <li *ngFor="let template of allTemplateList">
+                    <button
+                      class="dropdown-item"
+                      type="button"
+                      (click)="setDefaultTemplate(template.templateId)"
+                    >
+                      {{ template.templateName }}
+                    </button>
+                  </li>
+                </div>
               </ul>
             </li>
             <li class="dropdown-item-container">
@@ -192,15 +201,17 @@
               </button>
               <ul class="dropdown-submenu">
                 <li><h6 class="dropdown-header">เขียนทับเทมเพลต</h6></li>
-                <li *ngFor="let template of privateTemplateList">
-                  <button
-                    class="dropdown-item"
-                    type="button"
-                    (click)="updateTemplate(template.templateId)"
-                  >
-                    {{ template.templateName }}
-                  </button>
-                </li>
+                <div class="template-list-container">
+                  <li *ngFor="let template of privateTemplateList">
+                    <button
+                      class="dropdown-item"
+                      type="button"
+                      (click)="updateTemplate(template.templateId)"
+                    >
+                      {{ template.templateName }}
+                    </button>
+                  </li>
+                </div>
                 <li><hr class="dropdown-divider" /></li>
                 <li>
                   <button
@@ -223,15 +234,17 @@
               </button>
               <ul class="dropdown-submenu">
                 <li><h6 class="dropdown-header">ลบเทมเพลต</h6></li>
-                <li *ngFor="let template of privateTemplateList">
-                  <button
-                    class="dropdown-item"
-                    type="button"
-                    (click)="deleteTemplate(template.templateId)"
-                  >
-                    {{ template.templateName }}
-                  </button>
-                </li>
+                <div class="template-list-container">
+                  <li *ngFor="let template of privateTemplateList">
+                    <button
+                      class="dropdown-item"
+                      type="button"
+                      (click)="deleteTemplate(template.templateId)"
+                    >
+                      {{ template.templateName }}
+                    </button>
+                  </li>
+                </div>
               </ul>
             </li>
           </ul>

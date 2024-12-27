@@ -6,6 +6,8 @@ import { UserService } from '../../services/sharedService/userService/userServic
 import bootstrap from 'bootstrap';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import Swal from 'sweetalert2';
+import { BehaviorSubject, switchMap } from 'rxjs';
+import { CacheService } from '../../core/services/cache.service';
 
 @Component({
   selector: 'app-modal-send-mail',
@@ -25,8 +27,12 @@ export class ModalSendMailComponent implements OnInit {
 
   placeholderList: any[] = [];
   privateTemplateList: any[] = [];
-  defaultTemplateList: any[] = [];
+  basicTemplateList: any[] = [];
   allTemplateList: any[] = [];
+  defaultTemplate: any = null;
+
+  //BehivorSubject
+  private refreshTemplates$ = new BehaviorSubject<void>(undefined);
 
   //flg
   isCreateTemplateSubmited: boolean = false;
@@ -36,13 +42,15 @@ export class ModalSendMailComponent implements OnInit {
   //form
   public createTemplateForm: FormGroup;
 
+  //interface
   constructor(
     private http: HttpClient,
     private scoreAnnouncementService: ScoreAnnouncementService,
     private userService: UserService,
     private renderer: Renderer2,
     private el: ElementRef,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private cacheService: CacheService
   ) {
     this.createTemplateForm = this.fb.group({
       nameTemplate: ['', Validators.required],
@@ -56,7 +64,24 @@ export class ModalSendMailComponent implements OnInit {
       this.language = savedLanguage; // กำหนดภาษาจาก localStorage
     }
     this.loadEmailPlaceholder();
-    this.loadEmailTemplate();
+    // this.loadEmailTemplate();
+    this.refreshTemplates$
+      .pipe(
+        switchMap(() =>
+          this.scoreAnnouncementService.loadEmailTemplate(
+            this.userService.username
+          )
+        )
+      )
+      .subscribe((resp: any) => {
+        this.basicTemplateList = resp.basicTemplates;
+        this.privateTemplateList = resp.privateTemplates;
+        this.allTemplateList = [
+          ...this.privateTemplateList,
+          ...this.basicTemplateList,
+        ];
+        this.initDefaultTemplate(resp.defaultTemplates);
+      });
   }
 
   //load MasterData
@@ -70,14 +95,19 @@ export class ModalSendMailComponent implements OnInit {
     this.scoreAnnouncementService
       .loadEmailTemplate('pamornpon')
       .subscribe((resp: any) => {
-        this.defaultTemplateList = resp.defaultTemplates;
+        this.basicTemplateList = resp.basicTemplates;
         this.privateTemplateList = resp.privateTemplates;
         this.allTemplateList = [
           ...this.privateTemplateList,
-          ...this.defaultTemplateList,
+          ...this.basicTemplateList,
         ];
-        console.log(this.defaultTemplateList);
+        let defaultTemplate = resp.defaultTemplates;
+        console.log(this.basicTemplateList);
         console.log(this.privateTemplateList);
+        console.log(defaultTemplate);
+
+        // เรียก initBasicTemplate หลังจากโหลดข้อมูลเสร็จ
+        this.initDefaultTemplate(defaultTemplate);
       });
   }
 
@@ -159,26 +189,36 @@ export class ModalSendMailComponent implements OnInit {
   }
 
   //template
-  // เทมเพลต mockup
-  templates: { [key: string]: { subject: string; body: string } } = {
-    basicTemplate1: {
-      subject: `ประกาศคะแนนเก็บวิชา {!SUBJECT_ID} {!SUBJECT_NAME} ปีการศึกษา {!ACADEMIC_YEAR}`,
-      body: `ถึง {!STUDENT_PREFIX}{!STUDENT_NAME}\nอีเมลฉบับนี้ถูกส่งโดยระบบจัดการคะแนน\nวิชา: {!SUBJECT_NAME}\nชื่อ: {!STUDENT_PREFIX}{!STUDENT_NAME}\nรหัสนิสิต: {!STUDENT_ID}\nหมู่เรียน: {!SECTION_ID}\n\nได้คะแนนรายละเอียดดังนี้\n\tประเภทคะแนน \t\t\tคะแนน\n\tคะแนนเก็บ    \t\t\t{!ACCUMULATED_SCORE}\n\tคะแนนกลางภาค\t\t\t{!MIDTERM_SCORE}\n\tคะแนนปลายภาค\t\t\t{!FINAL_SCORE}\n\tรวมคะแนนทั้งหมด\t\t\t{!TOTAL_SCORE}\n\nคะแนนเฉลี่ย: {!MEAN_SCORE}/100\nคะแนนสูงสุด: {!MAX_SCORE}/100\nคะแนนต่ำสุด: {!MIN_SCORE}/100\n\nหากมีคำถาม กรุณาติดต่ออาจารย์ผู้สอนโดยตรง\n\n{!TEACHER_NAME}`,
-    },
-  };
-  loadTemplate(templateKey: string): void {
-    const template = this.templates[templateKey];
-    if (template) {
-      // แทนที่ค่าใน subject
-      this.emailSubject = template.subject;
 
-      // แทนที่ค่าใน body
-      this.messageText = template.body;
+  // เรียกใช้งานเพื่อ refresh template
+  refreshTemplates(): void {
+    this.refreshTemplates$.next();
+  }
+
+  initDefaultTemplate(defaultTemplate: any): void {
+    console.log(defaultTemplate);
+    console.log(this.allTemplateList);
+
+    if (defaultTemplate?.defaultTemplate_id != null) {
+      let templateKey: number = defaultTemplate.defaultTemplate_id;
+      let template = this.allTemplateList.find(
+        (t) => t.templateId === templateKey
+      );
+      console.log(template);
+      if (template) {
+        // แทนที่ค่าใน subject
+        this.emailSubject = template.detail.subject;
+
+        // แทนที่ค่าใน body
+        this.messageText = template.detail.body;
+      }
+    } else {
+      console.log('not found default template');
     }
   }
 
-  loadDefaultTemplate(templateKey: number): void {
-    let template = this.defaultTemplateList.find(
+  loadBasicTemplate(templateKey: number): void {
+    let template = this.basicTemplateList.find(
       (t) => t.templateId === templateKey
     );
     console.log(template);
@@ -210,7 +250,32 @@ export class ModalSendMailComponent implements OnInit {
     };
     this.scoreAnnouncementService.setDefaultTemplate(payload).subscribe(
       (response) => {
-        console.log('Response : ', response);
+        if (response.isSuccess) {
+          Swal.fire({
+            title: 'บันทึกเทมเพลตพื้นฐานสำเร็จ',
+            icon: 'success',
+            confirmButtonColor: 'var(--primary-color)',
+            confirmButtonText: 'ตกลง',
+          }).then((result) => {
+            if (result.isConfirmed) {
+              // หากคลิก "ตกลง"
+              console.log('success : ', response.messageDesc);
+            }
+          });
+        } else {
+          Swal.fire({
+            title: 'เกิดข้อผิดพลาด',
+            text: response.message.messageDescription,
+            icon: 'error',
+            confirmButtonColor: 'var(--secondary-color)',
+            confirmButtonText: 'ปิด',
+          }).then((result) => {
+            if (result.isConfirmed) {
+              // หากคลิก "ตกลง"
+              console.log('error : ', response.messageDesc);
+            }
+          });
+        }
       },
       (error) => {
         console.error('Error creating template:', error);
@@ -261,7 +326,15 @@ export class ModalSendMailComponent implements OnInit {
         console.log('ข้อมูลถูกลบแล้ว');
         this.scoreAnnouncementService.updateEmailTemplate(payload).subscribe(
           (response) => {
-            console.log('Response : ', response);
+            if (response.isSuccess) {
+              this.cacheService.clearCacheForUrl(
+                '/api/MasterData/EmailTemplate'
+              );
+              this.refreshTemplates();
+              console.log('Response : ', response);
+            } else {
+              console.log('fail Response : ', response);
+            }
           },
           (error) => {
             console.error('Error updating template:', error);
@@ -297,7 +370,15 @@ export class ModalSendMailComponent implements OnInit {
         console.log('ข้อมูลถูกลบแล้ว');
         this.scoreAnnouncementService.deleteEmailTemplate(payload).subscribe(
           (response) => {
-            console.log('Response : ', response);
+            if (response.isSuccess) {
+              this.cacheService.clearCacheForUrl(
+                '/api/MasterData/EmailTemplate'
+              );
+              this.refreshTemplates();
+              console.log('Response : ', response);
+            } else {
+              console.log('fail Response : ', response);
+            }
           },
           (error) => {
             console.error('Error updating template:', error);
@@ -491,6 +572,10 @@ export class ModalSendMailComponent implements OnInit {
             }).then((result) => {
               if (result.isConfirmed) {
                 // หากคลิก "ตกลง"
+                this.cacheService.clearCacheForUrl(
+                  '/api/MasterData/EmailTemplate'
+                );
+                this.refreshTemplates();
                 console.log('success : ', response.messageDesc);
               }
             });

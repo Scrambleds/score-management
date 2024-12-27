@@ -54,6 +54,7 @@ import { ModalSendMailComponent } from './components/modal-send-mail/modal-send-
 import { TranslateDropdownPipe } from './shared/pipes/translateDropdown.pipe';
 import { CachingInterceptor } from './core/interceptors/caching.interceptor';
 import { ScoreAnnouncementService } from './services/score-announcement/score-announcement.service';
+import { CacheService } from './core/services/cache.service';
 
 @NgModule({
   declarations: [
@@ -100,6 +101,7 @@ import { ScoreAnnouncementService } from './services/score-announcement/score-an
     RequiredMarkerDirective,
   ],
   providers: [
+    CacheService,
     provideHttpClient(withInterceptorsFromDi()),
     {
       provide: HTTP_INTERCEPTORS,
