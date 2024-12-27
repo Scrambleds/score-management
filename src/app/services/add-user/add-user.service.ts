@@ -44,9 +44,11 @@ export class AddUserService {
     return this.http.post<any>(this.apiUrlInsert, data, { headers, withCredentials: true }).pipe(
       catchError((error) => {
         console.error('Error occurred while inserting user data:', error);
-        if (error.error && error.error.errors) {
+        if (error.error) {
           // เก็บ errors ไว้ใน BehaviorSubject
-          this.errorsSubject.next(error.error.errors);
+          this.errorsSubject.next(error.error);
+          console.log(error.error)
+          return throwError(() => error.error);
         }
         return throwError(() => new Error('Failed to insert user data. Please try again.'));
       })

@@ -66,9 +66,10 @@
       style="width: 100%; height: 30.375rem"
       class="ag-theme-quartz"
       [rowData]="rowData"
+      [gridOptions]="gridOptions"
       [columnDefs]="columnDefs"
       [defaultColDef]="defaultColDef"
-      (cellValueChanged)="onCellValueChanged($event)"
+      (gridReady)="onGridReady($event)"
     >
     </ag-grid-angular>
   </div>

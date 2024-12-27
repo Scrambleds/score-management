@@ -6,6 +6,7 @@ import {
   Output,
   ViewChild,
   OnInit,
+  viewChild,
 } from '@angular/core';
 import * as XLSX from 'xlsx';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -17,6 +18,9 @@ import { UserService } from '../../services/sharedService/userService/userServic
 import { masterDataService } from '../../services/sharedService/masterDataService/masterDataService';
 import { SelectBoxService } from '../../services/select-box/select-box.service';
 import { forkJoin } from 'rxjs';
+import { EditUserComponent } from '../edit-user/edit-user.component';
+// import { RowNode } from 'ag-grid-community';
+import { GridApi, GridOptions, RowNode } from 'ag-grid-community';
 
 @Component({
   selector: 'app-add-user',
@@ -25,11 +29,21 @@ import { forkJoin } from 'rxjs';
   styleUrls: ['./add-user.component.css'],
 })
 export class AddUserComponent implements OnInit {
-  // public roleDatas: any[] = [];
-  // public prefixDatas: any[] = [];
+  gridApi!: GridApi;
+  gridColumnApi: any;
+  
+  // @ViewChild('onReset', { static: false }) editUserComponent!: EditUserComponent;
+  @ViewChild('editUserComponent', { static: false }) editUserComponent!: EditUserComponent;
+  gridOptions: GridOptions = {
+    // domLayout: 'autoHeight',
+    // pagination: true,
+    // paginationPageSize: 10,
+    // suppressRowClickSelection: true
+  };  
   roleData: any[] = [];
   prefixData: any[] = [];
   statusData: any[] = [];
+  // onReset!: EditUserComponent;
   @Input() criteria: any;
   @Input() titleName: string = 'อัปโหลดไฟล์ข้อมูลบัญชีผู้ใช้';
   @Input() buttonName: string = 'อัปโหลดไฟล์ Excel';
@@ -37,13 +51,14 @@ export class AddUserComponent implements OnInit {
   @Output() dataUploaded = new EventEmitter<any[]>(); // ส่งข้อมูลไปยัง Parent Component
   @Output() submitRequest = new EventEmitter<void>();
   @Output() isUploaded = new EventEmitter<boolean>();
+  @Output() searchEvent = new EventEmitter<void>();
 
   searchCriteria: any;
-  rowData: any[] = []; // ข้อมูลใน ag-Grid
-  columnDefs: any[] = []; // คำนิยามคอลัมน์สำหรับ ag-Grid
+  rowData: any[] = [];
+  columnDefs: any[] = [];
   originalData: any[] = [];
   filteredData: any[] = [];
-  isFileUploaded = false; // ตรวจสอบว่าไฟล์อัปโหลดแล้วหรือยัง
+  isFileUploaded = false;
   requiredFields = [
     'email',
     'teacher_code',
@@ -56,6 +71,7 @@ export class AddUserComponent implements OnInit {
   defaultColDef = {
     sortable: true,
     resizable: true,
+    editable: true,
   };
 
   form: FormGroup; // Declare form
@@ -69,14 +85,13 @@ export class AddUserComponent implements OnInit {
     private masterDataService: masterDataService,
     private SelectBoxService: SelectBoxService,
   ) {
-    // Initialize form here
     this.form = this.fb.group({
-      // teacher_code: ['', Validators.required],
-      // fullname: ['', Validators.required],
-      // email: ['', [Validators.required, Validators.email]],
-      // role: ['', Validators.required],
-      // active_status: ['', Validators.required],
     });
+  }
+
+  onGridReady(params: any) {
+    this.gridApi = params.api;
+    this.gridColumnApi = params.columnApi;
   }
 
   initGrid() {
@@ -88,13 +103,36 @@ export class AddUserComponent implements OnInit {
     }));
   }
 
+  // ngAfterViewInit(): void {
+  //   setTimeout(() => {
+  //     if (this.gridApi) {
+  //       console.log('Grid API available:', this.gridApi);
+  //     } else {
+  //       console.error('Grid API is not available.');
+  //     }
+  //   }, 0);
+  // }  
+
+  onSomeAction() {
+    if (this.editUserComponent) {
+      // เรียกใช้เมธอดใน EditUserComponent
+      this.editUserComponent.onReset();
+      console.log('Method in EditUserComponent called!');
+    }
+  }
+  
+
+  onLoading = (): void =>{
+    this.onSomeAction()
+    console.log("On change!");
+  }
+
   ngOnInit() {
 
         const role = 'role';
         const prefix = 'prefix';
         const status = 'active_status';
 
-       // Fetch role, prefix, and status data
         forkJoin({
           roleData: this.SelectBoxService.getSystemParamRole(role),
           prefixData: this.SelectBoxService.getSystemParamPrefix(prefix),
@@ -232,15 +270,20 @@ export class AddUserComponent implements OnInit {
       reader.onload = (e: any) => {
         const data = new Uint8Array(e.target.result);
         const workbook = XLSX.read(data, { type: 'array' });
-
+  
         const sheetName = workbook.SheetNames[0];
         const sheet = workbook.Sheets[sheetName];
         const jsonData = XLSX.utils.sheet_to_json(sheet);
-
+  
         if (this.validateFields(jsonData)) {
+          ////debugger;
           const modifiedData = this.processData(jsonData);
-
-          this.LoadGridData(modifiedData);
+  
+          // เคลียร์ข้อมูลเก่าก่อนโหลดข้อมูลใหม่
+          this.rowData = [];  // เคลียร์ rowData
+          this.originalData = [];  // เคลียร์ originalData
+  
+          this.LoadGridData(modifiedData); // โหลดข้อมูลใหม่
           this.isFileUploaded = true;
           this.isUploaded.emit(true);
         } else {
@@ -250,10 +293,10 @@ export class AddUserComponent implements OnInit {
       reader.readAsArrayBuffer(file);
     }
   }
-
+  
   processData(data: any[]): any[] {
     return data.map((row, index) => ({
-      row_id: index + 1,
+      row_id: index,
       email: row['อีเมล'] || row['email'] || null,
       teacher_code: row['รหัสอาจารย์'] || row['teacher_code'] || null,
       prefix: row['คำนำหน้า'] || row['prefix'] || null,
@@ -265,6 +308,7 @@ export class AddUserComponent implements OnInit {
 
   LoadGridData(data: any[]) {
     if (data.length > 0) {
+      ////debugger;
       console.log('Original data: ', data);
 
       // คำนิยามคอลัมน์ที่แสดงใน ag-Grid เป็นภาษาไทย
@@ -328,7 +372,7 @@ export class AddUserComponent implements OnInit {
         return {
           field: key, // Field name to be used in the API
           headerName: headerName, // Column header name
-          editable: true,
+          // editable: true,
           flex: flexValue,
           minWidth: customWidth,
           cellRenderer: (params: any) => {
@@ -350,6 +394,29 @@ export class AddUserComponent implements OnInit {
         };
       });
 
+      this.columnDefs.push({
+        headerName: '',
+        field: 'action',
+        width: 150,
+        cellRenderer: (params: any) => {
+          const rowId = params.data.row_id; // Use row_id to identify the row
+          
+          // Create container for delete button
+          const container = document.createElement('div');
+          container.innerHTML = `
+            <button class="btn btn-danger btn-sm">Delete</button>
+          `;
+          
+          // Add event listener for delete
+          container.querySelector('.btn-danger')?.addEventListener('click', () => {
+            this.onDeleteRow(rowId);  // Pass row_id to onDeleteRow method
+          });
+      
+          return container;
+        },
+        suppressHeaderMenuButton: true,
+      });
+      
       // Processed Data
       const processedData = data.map((row) => {
         const updatedRow: any = {};
@@ -360,18 +427,147 @@ export class AddUserComponent implements OnInit {
         return updatedRow;
       });
 
-      this.rowData = processedData;
-      this.originalData = processedData;
-      console.log(this.rowData);
+      this.rowData = [...data];
+      this.originalData = [...data];
+      
+      console.log("Data load: ", this.rowData);
     } else {
       console.log('No data to load');
     }
   }
+  
+  // onCellValueChanged(event: any) {
+  //   const updatedData = event.data;  
+  //   // ทำการอัปเดตข้อมูลหรือส่งข้อมูลไปยัง server
+  //   console.log('Cell value changed:', updatedData);
+  // }
+  
+  // onDeleteRow(rowId: number) {
+  //   const rowIndex = this.originalData.findIndex(row => row.row_id === rowId);
+    
+  //   if (rowIndex !== -1) {
+  //     Swal.fire({
+  //       title: 'คุณยืนยันที่จะลบข้อมูลผู้ใช้นี้?',
+  //       text: 'คำเตือน: หากลบไปแล้วจะไม่สามารถนำกลับมาได้อีก',
+  //       icon: 'warning',
+  //       showCancelButton: true,
+  //       confirmButtonColor: '#d33',
+  //       cancelButtonColor: '#3085d6',
+  //       confirmButtonText: 'ลบ',
+  //       cancelButtonText: 'ยกเลิก',
+  //     }).then((result) => {
+  //       if (result.isConfirmed) {
+  //         // Remove the row from the original data array
+  //         this.originalData.splice(rowIndex, 1);
+  
+  //         // Update rowData for the grid
+  //         this.rowData = [...this.originalData];
+  
+  //         // Reassign row_id to maintain sequential row numbering
+  //         this.rowData = this.rowData.map((row, index) => {
+  //           row.row_id = index + 1;
+  //           return row;
+  //         });
+  
+  //         if (this.gridApi) {
+  //           this.gridApi.refreshCells({ force: true });
+  //         } else {
+  //           console.error('Grid API is not available.');
+  //         }
 
-  onCellValueChanged(event: any) {
-    console.log('Cell value changed', event);
+  //         // if (this.gridApi) {
+  //         //   this.gridApi.refreshRows();
+  //         // } else {
+  //         //   console.error('Grid API is not available.');
+  //         // }
+
+  //         // if (this.gridApi) {
+
+  //         //   this.gridApi.setRowData(this.rowData);
+  //         //   this.gridApi.refreshCells({ force: true });
+  //         // }
+  
+  //         console.log('Row deleted successfully.');
+  
+  //         // this.gridApi.setRowData(this.originalData);
+  //         console.log('Row deleted');
+  //       } else {
+  //         console.log('Row deletion canceled');
+  //       }
+  //     });
+  //   } else {
+  //     console.log("Row not found to delete.");
+  //   }
+  // }
+
+  onDeleteRow(rowId: number) {
+    console.log(this.originalData)
+    const rowIndex = this.originalData.findIndex(row => row.row_id === rowId);
+    console.log(rowIndex);
+    console.log(rowId);
+    if (rowIndex !== -1) {
+      Swal.fire({
+        title: 'คุณยืนยันที่จะลบข้อมูลผู้ใช้นี้?',
+        text: 'คำเตือน: หากลบไปแล้วจะไม่สามารถนำกลับมาได้อีก',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'ลบ',
+        cancelButtonText: 'ยกเลิก',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          
+          // console.log('Row rowData', this.rowData);
+          // console.log('Row originalData', this.originalData);
+          // console.log("MyRowID: ", rowId - 1);
+          // Remove the row from the original data array
+          // this.originalData.splice(rowIndex, 1);
+
+          // // Update rowData for the grid
+          // this.rowData = this.originalData;
+
+          // // Reassign row_id to maintain sequential row numbering
+          // this.rowData = this.rowData.map((row, index) => {
+          //   row.row_id = index + 1;
+          //   return row;
+          // });
+
+          if (this.gridApi) {
+            // Remove the row from the original data array
+            this.originalData.splice(rowIndex, 1);
+          
+            // Update rowData for the grid
+            
+          
+            // Reassign row_id to maintain sequential row numbering
+            // this.rowData = this.rowData.map((row, index) => {
+            //   row.row_id = index + 1;
+            //   return row;
+            // });
+            
+            // Apply the transaction to update the rows
+            this.gridApi.applyTransaction({
+              remove: this.originalData.filter(row => row.row_id === rowIndex)
+            });
+            this.rowData = [...this.originalData];
+            this.gridApi.setGridOption("rowData", this.rowData);
+            // Optionally refresh the grid to ensure display is updated
+            this.gridApi.refreshCells({ force: true });
+          }          
+
+          console.log('Row rowData', this.rowData);
+          console.log('Row originalData', this.originalData);
+          console.log('Row deleted successfully.');
+        } else {
+          console.log('Row deletion canceled');
+        }
+      });
+    } else {
+      console.log("Row not found to delete.");
+    }
   }
-
+  
   onSaveData() {
     // ตรวจสอบว่ามีข้อมูลในตารางหรือไม่
     if (!this.rowData || this.rowData.length === 0) {
@@ -407,6 +603,7 @@ export class AddUserComponent implements OnInit {
           '<br>'
         )}`,
         icon: 'warning',
+        confirmButtonColor: '#0d6efd',
         confirmButtonText: 'ตกลง',
       });
       return;
@@ -430,18 +627,40 @@ export class AddUserComponent implements OnInit {
           title: 'บันทึกข้อมูลสำเร็จ',
           text: 'ข้อมูลถูกบันทึกเรียบร้อยแล้ว',
           icon: 'success',
+          confirmButtonColor: '#0d6efd',
           confirmButtonText: 'ตกลง',
         }).then(() => {
-          // หลังจากการบันทึกเสร็จแล้ว นำทางไปยังหน้าที่ต้องการ
           this.router.navigate(['/UserManagement']);
         });
       },
       (error) => {
+        console.error('Error occurred while inserting user data: ', error);
+    
+        // Check if errors exist in the response
+        if (error && error.errors) {
+          const errorMessages = error.errors;
+    
+          // If there are duplicate emails or other errors, display them
+          if (errorMessages.length > 0) {
+            //debugger;
+            Swal.fire({
+              title: 'เกิดข้อผิดพลาด',
+              html: `พบอีเมลที่ซ้ำกัน:<br>${errorMessages.join('<br>')}`,
+              icon: 'error',
+              confirmButtonColor: '#0d6efd',
+              confirmButtonText: 'ตกลง',
+            });
+            return; // Do not proceed with saving data if there are errors
+          }
+        }
+    
+        // If no specific errors are found, show a general error message
         Swal.fire({
           title: 'เกิดข้อผิดพลาด',
           text: 'ไม่สามารถบันทึกข้อมูลได้ โปรดลองอีกครั้ง',
           icon: 'error',
           confirmButtonText: 'ตกลง',
+          confirmButtonColor: '#0d6efd',
         });
       }
     );
@@ -460,6 +679,7 @@ export class AddUserComponent implements OnInit {
     }).then((result) => {
       if (result.isConfirmed) {
         this.rowData = [];
+        this.originalData = [];
         this.isFileUploaded = false;
         this.isUploaded.emit(false);
         console.log(this.rowData);
@@ -492,6 +712,7 @@ export class AddUserComponent implements OnInit {
         )}`,
         icon: 'warning',
         confirmButtonText: 'ตกลง',
+        confirmButtonColor: '#0d6efd',
       });
       return false;
     }

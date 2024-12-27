@@ -63,7 +63,7 @@ ngOnInit() {
   });
 }
 
-onSearch(): void {
+public onSearch(): void {
   if (this.form.valid) {
     const searchCriteria = this.form.value;
 
@@ -85,7 +85,8 @@ onSearch(): void {
   }
 }
 
-  onReset(): void {
+public onReset(): void {
+    console.log("Welcome to my reset func!")
     this.form.reset();
     this.filteredData = [...this.originalData]; // คืนค่าข้อมูลทั้งหมด
     this.rowData = [...this.originalData];
