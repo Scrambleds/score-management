@@ -1,0 +1,123 @@
+<div class="custom-card">
+  <div class="card-body">
+    <div class="fw-bold">รายละเอียด</div>
+    <div class="text-danger">*กรุณากรอกรหัสวิชา และ ชื่อวิชา</div>
+    <!-- parent will submit this form instead -->
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="w-100">
+      <div class="row">
+        <!-- Subject Code -->
+        <div class="col-6 col-sm-5 col-md-2">
+          <label for="subjectCode" class="fw-bold mb-2">{{
+            "subject_code" | translate
+          }}</label>
+          <div class="input-group-autocomplete mb-2">
+            <app-autocomplete
+              #subjectCode
+              id="subjectCode"
+              [name]="'subjectCode'"
+              formControlName="subjectCode"
+              [placeholder]="'placeholder_text' | translate"
+              [suggestions]="filteredSubjects"
+              [displayKey]="'subjectCode'"
+              [displayFormat]="customFormat"
+              [widthAuto]="true"
+              (search)="searchCode($event)"
+              (select)="selectCode($event)"
+              [value]="form.get('subjectCode')?.value"
+            ></app-autocomplete>
+
+            <ng-template #customFormat let-item>
+              {{ item.subjectCode }} - {{ item.subjectName }}
+            </ng-template>
+          </div>
+          <div
+            *ngIf="
+              form.get('subjectCode')?.touched &&
+              form.get('subjectCode')?.invalid
+            "
+            class="text-danger ps-2"
+          >
+            {{ "alert_enterData" | translate }}
+          </div>
+        </div>
+
+        <!-- Subject Name -->
+        <div class="col-6 col-sm-7 col-md-4 col-lg-3">
+          <label for="subjectName" class="fw-bold mb-2">{{
+            "subject_name" | translate
+          }}</label>
+          <app-autocomplete
+            id="subjectName"
+            [name]="'subjectName'"
+            formControlName="subjectName"
+            [placeholder]="'placeholder_text' | translate"
+            [suggestions]="filteredSubjects"
+            [displayKey]="'subjectName'"
+            [displayFormat]="customFormat"
+            [readonly]="isSubjectNameReadonly"
+            [value]="form.get('subjectName')!.value"
+          ></app-autocomplete>
+
+          <ng-template #customFormat let-item>
+            {{ item.subjectCode }} - {{ item.subjectName }}
+          </ng-template>
+        </div>
+
+        <div class="col-6 col-sm-4 col-md-2 col-lg-3">
+          <label for="academic_year" class="fw-bold mb-2"
+            >{{ "student_name" | translate }} /
+            {{ "student_id" | translate }}</label
+          >
+          <app-autocomplete
+            id="student_name"
+            [name]="'student_name'"
+            formControlName="student_name"
+            [placeholder]="'placeholder_text' | translate"
+            [suggestions]="filteredSubjects"
+            [displayKey]="'student_name'"
+            [displayFormat]="customFormat"
+            [readonly]="isSubjectNameReadonly"
+          ></app-autocomplete>
+          <div
+            *ngIf="
+              form.get('academicYearCode')?.touched &&
+              form.get('academicYearCode')?.invalid
+            "
+            class="text-danger ps-2"
+          >
+            {{ "alert_enterData" | translate }}
+          </div>
+        </div>
+
+        <div class="col-6 col-sm-4 col-md-2">
+          <label for="sendStatus" class="fw-bold mb-2">{{
+            "send_status" | translate
+          }}</label>
+          <ng-select
+            name="sendStatus"
+            formControlName="sendStatus"
+            bindLabel="label"
+            bindValue="value"
+            [placeholder]="'placeholder_select' | translate"
+            [clearable]="true"
+          >
+          </ng-select>
+          <div
+            *ngIf="
+              form.get('semesterCode')?.touched &&
+              form.get('semesterCode')?.invalid
+            "
+            class="text-danger ps-2"
+          >
+            {{ "alert_enterData" | translate }}
+          </div>
+        </div>
+        <div class="col-12 col-md align-items-end">
+          <button type="submit" class="btn btn-primary custom-btn">
+            <i class="bi bi-search"></i> ค้นหา
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

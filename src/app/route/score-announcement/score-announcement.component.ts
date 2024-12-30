@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { ScoreAnnouncementService } from '../../services/score-announcement/score-announcement.service';
+import { FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-score-announcement',
@@ -9,6 +11,7 @@ import { Component } from '@angular/core';
 })
 export class ScoreAnnouncementComponent {
   //สำหรับตัวอย่าง response ของ language
+  gridData: any[] = [];
   jsonString = JSON.stringify(
     {
       isSuccess: false,
@@ -41,4 +44,41 @@ export class ScoreAnnouncementComponent {
     null,
     2
   ); // Null, 2 for pretty-printing
+  scoreForm!: FormGroup;
+  teacherCode: string | null = null;
+  rowData: any[] = []; // ข้อมูลสำหรับ ag-grid
+
+  constructor(
+    private scoreService: ScoreAnnouncementService,
+    private fb: FormBuilder
+  ) {
+    this.scoreForm = this.fb.group({
+      subjectId: [''],
+      academicYearCode: [''],
+      semesterCode: [''],
+    });
+  }
+
+  ngOnInit() {
+  }
+  updateGridData(newData: any[]): void {
+    this.gridData = newData;
+  }
+  onSearchSubmit(requestData: any) {
+    this.scoreService.getScoreAnnouncementByCondition(requestData).subscribe(
+      (response) => {
+        // ตรวจสอบ response ว่ามีข้อมูลที่ต้องการ
+        if (response.objectResponse && response.objectResponse.length > 0) {
+          this.gridData = response.objectResponse; // อัปเดต gridData
+          console.log('Data received:', this.gridData); // ดูข้อมูลที่ได้รับจาก API
+        } else {
+          console.warn('No data found for the given search criteria');
+          this.gridData = [];
+        }
+      },
+      (error) => {
+        console.error('Error fetching scores:', error);
+      }
+    );
+  }
 }

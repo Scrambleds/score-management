@@ -1,0 +1,46 @@
+<div class="custom-card">
+  <div class="card-body w-100 gx-0">
+    <div class="row gx-0 w-100">
+      <div class="col-12 col-md-8">
+        <div
+          class="d-flex justify-content-start align-items-start flex-column w-100"
+        >
+          <div class="w-100 mt-2">
+            <div class="fw-bold text-start">ข้อมูลรายการประกาศคะแนนนิสิต</div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="col-12 col-md ms-auto d-flex justify-content-end align-items-end"
+      >
+        <div class="button-container mb-2 d-flex gap-2">
+          <!-- 1. click save data -->
+          <button
+            type="button"
+            class="btn btn-primary "
+            data-bs-toggle="modal"
+            data-bs-target="#announceScoreModal"
+          >
+            <i
+              class="bi bi-send"
+              style="color: white; font-size: 22px; cursor: pointer"
+              title="ส่งคะแนน"
+            ></i>
+            {{ "send_all" | translate }}
+          </button>
+        </div>
+      </div>
+    </div>
+    <!-- ag-Grid -->
+    <ag-grid-angular
+      style="width: 100%; height: 30.375rem"
+      class="ag-theme-quartz"
+      [rowData]="gridData"
+      [columnDefs]="columnDefs"
+      [defaultColDef]="defaultColDef"
+      rowSelection="multiple"
+      [rowMultiSelectWithClick]="true"
+    >
+    </ag-grid-angular>
+  </div>
+</div>
