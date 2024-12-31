@@ -58,7 +58,6 @@ export class SearchFormScoreAnnouncementComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-
     this.contantLovService
       .getLovContant('GetLovSendStatus')
       .subscribe((data) => {
@@ -68,16 +67,16 @@ export class SearchFormScoreAnnouncementComponent implements OnInit {
     this.form = this.fb.group({
       subjectCode: ['', Validators.required],
       subjectName: [''],
-      student_name: [{ value: null, disabled: true }],
+      fullName: [{ value: null, disabled: true }],
       sendStatus: [{ value: null, disabled: true }],
     });
 
     const toggleFields = (value: string | null) => {
       if (value) {
-        this.form.get('student_name')?.enable();
+        this.form.get('fullName')?.enable();
         this.form.get('sendStatus')?.enable();
       } else {
-        this.form.get('student_name')?.disable();
+        this.form.get('fullName')?.disable();
         this.form.get('sendStatus')?.disable();
       }
     };
@@ -125,10 +124,10 @@ export class SearchFormScoreAnnouncementComponent implements OnInit {
     console.log('Submitting form...');
     if (this.form.valid) {
       const userInfo = localStorage.getItem('userInfo');
-  
+
       let score_create_by: string | null = null;
       let teacher_code: string | null = null;
-  
+
       if (userInfo) {
         try {
           const parsedUserInfo = JSON.parse(userInfo);
@@ -140,28 +139,26 @@ export class SearchFormScoreAnnouncementComponent implements OnInit {
       } else {
         console.error('userInfo not found in localStorage');
       }
-  
+
       // ตรวจสอบ sendStatus และกำหนดค่าเริ่มต้นหากไม่มีค่า
-      const sendStatus = this.form.value.sendStatus ?? "";
-  
+
       const requestData = {
         score_create_by,
         teacher_code,
         subject_id: this.form.value.subjectCode,
         academicYearCode: this.form.value.academicYearCode,
         semesterCode: this.form.value.semesterCode,
-        subject_name:this.form.value.subjectName,
-        lastname:"",
-        firstname:"",
-        send_status_code: sendStatus,
+        subject_name: this.form.value.subjectName,
+        full_name: this.form.value.fullName ?? '',
+        send_status_code: this.form.value.sendStatus ?? '',
       };
-  
+
       this.searchSubmit.emit(requestData); // ส่ง requestData ไปยัง API
     } else {
       console.error('Form is invalid');
     }
   }
-  
+
   searchCode(term: string) {
     console.log('search code');
   }

@@ -64,19 +64,16 @@
         </div>
 
         <div class="col-6 col-sm-4 col-md-2 col-lg-3">
-          <label for="academic_year" class="fw-bold mb-2"
+          <label for="fullName" class="fw-bold mb-2"
             >{{ "student_name" | translate }} /
             {{ "student_id" | translate }}</label
           >
           <app-autocomplete
-            id="student_name"
-            [name]="'student_name'"
-            formControlName="student_name"
+            id="fullName"
+            [name]="'fullName'"
+            formControlName="fullName"
             [placeholder]="'placeholder_text' | translate"
-            [suggestions]="filteredSubjects"
-            [displayKey]="'student_name'"
-            [displayFormat]="customFormat"
-            [readonly]="isSubjectNameReadonly"
+            [displayKey]="'fullName'"
           ></app-autocomplete>
           <div
             *ngIf="
