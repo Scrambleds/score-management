@@ -40,6 +40,7 @@
       [defaultColDef]="defaultColDef"
       rowSelection="multiple"
       [rowMultiSelectWithClick]="true"
+      [overlayNoRowsTemplate]="'<span>' + ('no_row_show' | translate) + '</span>'"
     >
     </ag-grid-angular>
   </div>

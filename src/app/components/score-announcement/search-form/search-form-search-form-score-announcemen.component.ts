@@ -10,9 +10,10 @@ import {
 } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 // import { UploadScoreService } from '../../services/upload-score/upload-score.service';
-import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, first } from 'rxjs/operators';
 import Swal from 'sweetalert2';
 import { ScoreAnnouncementService } from '../../../services/score-announcement/score-announcement.service';
+import { ContantService } from '../../../shared/service/contants-service.service';
 
 @Component({
   selector: 'search-form-score-announcemen',
@@ -49,27 +50,28 @@ export class SearchFormScoreAnnouncementComponent implements OnInit {
   isSemesterDisabled: boolean = true;
   isSectionCodeDisabled: boolean = true;
 
-  sectionCodeOptions = [
-    { value: null, label: 'กรุณาเลือก' },
-    { value: '800', label: '800' },
-    { value: '801', label: '801' },
-    { value: '870', label: '870' },
-    { value: '880', label: '880' },
-  ];
+  statuses: Array<{ label: string; value: string }> = [];
 
   constructor(
     private fb: FormBuilder,
-    private scoreAnnouncementService: ScoreAnnouncementService
+    private contantLovService: ContantService
   ) {}
 
   ngOnInit() {
+
+    this.contantLovService
+      .getLovContant('GetLovSendStatus')
+      .subscribe((data) => {
+        this.statuses = data;
+      });
+
     this.form = this.fb.group({
       subjectCode: ['', Validators.required],
       subjectName: [''],
       student_name: [{ value: null, disabled: true }],
       sendStatus: [{ value: null, disabled: true }],
     });
-  
+
     const toggleFields = (value: string | null) => {
       if (value) {
         this.form.get('student_name')?.enable();
@@ -79,44 +81,87 @@ export class SearchFormScoreAnnouncementComponent implements OnInit {
         this.form.get('sendStatus')?.disable();
       }
     };
-  
+
     this.form.get('subjectName')?.valueChanges.subscribe(toggleFields);
     this.form.get('subjectCode')?.valueChanges.subscribe(toggleFields);
   }
   ngAfterViewInit() {}
 
+  loadStatuses(): void {}
+
+  // onSubmit() {
+  //   console.log('asdfasdfasdfasdf');
+  //   if (this.form.valid) {
+  //     const userInfo = localStorage.getItem('userInfo');
+
+  //     let score_create_by: string | null = null;
+  //     let teacher_code: string | null = null;
+  //     if (userInfo) {
+  //       try {
+  //         const parsedUserInfo = JSON.parse(userInfo); // แปลง JSON เป็น Object
+  //         score_create_by = parsedUserInfo.teacher_code; // เข้าถึง key `teacher_code`
+  //         teacher_code = parsedUserInfo.teacher_code; // เข้าถึง key `teacher_code`
+  //       } catch (error) {
+  //         console.error('Error parsing userInfo from localStorage:', error);
+  //       }
+  //     } else {
+  //       console.error('userInfo not found in localStorage');
+  //     }
+
+  //     const requestData = {
+  //       score_create_by,
+  //       teacher_code,
+  //       subject_id: this.form.value.subjectCode,
+  //       academicYearCode: this.form.value.academicYearCode,
+  //       semesterCode: this.form.value.semesterCode,
+  //       send_status_code: this.form.value.sendStatus,
+  //     };
+  //     this.searchSubmit.emit(requestData);
+  //   } else {
+  //     console.error('Form is invalid');
+  //   }
+  // }
   onSubmit() {
-    console.log('asdfasdfasdfasdf');
+    console.log('Submitting form...');
     if (this.form.valid) {
       const userInfo = localStorage.getItem('userInfo');
-
+  
       let score_create_by: string | null = null;
       let teacher_code: string | null = null;
+  
       if (userInfo) {
         try {
-          const parsedUserInfo = JSON.parse(userInfo); // แปลง JSON เป็น Object
-          score_create_by = parsedUserInfo.teacher_code; // เข้าถึง key `teacher_code`
-          teacher_code = parsedUserInfo.teacher_code; // เข้าถึง key `teacher_code`
+          const parsedUserInfo = JSON.parse(userInfo);
+          score_create_by = parsedUserInfo.teacher_code;
+          teacher_code = parsedUserInfo.teacher_code;
         } catch (error) {
           console.error('Error parsing userInfo from localStorage:', error);
         }
       } else {
         console.error('userInfo not found in localStorage');
       }
-
+  
+      // ตรวจสอบ sendStatus และกำหนดค่าเริ่มต้นหากไม่มีค่า
+      const sendStatus = this.form.value.sendStatus ?? "";
+  
       const requestData = {
         score_create_by,
         teacher_code,
         subject_id: this.form.value.subjectCode,
         academicYearCode: this.form.value.academicYearCode,
         semesterCode: this.form.value.semesterCode,
+        subject_name:this.form.value.subjectName,
+        lastname:"",
+        firstname:"",
+        send_status_code: sendStatus,
       };
-      this.searchSubmit.emit(requestData);
+  
+      this.searchSubmit.emit(requestData); // ส่ง requestData ไปยัง API
     } else {
       console.error('Form is invalid');
     }
   }
-
+  
   searchCode(term: string) {
     console.log('search code');
   }
