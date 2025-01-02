@@ -44,3 +44,13 @@
   align-items: center;
   gap: 0.75rem;
 }
+
+.input-group-autocomplete[_ngcontent-ng-c1926015072] {
+  position: relative;
+  display: block;
+  width: 100%;
+}
+
+.button-container {
+  flex-wrap: wrap;
+}

@@ -22,24 +22,37 @@
 
 <div *ngIf="isFileUploaded" class="custom-card">
   <div class="card-body w-100 gx-0">
+    <!-- header -->
     <div class="row gx-0 w-100">
-      <div class="col-12 col-md-8">
-        <div
-          class="d-flex justify-content-start align-items-start flex-column w-100"
+      <div class="w-100 mb-2">
+        <div class="fw-bold text-start">ตารางคะแนน</div>
+      </div>
+      <div class="col-12 col-md-8 mb-2">
+        <form
+          [formGroup]="form"
+          (ngSubmit)="onSubmitFilter()"
+          class="w-100 mb-0"
         >
-          <div class="w-100 mb-2">
-            <div class="fw-bold text-start">ตารางคะแนน</div>
-          </div>
-          <form
-            [formGroup]="form"
-            (ngSubmit)="onSubmitFilter()"
-            class="d-flex justify-content-start align-items-start flex-row gap-2 w-100 mb-0"
-          >
-            <div class="" style="width: 50%">
-              <label for="subjectNo" class="fw-bold mb-2"
+          <div class="row gx-2 w-100">
+            <div class="col-12 col-md-6">
+              <label
+                for="subjectNo"
+                class="fw-bold mb-2 mw-100"
+                style="
+                  white-space: nowrap;
+                  overflow: hidden;
+                  text-overflow: ellipsis;
+                "
                 >รหัสนิสิต/ชื่อนิสิต/อีเมล</label
               >
-              <div class="input-group-autocomplete mb-2">
+              <div
+                class="input-group-autocomplete mw-100"
+                style="
+                  white-space: nowrap;
+                  overflow: hidden;
+                  text-overflow: ellipsis;
+                "
+              >
                 <input
                   class="form-control"
                   formControlName="search"
@@ -49,10 +62,11 @@
                 />
               </div>
             </div>
-            <div class="" style="width: 25%">
+            <div class="col-12 col-md-3">
               <label for="subjectNo" class="fw-bold mb-2">รหัสสาขา</label>
               <ng-select
                 id="majorCode"
+                class="w-100"
                 formControlName="majorCode"
                 [items]="majorCodeOptions"
                 bindLabel="label"
@@ -64,8 +78,8 @@
               </ng-select>
             </div>
             <div
-              class="d-flex align-items-end"
-              style="width: 25%; height: 68px"
+              class="col-12 col-md d-flex align-items-end"
+              style="height: 68px; min-width: 89px"
             >
               <button type="submit" class="btn btn-primary">
                 <i
@@ -75,22 +89,30 @@
                 ค้นหา
               </button>
             </div>
-          </form>
-        </div>
+          </div>
+        </form>
       </div>
       <div
-        class="col-12 col-md ms-auto d-flex justify-content-end align-items-end"
+        class="col-12 col-md ms-auto d-flex justify-content-end align-items-end mb-2 gap-2"
       >
-        <div class="button-container mb-2 d-flex gap-2">
+        <div class="button-container d-flex justify-content-start gap-2">
           <!-- 1. click save data -->
-          <button class="btn btn-primary" (click)="onSaveData()">
+          <button
+            class="btn btn-primary"
+            (click)="onSaveData()"
+            style="max-height: 37.6px"
+          >
             <i
               class="bi bi-floppy-fill"
               style="font-size: var(--icon-size); color: var(--white-color)"
             ></i>
             บันทึกข้อมูล
           </button>
-          <button class="btn btn-secondary" (click)="onDelete()">
+          <button
+            class="btn btn-secondary"
+            (click)="onDelete()"
+            style="max-height: 37.6px"
+          >
             <i
               class="bi bi-trash-fill"
               style="font-size: var(--icon-size); color: var(--white-color)"
