@@ -42,7 +42,6 @@ export class CachingInterceptor implements HttpInterceptor {
     return next.handle(requestinjected).pipe(
       tap((res) => {
         this.cacheService.setCache(request.urlWithParams, res);
-        console.log('all cache');
       })
     );
   }

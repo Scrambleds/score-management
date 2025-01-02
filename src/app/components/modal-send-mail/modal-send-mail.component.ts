@@ -65,23 +65,28 @@ export class ModalSendMailComponent implements OnInit {
     }
     this.loadEmailPlaceholder();
     // this.loadEmailTemplate();
-    this.refreshTemplates$
-      .pipe(
-        switchMap(() =>
-          this.scoreAnnouncementService.loadEmailTemplate(
-            this.userService.username
+    // รอให้ userInfo ถูกตั้งค่าใน localStorage
+    this.waitForUserInfo().then(() => {
+      console.log(localStorage.getItem('userInfo')); // userInfo พร้อมใช้งานแล้ว
+
+      this.refreshTemplates$
+        .pipe(
+          switchMap(() =>
+            this.scoreAnnouncementService.loadEmailTemplate(
+              this.userService.username
+            )
           )
         )
-      )
-      .subscribe((resp: any) => {
-        this.basicTemplateList = resp.basicTemplates;
-        this.privateTemplateList = resp.privateTemplates;
-        this.allTemplateList = [
-          ...this.privateTemplateList,
-          ...this.basicTemplateList,
-        ];
-        this.initDefaultTemplate(resp.defaultTemplates);
-      });
+        .subscribe((resp: any) => {
+          this.basicTemplateList = resp.basicTemplates;
+          this.privateTemplateList = resp.privateTemplates;
+          this.allTemplateList = [
+            ...this.privateTemplateList,
+            ...this.basicTemplateList,
+          ];
+          this.initDefaultTemplate(resp.defaultTemplates);
+        });
+    });
   }
 
   //load MasterData
@@ -424,10 +429,10 @@ export class ModalSendMailComponent implements OnInit {
         academic_year: '2024',
         semester: '1',
         section: '800',
-        student_id: '6430250229',
       },
+      student_id: ['6430250229', '6430250261'],
       //username teacher
-      username: 'pamornpon',
+      username: this.userService.username,
       emailDetail: {
         subjectEmail: this.emailSubject,
         contentEmail: this.messageText,
@@ -617,5 +622,18 @@ export class ModalSendMailComponent implements OnInit {
     // setTimeout(() => {
     //   this.createTemplateForm.reset();
     // }, delay);
+  }
+
+  // สร้างฟังก์ชันรอ userInfo
+  private waitForUserInfo(): Promise<void> {
+    return new Promise((resolve) => {
+      const interval = setInterval(() => {
+        const userInfo = localStorage.getItem('userInfo');
+        if (userInfo) {
+          clearInterval(interval);
+          resolve(); // ข้อมูลพร้อมแล้ว
+        }
+      }, 100); // ตรวจสอบทุก 100 มิลลิวินาที
+    });
   }
 }
