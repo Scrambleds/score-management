@@ -53,11 +53,12 @@ import { AddUserComponent } from '../../src/app/components/add-user/add-user.com
 import { ModalSendMailComponent } from './components/modal-send-mail/modal-send-mail.component';
 import { TranslateDropdownPipe } from './shared/pipes/translateDropdown.pipe';
 import { CachingInterceptor } from './core/interceptors/caching.interceptor';
-import { ScoreAnnouncementService } from './services/score-announcement/score-announcement.service';
 import { CacheService } from './core/services/cache.service';
 import { MasterDataComponents } from '../../src/app/components/master-data/master-data.component';
 import { ModalMasterdataEditComponent } from './components/modal-masterdata-edit/modal-masterdata-edit.component';
 import { ModalMasterdataAddComponent } from './components/modal-masterdata-add/modal-masterdata-add.component'
+import { SearchFormScoreAnnouncementComponent } from './components/score-announcement/search-form/search-form-search-form-score-announcemen.component';
+import { TableScoreAnnouncementComponent } from './components/score-announcement/table-score-announcemen/table-score-announcemen.component';
 
 @NgModule({
   declarations: [
@@ -88,6 +89,9 @@ import { ModalMasterdataAddComponent } from './components/modal-masterdata-add/m
     MasterDataComponents,
     ModalMasterdataEditComponent,
     ModalMasterdataAddComponent,
+    SearchScoreComponent,
+    SearchFormScoreAnnouncementComponent,
+    TableScoreAnnouncementComponent,
   ],
   imports: [
     BrowserModule,
