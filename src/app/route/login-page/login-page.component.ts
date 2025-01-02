@@ -4,6 +4,7 @@ import { environment } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TranslationService } from '../../core/services/translation.service';
+import { UserService } from '../../services/sharedService/userService/userService.service';
 
 @Component({
   selector: 'app-login-page',
@@ -22,7 +23,8 @@ export class LoginPageComponent {
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private fb: FormBuilder,
-    private translationService: TranslationService
+    private translationService: TranslationService,
+    private UserService: UserService,
   ) {
     this.loginForm = this.fb.group({
       username: ['', Validators.required],
@@ -121,14 +123,11 @@ export class LoginPageComponent {
         .subscribe(
           (response: any) => {
             if (response.isSuccess) {
-              localStorage.setItem(
-                'userInfo',
-                JSON.stringify(response.objectResponse)
+              localStorage.setItem('userInfo', JSON.stringify(response.objectResponse)
               );
-              console.log(
-                'User info stored in localStorage:',
-                response.objectResponse
-              );
+              console.log('User info stored in localStorage:', response.objectResponse);
+              const userInfo = response.objectResponse;
+              this.UserService.updateUserInfo(userInfo)
             } else {
               console.error(
                 'Failed to fetch user info:',

@@ -55,6 +55,9 @@ import { TranslateDropdownPipe } from './shared/pipes/translateDropdown.pipe';
 import { CachingInterceptor } from './core/interceptors/caching.interceptor';
 import { ScoreAnnouncementService } from './services/score-announcement/score-announcement.service';
 import { CacheService } from './core/services/cache.service';
+import { MasterDataComponents } from '../../src/app/components/master-data/master-data.component';
+import { ModalMasterdataEditComponent } from './components/modal-masterdata-edit/modal-masterdata-edit.component';
+import { ModalMasterdataAddComponent } from './components/modal-masterdata-add/modal-masterdata-add.component'
 
 @NgModule({
   declarations: [
@@ -82,6 +85,9 @@ import { CacheService } from './core/services/cache.service';
     AddUserRoute,
     ModalSendMailComponent,
     TranslateDropdownPipe,
+    MasterDataComponents,
+    ModalMasterdataEditComponent,
+    ModalMasterdataAddComponent,
   ],
   imports: [
     BrowserModule,

@@ -4,11 +4,11 @@ import { passwordStrengthValidator } from '../validators/password-strength.valid
 import Swal from 'sweetalert2';
 import { Modal } from 'bootstrap';
 import { UserEditService } from '../../services/edit-user/edit-user.service'
-import { response } from 'express';
 import { SelectBoxService } from '../../services/select-box/select-box.service';
 import { UserService } from '../../services/sharedService/userService/userService.service'
 import { UserManageService } from '../../services/user-manage/user-manage.service';
 import { Router } from '@angular/router';
+import { TranslationService } from '../../core/services/translation.service';
 
 @Component({
   selector: 'app-modal-edit',
@@ -40,7 +40,8 @@ export class ModalEditComponent {
     , private SelectBoxService: SelectBoxService
     , private UserService: UserService
     , private UserManageService: UserManageService
-    , private Router: Router) {
+    , private Router: Router
+    , private translate: TranslationService) {
     this.form = this.fb.group({
       row_id: [null],
       teacher_code: [{value: null , disabled: this.isDisabled}, Validators.required],
@@ -210,6 +211,9 @@ export class ModalEditComponent {
 
       const UserInfo = this.UserService.username;
 
+      const Success_title = this.translate.getTranslation('sweet_alert_success');
+      const Success_text = this.translate.getTranslation('sweet_alert_edit')
+
       const userData = this.form.getRawValue();
       userData.update_by = UserInfo;
       console.log("ฟอร์มถูกต้อง ข้อมูลที่ส่ง: ", userData);
@@ -218,8 +222,10 @@ export class ModalEditComponent {
         this.submit.emit(this.form.getRawValue()); 
   
         Swal.fire({
-          title: 'สำเร็จ',
-          text: 'บันทึกข้อมูลเรียบร้อยแล้ว',
+          // title: 'สำเร็จ',
+          // text: 'บันทึกข้อมูลเรียบร้อยแล้ว',
+          title: Success_title,
+          text: Success_text,
           icon: 'success',
           confirmButtonText: 'ตกลง',
           confirmButtonColor: '#007bff'
@@ -238,9 +244,14 @@ export class ModalEditComponent {
         this.removeConditionalFields();
         
       }, (error: any) => {
+
+        const Fail_title = this.translate.getTranslation('sweet_alert_fail_title');
+        const Fail_text = this.translate.getTranslation('sweet_alert_fail_text');
         Swal.fire({
-          title: 'เกิดข้อผิดพลาด',
-          text: 'การอัปเดตข้อมูลผู้ใช้ล้มเหลว',
+          // title: 'เกิดข้อผิดพลาด',
+          // text: 'การอัปเดตข้อมูลผู้ใช้ล้มเหลว',
+          title: Fail_title,
+          text: Fail_text,
           icon: 'error',
           confirmButtonText: 'ตกลง',
           confirmButtonColor: '#ff0000',

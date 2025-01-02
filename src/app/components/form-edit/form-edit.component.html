@@ -13,7 +13,8 @@
       </p>
       <button type="submit" class="btn btn-primary" (click)="onAddUserClick()">
         <i class="bi bi-person-fill-add"></i>
-        เพิ่มบัญชีผู้ใช้
+        <!-- เพิ่มบัญชีผู้ใช้ -->
+         {{ "user_manage_adduser" | translate }}
       </button>
     </form>
 
@@ -47,7 +48,7 @@
                   class="btn btn-text-blue min-w-1.25rem p-0"
                   (click)="openModal(value)"
                 >
-                  <i class="bi bi-pencil-square" style="color: #0d00ff"></i>
+                <i class="bi bi-pencil-square" style="color: #0d00ff; font-size: 1.2rem;"></i>
                 </button>
               </a>
             </div>

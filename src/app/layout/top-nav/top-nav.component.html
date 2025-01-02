@@ -158,8 +158,10 @@
               ></i>
             </div>
             <div class="col-8 d-flex flex-column text-end">
-              <div style="font-size: 12px">ดร.ฉัตรชัย เกษมทวีโชค</div>
-              <div style="font-size: 10px">รหัสอาจารย์: S2024</div>
+              <!-- <div style="font-size: 12px">ดร.ฉัตรชัย เกษมทวีโชค</div> -->
+              <div style="font-size: 12px">{{ prefix }} {{ firstname }} {{ lastname }}</div>
+              <!-- <div style="font-size: 10px">รหัสอาจารย์: S2024</div> -->
+              <div style="font-size: 10px">รหัสอาจารย์: {{ teacher_code }} </div>
             </div>
             <div class="col-1 d-flex align-items-center justify-content-center">
               <i
@@ -185,9 +187,9 @@
                 font-size: 14px;
               "
             >
-              <div>ดร.ฉัตรชัย เกษมทวีโชค</div>
-              <div>รหัสอาจารย์: S2024</div>
-              <div>หน้าที่: อาจารย์ผู้สอน</div>
+              <div>{{ prefix }} {{ firstname }} {{ lastname }}</div>
+              <div>รหัสอาจารย์: {{ teacher_code }}</div>
+              <div>หน้าที่: {{ role }}</div>
             </div>
           </li>
           <li>
