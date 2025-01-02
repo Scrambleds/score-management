@@ -21,6 +21,7 @@ import { forkJoin } from 'rxjs';
 import { EditUserComponent } from '../edit-user/edit-user.component';
 // import { RowNode } from 'ag-grid-community';
 import { GridApi, GridOptions, RowNode } from 'ag-grid-community';
+import { TranslationService } from '../../core/services/translation.service';
 
 @Component({
   selector: 'app-add-user',
@@ -45,8 +46,8 @@ export class AddUserComponent implements OnInit {
   statusData: any[] = [];
   // onReset!: EditUserComponent;
   @Input() criteria: any;
-  @Input() titleName: string = 'อัปโหลดไฟล์ข้อมูลบัญชีผู้ใช้';
-  @Input() buttonName: string = 'อัปโหลดไฟล์ Excel';
+  // @Input() titleName: string = 'อัปโหลดไฟล์ข้อมูลบัญชีผู้ใช้';
+  // @Input() buttonName: string = 'อัปโหลดไฟล์ Excel';
 
   @Output() dataUploaded = new EventEmitter<any[]>(); // ส่งข้อมูลไปยัง Parent Component
   @Output() submitRequest = new EventEmitter<void>();
@@ -84,6 +85,7 @@ export class AddUserComponent implements OnInit {
     private UserService: UserService,
     private masterDataService: masterDataService,
     private SelectBoxService: SelectBoxService,
+    private translate: TranslationService,
   ) {
     this.form = this.fb.group({
     });
@@ -102,16 +104,6 @@ export class AddUserComponent implements OnInit {
       filter: true,
     }));
   }
-
-  // ngAfterViewInit(): void {
-  //   setTimeout(() => {
-  //     if (this.gridApi) {
-  //       console.log('Grid API available:', this.gridApi);
-  //     } else {
-  //       console.error('Grid API is not available.');
-  //     }
-  //   }, 0);
-  // }  
 
   onSomeAction() {
     if (this.editUserComponent) {
@@ -240,8 +232,6 @@ export class AddUserComponent implements OnInit {
             ?.toLowerCase()
             .includes(criteria.email?.toLowerCase())) &&
         (!criteria.role || item['role'] === criteria.role) &&
-        // (!criteria.active_status ||
-        //   item['active_status'] === criteria.active_status) &&
         (!criteria.fullname ||
           fullname.includes(criteria.fullname?.toLowerCase()));
 
@@ -286,9 +276,10 @@ export class AddUserComponent implements OnInit {
           this.LoadGridData(modifiedData); // โหลดข้อมูลใหม่
           this.isFileUploaded = true;
           this.isUploaded.emit(true);
-        } else {
-          alert('ไฟล์ไม่ถูกต้อง กรุณาอัปโหลดไฟล์ที่มีฟิลด์ครบถ้วน');
-        }
+        } 
+        // else {
+        //   alert('ไฟล์ไม่ถูกต้อง กรุณาอัปโหลดไฟล์ที่มีฟิลด์ครบถ้วน');
+        // }
       };
       reader.readAsArrayBuffer(file);
     }
@@ -311,20 +302,42 @@ export class AddUserComponent implements OnInit {
       ////debugger;
       console.log('Original data: ', data);
 
-      // คำนิยามคอลัมน์ที่แสดงใน ag-Grid เป็นภาษาไทย
-      this.columnDefs = Object.keys(data[0]).map((key) => {
-        let customWidth = 100;
-        let flexValue = 1;
-        let cellClass = '';
-        let headerName = '';
-        let cellEditor = null;
+      // this.columnDefs = Object.keys(data[0]).map((key) => {
+      //   let customWidth = 100;
+      //   let flexValue = 1;
+      //   let cellClass = '';
+      //   let headerName = '';
+      //   let cellEditor = null;
+
+      this.columnDefs = [
+        {
+          headerName: 'ลำดับที่ซ่อน (ใช้ลบ)',
+          field: 'hiddenIndex',
+          hide: true, // ซ่อนคอลัมน์จาก UI
+        },
+        {
+          headerName: 'ลำดับ',
+          valueGetter: (params: any) => params.node.rowIndex + 1, // ใช้ index ของ row
+          minWidth: 70,
+          flex: 0.3,
+        },
+        ...Object.keys(data[0]).map((key) => {
+          let customWidth = 100;
+          let flexValue = 1;
+          let cellClass = '';
+          let headerName = '';
+          let cellEditor = null;
 
         switch (key) {
           case 'row_id':
             headerName = 'ลำดับ';
             customWidth = 70;
             flexValue = 0.3;
-            break;
+            return {
+              field: key,
+              headerName: headerName,
+              hide: true, // ซ่อนคอลัมน์นี้จาก UI
+            };
           case 'email':
             headerName = 'อีเมล';
             customWidth = 70;
@@ -370,8 +383,8 @@ export class AddUserComponent implements OnInit {
         }
 
         return {
-          field: key, // Field name to be used in the API
-          headerName: headerName, // Column header name
+          field: key,
+          headerName: headerName,
           // editable: true,
           flex: flexValue,
           minWidth: customWidth,
@@ -392,26 +405,31 @@ export class AddUserComponent implements OnInit {
           } : null,
           cellEditor: cellEditor, // Apply select-box editor
         };
-      });
+      }),
+    ];
 
       this.columnDefs.push({
         headerName: '',
         field: 'action',
-        width: 150,
+        width: 100,
         cellRenderer: (params: any) => {
           const rowId = params.data.row_id; // Use row_id to identify the row
           
           // Create container for delete button
           const container = document.createElement('div');
           container.innerHTML = `
-            <button class="btn btn-danger btn-sm">Delete</button>
+            <div style="display: flex; justify-content: center; align-items: center; height: 100%;">
+              <button style="background: none; border: none; cursor: pointer; display: flex; justify-content: center; align-items: center;">
+                <i class="bi bi-trash3" style="color: #d33; font-size: 1.2rem;"></i>
+              </button>
+            </div>
           `;
           
           // Add event listener for delete
-          container.querySelector('.btn-danger')?.addEventListener('click', () => {
-            this.onDeleteRow(rowId);  // Pass row_id to onDeleteRow method
+          container.querySelector('button')?.addEventListener('click', () => {
+            this.onDeleteRow(rowId); // Pass row_id to onDeleteRow method
           });
-      
+
           return container;
         },
         suppressHeaderMenuButton: true,
@@ -435,124 +453,43 @@ export class AddUserComponent implements OnInit {
       console.log('No data to load');
     }
   }
-  
-  // onCellValueChanged(event: any) {
-  //   const updatedData = event.data;  
-  //   // ทำการอัปเดตข้อมูลหรือส่งข้อมูลไปยัง server
-  //   console.log('Cell value changed:', updatedData);
-  // }
-  
-  // onDeleteRow(rowId: number) {
-  //   const rowIndex = this.originalData.findIndex(row => row.row_id === rowId);
-    
-  //   if (rowIndex !== -1) {
-  //     Swal.fire({
-  //       title: 'คุณยืนยันที่จะลบข้อมูลผู้ใช้นี้?',
-  //       text: 'คำเตือน: หากลบไปแล้วจะไม่สามารถนำกลับมาได้อีก',
-  //       icon: 'warning',
-  //       showCancelButton: true,
-  //       confirmButtonColor: '#d33',
-  //       cancelButtonColor: '#3085d6',
-  //       confirmButtonText: 'ลบ',
-  //       cancelButtonText: 'ยกเลิก',
-  //     }).then((result) => {
-  //       if (result.isConfirmed) {
-  //         // Remove the row from the original data array
-  //         this.originalData.splice(rowIndex, 1);
-  
-  //         // Update rowData for the grid
-  //         this.rowData = [...this.originalData];
-  
-  //         // Reassign row_id to maintain sequential row numbering
-  //         this.rowData = this.rowData.map((row, index) => {
-  //           row.row_id = index + 1;
-  //           return row;
-  //         });
-  
-  //         if (this.gridApi) {
-  //           this.gridApi.refreshCells({ force: true });
-  //         } else {
-  //           console.error('Grid API is not available.');
-  //         }
-
-  //         // if (this.gridApi) {
-  //         //   this.gridApi.refreshRows();
-  //         // } else {
-  //         //   console.error('Grid API is not available.');
-  //         // }
-
-  //         // if (this.gridApi) {
-
-  //         //   this.gridApi.setRowData(this.rowData);
-  //         //   this.gridApi.refreshCells({ force: true });
-  //         // }
-  
-  //         console.log('Row deleted successfully.');
-  
-  //         // this.gridApi.setRowData(this.originalData);
-  //         console.log('Row deleted');
-  //       } else {
-  //         console.log('Row deletion canceled');
-  //       }
-  //     });
-  //   } else {
-  //     console.log("Row not found to delete.");
-  //   }
-  // }
 
   onDeleteRow(rowId: number) {
+    const title =  this.translate.getTranslation('add_user_question_1');
+    const text =  this.translate.getTranslation('add_user_question_2');
+    const delete_button = this.translate.getTranslation('add_user_delete');
+    const cancel_button = this.translate.getTranslation('add_user_cancel');
+
     console.log(this.originalData)
     const rowIndex = this.originalData.findIndex(row => row.row_id === rowId);
     console.log(rowIndex);
     console.log(rowId);
     if (rowIndex !== -1) {
       Swal.fire({
-        title: 'คุณยืนยันที่จะลบข้อมูลผู้ใช้นี้?',
-        text: 'คำเตือน: หากลบไปแล้วจะไม่สามารถนำกลับมาได้อีก',
+        // title: 'คุณยืนยันที่จะลบข้อมูลผู้ใช้นี้?',
+        // text: 'คำเตือน: หากลบไปแล้วจะไม่สามารถนำกลับมาได้อีก',
+        title: title,
+        text: text,
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#d33',
-        cancelButtonColor: '#3085d6',
-        confirmButtonText: 'ลบ',
-        cancelButtonText: 'ยกเลิก',
+        cancelButtonColor: '#6c757d',
+        // confirmButtonText: 'ลบ',
+        // cancelButtonText: 'ยกเลิก',
+        confirmButtonText: delete_button,
+        cancelButtonText: cancel_button,
       }).then((result) => {
         if (result.isConfirmed) {
-          
-          // console.log('Row rowData', this.rowData);
-          // console.log('Row originalData', this.originalData);
-          // console.log("MyRowID: ", rowId - 1);
-          // Remove the row from the original data array
-          // this.originalData.splice(rowIndex, 1);
-
-          // // Update rowData for the grid
-          // this.rowData = this.originalData;
-
-          // // Reassign row_id to maintain sequential row numbering
-          // this.rowData = this.rowData.map((row, index) => {
-          //   row.row_id = index + 1;
-          //   return row;
-          // });
-
+      
           if (this.gridApi) {
-            // Remove the row from the original data array
+
             this.originalData.splice(rowIndex, 1);
-          
-            // Update rowData for the grid
             
-          
-            // Reassign row_id to maintain sequential row numbering
-            // this.rowData = this.rowData.map((row, index) => {
-            //   row.row_id = index + 1;
-            //   return row;
-            // });
-            
-            // Apply the transaction to update the rows
             this.gridApi.applyTransaction({
               remove: this.originalData.filter(row => row.row_id === rowIndex)
             });
             this.rowData = [...this.originalData];
             this.gridApi.setGridOption("rowData", this.rowData);
-            // Optionally refresh the grid to ensure display is updated
             this.gridApi.refreshCells({ force: true });
           }          
 
@@ -567,19 +504,21 @@ export class AddUserComponent implements OnInit {
       console.log("Row not found to delete.");
     }
   }
-  
+
   onSaveData() {
+    const currentLang = localStorage.getItem('language') || 'en';
+  
     // ตรวจสอบว่ามีข้อมูลในตารางหรือไม่
     if (!this.rowData || this.rowData.length === 0) {
       Swal.fire({
-        title: 'ไม่มีข้อมูล',
-        text: 'กรุณาอัปโหลดข้อมูลก่อนบันทึก',
+        title: currentLang === 'th' ? 'ไม่มีข้อมูล' : 'No data',
+        text: currentLang === 'th' ? 'กรุณาอัปโหลดข้อมูลก่อนบันทึก' : 'Please upload data before saving',
         icon: 'error',
-        confirmButtonText: 'ตกลง',
+        confirmButtonText: currentLang === 'th' ? 'ตกลง' : 'OK',
       });
       return;
     }
-
+  
     // ตรวจสอบฟิลด์ที่ว่างเปล่าในแต่ละแถว
     const missingFieldsGrouped = this.rowData
       .map((row, index) => {
@@ -590,25 +529,25 @@ export class AddUserComponent implements OnInit {
             row[field].toString().trim().toUpperCase() === 'NULL'
         );
         return missingFields.length > 0
-          ? `แถวที่ ${index + 1}: ${missingFields.join(', ')}`
+          ? `${currentLang === 'th' ? 'แถวที่' : 'Row'} ${index + 1}: ${missingFields.join(', ')}`
           : null;
       })
       .filter((item) => item !== null);
-
+  
     // หากมีฟิลด์ที่ว่างเปล่า แสดงการแจ้งเตือน
     if (missingFieldsGrouped.length > 0) {
       Swal.fire({
-        title: 'ข้อมูลไม่ครบถ้วน',
-        html: `พบฟิลด์ที่ยังไม่ได้กรอก:<br>${missingFieldsGrouped.join(
+        title: currentLang === 'th' ? 'ข้อมูลไม่ครบถ้วน' : 'Incomplete Data',
+        html: `${currentLang === 'th' ? 'พบฟิลด์ที่ยังไม่ได้กรอก:' : 'Missing fields:'}<br>${missingFieldsGrouped.join(
           '<br>'
         )}`,
         icon: 'warning',
         confirmButtonColor: '#0d6efd',
-        confirmButtonText: 'ตกลง',
+        confirmButtonText: currentLang === 'th' ? 'ตกลง' : 'OK',
       });
       return;
     }
-
+  
     const UserInfo = this.UserService.username;
     
     // กำหนดข้อมูลที่ต้องการส่ง
@@ -624,58 +563,67 @@ export class AddUserComponent implements OnInit {
     this.addUserService.insertUser(dataToSend).subscribe(
       (response) => {
         Swal.fire({
-          title: 'บันทึกข้อมูลสำเร็จ',
-          text: 'ข้อมูลถูกบันทึกเรียบร้อยแล้ว',
+          title: currentLang === 'th' ? 'บันทึกข้อมูลสำเร็จ' : 'Data Saved Successfully',
+          text: currentLang === 'th' ? 'ข้อมูลถูกบันทึกเรียบร้อยแล้ว' : 'Data has been saved successfully',
           icon: 'success',
           confirmButtonColor: '#0d6efd',
-          confirmButtonText: 'ตกลง',
+          confirmButtonText: currentLang === 'th' ? 'ตกลง' : 'OK',
         }).then(() => {
           this.router.navigate(['/UserManagement']);
         });
       },
       (error) => {
         console.error('Error occurred while inserting user data: ', error);
-    
-        // Check if errors exist in the response
+  
         if (error && error.errors) {
           const errorMessages = error.errors;
-    
-          // If there are duplicate emails or other errors, display them
+  
           if (errorMessages.length > 0) {
-            //debugger;
+            const errorMessage = errorMessages
+            .map((err: { th: string; en: string }) => (err as { [key: string]: string })[currentLang])
+              .join('<br>');
+            
             Swal.fire({
-              title: 'เกิดข้อผิดพลาด',
-              html: `พบอีเมลที่ซ้ำกัน:<br>${errorMessages.join('<br>')}`,
+              title: currentLang === 'th' ? 'เกิดข้อผิดพลาด' : 'An error occurred',
+              html: `${currentLang === 'th' ? 'พบอีเมลที่ซ้ำกัน:' : 'Duplicate emails found:'}<br>${errorMessage}`,
               icon: 'error',
               confirmButtonColor: '#0d6efd',
-              confirmButtonText: 'ตกลง',
+              confirmButtonText: currentLang === 'th' ? 'ตกลง' : 'OK',
             });
-            return; // Do not proceed with saving data if there are errors
+            return;
           }
         }
-    
-        // If no specific errors are found, show a general error message
+  
         Swal.fire({
-          title: 'เกิดข้อผิดพลาด',
-          text: 'ไม่สามารถบันทึกข้อมูลได้ โปรดลองอีกครั้ง',
+          title: currentLang === 'th' ? 'เกิดข้อผิดพลาด' : 'An error occurred',
+          text: currentLang === 'th' ? 'ไม่สามารถบันทึกข้อมูลได้ โปรดลองอีกครั้ง' : 'Unable to save data, please try again',
           icon: 'error',
-          confirmButtonText: 'ตกลง',
+          confirmButtonText: currentLang === 'th' ? 'ตกลง' : 'OK',
           confirmButtonColor: '#0d6efd',
         });
       }
     );
-  }
-
+  }  
+  
   onDelete() {
+    const title =  this.translate.getTranslation('add_user_question_1');
+    const text =  this.translate.getTranslation('add_user_question_2');
+    const delete_button = this.translate.getTranslation('add_user_delete');
+    const cancel_button = this.translate.getTranslation('add_user_cancel');
+
     Swal.fire({
-      title: 'ต้องการลบข้อมูลใช่หรือไม่',
-      text: 'หลังจากลบข้อมูลแล้วจะไม่สามารถกลับมาแก้ไขได้',
+      // title: 'ต้องการลบข้อมูลใช่หรือไม่',
+      // text: 'หลังจากลบข้อมูลแล้วจะไม่สามารถกลับมาแก้ไขได้',
+      title: title,
+      text: text,
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#d33',
-      confirmButtonText: 'ลบ',
+      // confirmButtonText: 'ลบ',
       cancelButtonColor: 'var(--secondary-color)',
-      cancelButtonText: 'ยกเลิก',
+      // cancelButtonText: 'ยกเลิก',
+      confirmButtonText: delete_button,
+      cancelButtonText: cancel_button,
     }).then((result) => {
       if (result.isConfirmed) {
         this.rowData = [];
@@ -690,32 +638,116 @@ export class AddUserComponent implements OnInit {
     });
   }
 
-  validateFields(data: any[]): boolean {
-    const requiredFields = [
-      'อีเมล',
-      'รหัสอาจารย์',
-      'คำนำหน้า',
-      'ชื่อ',
-      'นามสกุล',
-      'หน้าที่',
-    ];
-    const fileFields = Object.keys(data[0]);
+//   validateFields(data: any[]): boolean {
+//     if (!data || data.length === 0 || !data[0]) {
+//       const Failed_title = this.translate.getTranslation('add_user_failed_title');
+//       const Failed_text = this.translate.getTranslation('add_user_failed_text');
+//       const submit = this.translate.getTranslation('add_user_ok');
+  
+//       Swal.fire({
+//         title: Failed_title,
+//         html: `${Failed_text}`,
+//         icon: 'error',
+//         confirmButtonText: submit,
+//         confirmButtonColor: '#0d6efd',
+//       });
+//       return false;
+//     }
+  
+//     const Ok_button = this.translate.getTranslation('add_user_ok');
+//     const Invalid_header = this.translate.getTranslation('add_user_invalid_header');
+//     const Validate_excel = this.translate.getTranslation('add_user_validate_excel');
+  
+//     const requiredFields = [
+//       'อีเมล',
+//       'รหัสอาจารย์',
+//       'คำนำหน้า',
+//       'ชื่อ',
+//       'นามสกุล',
+//       'หน้าที่',
+//     ];
+  
+//     // ตรวจสอบชื่อคอลัมน์จากแถวแรก
+//     const fileFields = Object.keys(data[0]).map(field => field.trim());
+  
+//     // ตรวจสอบคอลัมน์ที่ขาดหายไป
+//     const missingFields = requiredFields.filter(
+//       (field) => !fileFields.some(f => f.trim() === field.trim())
+//     );
+  
+//     // หากมีคอลัมน์ที่หายไป ให้แจ้งเตือน
+//     if (missingFields.length > 0) {
+//       Swal.fire({
+//         title: Invalid_header,
+//         html: `${Validate_excel}:<br>${missingFields.join('<br>')}`,
+//         icon: 'warning',
+//         confirmButtonText: Ok_button,
+//         confirmButtonColor: '#0d6efd',
+//       });
+//       console.log("Col on file: ", fileFields); // แสดงคอลัมน์ที่ได้รับจากไฟล์
+//       console.log("Data on col first row: ", Object.keys(data[0])); // ดูคอลัมน์ที่ได้จากข้อมูลแถวแรก
+//       return false;
+//     }
+  
+//     // ถ้าทุกคอลัมน์ที่ต้องการมีครบ สามารถอัปโหลดได้
+//     return true;
+//   }
+// }  
 
-    const missingFields = requiredFields.filter(
-      (field) => !fileFields.includes(field)
-    );
-    if (missingFields.length > 0) {
-      Swal.fire({
-        title: 'หัวคอลัมน์ไม่ถูกต้อง',
-        html: `กรุณาแก้ไขไฟล์ Excel ให้มีคอลัมน์ดังนี้:<br>${missingFields.join(
-          '<br>'
-        )}`,
-        icon: 'warning',
-        confirmButtonText: 'ตกลง',
-        confirmButtonColor: '#0d6efd',
-      });
-      return false;
-    }
-    return true;
+validateFields(data: any[]): boolean {
+  if (!data || data.length === 0 || !data[0]) {
+    const Failed_title = this.translate.getTranslation('add_user_failed_title');
+    const Failed_text = this.translate.getTranslation('add_user_failed_text');
+    const submit = this.translate.getTranslation('add_user_ok');
+
+    Swal.fire({
+      title: Failed_title,
+      html: `${Failed_text}`,
+      icon: 'error',
+      confirmButtonText: submit,
+      confirmButtonColor: '#0d6efd',
+    });
+    return false;
   }
+
+  const Ok_button = this.translate.getTranslation('add_user_ok');
+  const Invalid_header = this.translate.getTranslation('add_user_invalid_header');
+  const Validate_excel = this.translate.getTranslation('add_user_validate_excel');
+
+  const requiredFields = [
+    'อีเมล', // ถ้าไม่จำเป็นสามารถเอาออกได้
+    'รหัสอาจารย์',
+    'คำนำหน้า',
+    'ชื่อ',
+    'นามสกุล',
+    'หน้าที่',
+  ];
+
+  // ตรวจสอบคอลัมน์ที่มีอยู่ในไฟล์
+  const fileFields = Object.keys(data[0]).map(field => field.trim());
+
+  // const missingFields = requiredFields.filter(
+  //   (field) => field !== 'อีเมล' && !fileFields.some(f => f.trim() === field.trim())
+  // );
+
+    // ตรวจสอบคอลัมน์ที่ขาดหายไป
+    const missingFields = requiredFields.filter(
+      (field) => !fileFields.some(f => f.trim() === field.trim())
+    );
+
+  // ถ้ามีคอลัมน์ที่ขาดหายไป ให้แสดงข้อความเตือน
+  if (missingFields.length > 0) {
+    Swal.fire({
+      title: Invalid_header,
+      html: `${Validate_excel}:<br>${missingFields.join('<br>')}`,
+      icon: 'warning',
+      confirmButtonText: Ok_button,
+      confirmButtonColor: '#0d6efd',
+    });
+    return false;
+  }
+
+  // หากไม่มีคอลัมน์ที่ขาดหายไป สามารถอัปโหลดไฟล์ได้
+  return true;
+}
 }

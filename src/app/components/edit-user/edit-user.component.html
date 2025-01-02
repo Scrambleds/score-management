@@ -42,7 +42,8 @@
                 routerLink="/UserManagement" 
                 routerLinkActive="text-highlight" 
                 [routerLinkActiveOptions]="{ exact: true }">
-                จัดการผู้ใช้
+                <!-- จัดการผู้ใช้ -->
+                {{ "user_manage_page" | translate }}
               </a>
             </li>
             <li class="breadcrumb-separator p-1">
@@ -58,7 +59,8 @@
               <a 
                 routerLink="/UserManagement/AddUser" 
                 routerLinkActive="text-highlight">
-                เพิ่มบัญชีผู้ใช้
+                <!-- เพิ่มบัญชีผู้ใช้ -->
+                 {{ "user_manage_adduser" | translate }}
               </a>
             </li>
           </ol>
@@ -71,37 +73,50 @@
                 <div class="row mb-0 g-3 mt-1">
                     <!-- Column 1 -->
                     <div class="col-12 col-md-6 col-lg-2">
-                        <label for="teacher_code" class="form-label fw-bold text-truncate ps-2" [appRequiredMarker]="form.get('teacher_code')">รหัสอาจารย์</label>
+                        <label for="teacher_code" class="form-label fw-bold text-truncate ps-2" [appRequiredMarker]="form.get('teacher_code')">
+                          <!-- รหัสอาจารย์ -->
+                           {{ "user_manage_teachercode" | translate }}
+                        </label>
                         <input type="text" class="form-control" placeholder="กรุณากรอก"
                             formControlName="teacher_code"  />
                             <div *ngIf="form.get('teacher_code')?.touched && form.get('teacher_code')?.invalid"
                             class="text-danger ps-2">
-                            กรุณากรอกข้อมูล
+                            <!-- กรุณากรอกข้อมูล -->
+                            {{ "placeholder_text" | translate }}
                           </div>
                     </div>
                     <!-- Column 2 -->
                     <div class="col-12 col-md-6 col-lg-2">
-                        <label for="fullname" class="form-label fw-bold text-truncate ps-2" [appRequiredMarker]="form.get('fullname')">ชื่ออาจารย์</label>
+                        <label for="fullname" class="form-label fw-bold text-truncate ps-2" [appRequiredMarker]="form.get('fullname')">
+                          <!-- ชื่ออาจารย์ -->
+                          {{ "user_manage_teachername" | translate }}
+                        </label>
                         <input type="text" id="fullname" class="form-control" placeholder="กรุณากรอก"
                             formControlName="fullname" />
                             <div *ngIf="form.get('fullname')?.touched && form.get('fullname')?.invalid"
                             class="text-danger ps-2">
-                            กรุณากรอกข้อมูล
+                            {{ "placeholder_text" | translate }}
                           </div>
                     </div>
                     <!-- Column 3 -->
                     <div class="col-12 col-md-6 col-lg-2">
-                        <label for="email" class="form-label text-truncate fw-bold ps-2" [appRequiredMarker]="form.get('email')">อีเมล</label>
+                        <label for="email" class="form-label text-truncate fw-bold ps-2" [appRequiredMarker]="form.get('email')">
+                          <!-- อีเมล -->
+                          {{ "user_manage_email" | translate }}
+                        </label>
                         <input type="text" class="form-control" placeholder="กรุณากรอก"
                             formControlName="email"  />
                             <div *ngIf="form.get('email')?.touched && form.get('email')?.invalid"
                             class="text-danger ps-2">
-                            กรุณากรอกข้อมูล
+                            {{ "placeholder_text" | translate }}
                           </div>
                     </div>
                     <!-- Column 4 (Select dropdown) -->
                     <div class="col-12 col-md-6 col-lg-2">
-                        <label for="role" class="form-label text-truncate fw-bold ps-2" [appRequiredMarker]="form.get('role')">หน้าที่</label>
+                        <label for="role" class="form-label text-truncate fw-bold ps-2" [appRequiredMarker]="form.get('role')">
+                          <!-- หน้าที่ -->
+                          {{ "user_manage_role" | translate }}
+                        </label>
                         <ng-select
                           id="role"
                           formControlName="role"
@@ -113,13 +128,16 @@
                         </ng-select>
                         <div *ngIf="form.get('role')?.touched && form.get('role')?.invalid"
                         class="text-danger ps-2">
-                        กรุณากรอกข้อมูล
+                        {{ "placeholder_select" | translate }}
                       </div>
                     </div>
                     
                     <!-- Column 5 (Select dropdown) -->
                     <div *ngIf="isCurrentRoute('/UserManagement')" class="col-12 col-md-6 col-lg-2">
-                        <label for="active_status" class="form-label fw-bold text-truncate ps-2" [appRequiredMarker]="form.get('active_status')">สถานะการใช้งาน</label>
+                        <label for="active_status" class="form-label fw-bold text-truncate ps-2" [appRequiredMarker]="form.get('active_status')">
+                          <!-- สถานะการใช้งาน -->
+                           {{ "user_manage_status" | translate }}
+                        </label>
                         <ng-select
                           id="active_status"
                           formControlName="active_status"
@@ -131,16 +149,21 @@
                         </ng-select>
                         <div *ngIf="form.get('active_status')?.touched && form.get('active_status')?.invalid"
                         class="text-danger ps-2">
-                        กรุณากรอกข้อมูล
+                        <!-- กรุณากรอกข้อมูล -->
+                        {{ "placeholder_select" | translate }}
                       </div>
                     </div>
                     <!-- Buttons -->
                     <div class="col-12 col-md d-flex align-items-end gap-2">
                         <button type="submit" class="btn btn-primary custom-btn">
-                          <i class="bi bi-search"></i> ค้นหา
+                          <i class="bi bi-search"></i> 
+                          <!-- ค้นหา -->
+                           {{ "user_manage_search" | translate }}
                         </button>
                         <button type="button" class="btn btn-secondary custom-btn" (click)="onReset()">
-                          <i class="bi bi-arrow-repeat"></i> รีเซ็ต
+                          <i class="bi bi-arrow-repeat"></i> 
+                          <!-- รีเซ็ต -->
+                          {{ "user_manage_reset" | translate }}
                         </button>
                     </div>
                 </div>

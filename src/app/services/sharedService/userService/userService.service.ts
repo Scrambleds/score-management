@@ -1,62 +1,75 @@
 import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserService {
-  private userInfo: any;
+  private userInfoSubject = new BehaviorSubject<any>(null);
+  userInfo$ = this.userInfoSubject.asObservable();
 
   constructor() {
     this.loadUserInfo();
   }
 
-  // ฟังก์ชันเพื่อโหลดข้อมูลจาก localStorage และแปลงเป็น JSON
   private loadUserInfo(): void {
     const userInfoJson = localStorage.getItem('userInfo');
-    if (userInfoJson) {
-      this.userInfo = JSON.parse(userInfoJson);
-    } else {
-      this.userInfo = null;
-    }
+    const userInfo = userInfoJson ? JSON.parse(userInfoJson) : null;
+    this.userInfoSubject.next(userInfo);
   }
 
-  // Getter สำหรับ username
+  updateUserInfo(userInfo: any): void {
+    localStorage.setItem('userInfo', JSON.stringify(userInfo));
+    this.userInfoSubject.next(userInfo);
+  }
+
   get username(): string {
-    return this.userInfo ? this.userInfo.username : '';
+    const userInfo = this.userInfoSubject.getValue();
+    return userInfo ? userInfo.username : '';
   }
 
-  // Getter สำหรับ role
   get role(): string {
-    return this.userInfo ? this.userInfo.role : '';
+    const userInfo = this.userInfoSubject.getValue();
+    return userInfo ? userInfo.role : '';
   }
 
-  // Getter สำหรับ teacher_code
   get teacherCode(): string {
-    return this.userInfo ? this.userInfo.teacher_code : '';
+    const userInfo = this.userInfoSubject.getValue();
+    return userInfo ? userInfo.teacher_code : '';
   }
 
-  // Getter สำหรับ prefix
   get prefix(): string {
-    return this.userInfo ? this.userInfo.prefix : '';
+    const userInfo = this.userInfoSubject.getValue();
+    return userInfo ? userInfo.prefix : '';
   }
 
-  // Getter สำหรับ firstname
   get firstname(): string {
-    return this.userInfo ? this.userInfo.firstname : '';
+    const userInfo = this.userInfoSubject.getValue();
+    return userInfo ? userInfo.firstname : '';
   }
 
-  // Getter สำหรับ lastname
   get lastname(): string {
-    return this.userInfo ? this.userInfo.lastname : '';
+    const userInfo = this.userInfoSubject.getValue();
+    return userInfo ? userInfo.lastname : '';
   }
 
-  // Getter สำหรับ email
   get email(): string {
-    return this.userInfo ? this.userInfo.email : '';
+    const userInfo = this.userInfoSubject.getValue();
+    return userInfo ? userInfo.email : '';
   }
 
-  // Getter สำหรับ active_status
   get activeStatus(): string {
-    return this.userInfo ? this.userInfo.active_status : '';
+    const userInfo = this.userInfoSubject.getValue();
+    return userInfo ? userInfo.active_status : '';
+  }
+
+  get prefixDescriptionTH(): string {
+    const userInfo = this.userInfoSubject.getValue();
+    return userInfo ? userInfo.prefix_description_th : '';
+  }
+
+  get roleDescriptionTH(): string {
+    const userInfo = this.userInfoSubject.getValue();
+    return userInfo ? userInfo.role_description_th : '';
   }
 }

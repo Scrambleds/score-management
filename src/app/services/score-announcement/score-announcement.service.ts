@@ -74,4 +74,9 @@ export class ScoreAnnouncementService {
       tap((_) => console.log('createEmailTemplate done!!'))
     );
   }
+
+  getScoreAnnouncementByCondition(data:any): Observable<any> {
+    const url = `${environment.apiUrl}/api/ScoreAnnoucement/GetScoreAnnoucementByCondition`;
+    return this.http.post(url, data);
+  }
 }

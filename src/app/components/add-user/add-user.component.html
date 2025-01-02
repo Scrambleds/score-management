@@ -8,13 +8,13 @@
     (dragover)="onDragOver($event)"
     (drop)="onDrop($event)"
   >
-    <div class="text-center">{{ titleName }}</div>
+    <div class="text-center">{{ "add_user_label" | translate }}</div>
     <label for="uploadfile" class="btn btn-primary">
       <i
         class="bi bi-box-arrow-in-down"
         style="font-size: var(--icon-size); color: var(--white-color)"
       ></i>
-      {{ buttonName }}
+      {{ "add_user_upload" | translate }}
     </label>
     <input id="uploadfile" type="file" class="d-none" />
   </div>
@@ -31,7 +31,8 @@
               class="d-flex align-items-center fw-bold text-start ms-3"
               style="width: 25%; height: 68px"
             >
-            ตารางข้อมูลผู้ใช้งาน
+            <!-- ตารางข้อมูลผู้ใช้งาน -->
+             {{ "add_user_info" | translate }}
             </div>
         </div>
       </div>
@@ -46,20 +47,22 @@
               class="bi bi-floppy-fill"
               style="font-size: var(--icon-size); color: var(--white-color)"
             ></i>
-            บันทึกข้อมูล
+            <!-- บันทึกข้อมูล -->
+             {{ "user_manage_save" | translate }}
           </button>
           <button class="btn btn-secondary" (click)="onDelete()">
             <i
               class="bi bi-trash-fill"
               style="font-size: var(--icon-size); color: var(--white-color)"
             ></i>
-            ลบข้อมูล
+            <!-- ลบข้อมูล -->
+             {{ "add_user_delete" | translate }}
           </button>
       </div>
     </div>
   </div>
 
-  <div class="col-12 text-danger ps-3 mb-0"> *กรุณากรอกข้อมูลให้ครบทุกฟิลด์ก่อนบันทึก</div>
+  <div class="col-12 text-danger ps-3 mb-0"> {{ "add_user_caution" | translate }}</div>
     <!-- ag-Grid -->
     <ag-grid-angular 
       *ngIf="isFileUploaded"
