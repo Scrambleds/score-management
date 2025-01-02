@@ -1,1 +1,74 @@
-<p>modal-masterdata-add works!</p>
+<div class="modal-overlay"></div>
+
+<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true" #modalElementAdd>
+  <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <!-- Header -->
+      <div class="modal-header bg-dark-blue text-white">
+        <h5 class="modal-title fw-bold" id="modalLabel">
+          เพิ่มข้อมูลอ้างอิง
+        </h5>
+        <button type="button" class="btn-close" aria-label="Close" (click)="closeModal()"></button>
+      </div>
+
+      <!-- Body -->
+      <div class="modal-body overflow-auto p-0">
+        <div class="bg-light-green">
+          <p class="fw-bold mb-3 ps-3">
+            ข้อมูลอ้างอิง
+          </p>
+        </div>
+        <form>
+          <!-- Row 1 -->
+          <div class="container">
+            <div class="row g-2 mb-3">
+              <div class="col-12 col-md-6 col-lg-3">
+                <label for="teacher_code" class="form-label ps-2">
+                  Teacher Code
+                </label>
+                <input type="text" id="teacher_code" class="form-control" placeholder="Enter Teacher Code" />
+
+              </div>
+
+              <div class="col-12 col-md-6 col-lg-3">
+                <label for="email" class="form-label ps-2">
+                  Email
+                </label>
+                <input type="text" id="email" class="form-control" placeholder="Enter Email" />
+
+              </div>
+
+              <div class="col-12 col-md-6 col-lg-3">
+                <label for="firstname" class="form-label ps-2">
+                  First Name
+                </label>
+                <input type="text" id="firstname" class="form-control" placeholder="Enter First Name" />
+
+              </div>
+
+              <div class="col-12 col-md-6 col-lg-3">
+                <label for="lastname" class="form-label ps-2">
+                  Last Name
+                </label>
+                <input type="text" id="lastname" class="form-control" placeholder="Enter Last Name" />
+
+              </div>
+            </div>
+          </div>
+
+          <!-- Submit Button -->
+          <div class="d-flex justify-content-center pt-3">
+            <button type="button" class="btn btn-primary">
+              <i class="bi bi-floppy-fill me-2"></i>
+              บันทึก
+            </button>
+            <button type="button" class="btn btn-secondary ms-2">
+              <i class="bi bi-trash3-fill"></i>
+              ลบ
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

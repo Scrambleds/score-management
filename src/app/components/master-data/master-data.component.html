@@ -4,7 +4,7 @@
     <div class="row ms-1 mt-2">
       <p class="mb-2" style="font-size: 0.8rem; color: #838383; font-weight: 600">ข้อมูลอ้างอิง</p>
       <div class="d-flex justify-content-between">
-        <h4 class="text-title fw-bold mb-2 mt-0">X ทั้งหมดกี่รายการ</h4>
+        <h4 class="text-title fw-bold mb-2 mt-0">ทั้งหมด {{ data.masterData.length }} รายการ</h4>
       </div>
     </div>
   </div>
@@ -20,19 +20,19 @@
       </div> -->
       <div class="mb-4"></div>
       <!-- Opportunities List -->
-      <div *ngFor="let item of data.dataOpportunity; let i = index">
-        <div class="card p-3 mb-2 max-h-100">
+      <div *ngFor="let item of data.masterData; let i = index">
+        <div class="card p-3 mb-3 max-h-100">
           <div class="row d-flex justify-content-between">
             <div class="col-6 d-flex align-items-center">
-              <p class="fw-bold mb-0">{{ item.productGroup }}</p>
+              <p class="fw-bold mb-0">{{ item.byte_reference }}</p>
               <p class="badge bg-blue mb-0 ms-2 d-flex align-items-center">
-                {{ item.opportunityDetail.length }} รายการ
+                {{ item.byteDetail.length }} รายการ
               </p>
-            </div>            
+            </div>
 
             <div class="col-6 px-4 d-flex justify-content-end align-items-center">
               
-              <button type="submit" class="btn btn-primary">
+              <button type="submit" class="btn btn-primary" (click)="openAddModal()">
                 <!-- <i class="bi bi-plus-circle-fill"></i> -->
                 <i class="bi bi-plus-circle"></i>
                 create
@@ -54,38 +54,38 @@
 
 
 
-            <div *ngIf="openCollapse === i" class="mt-2">
-              <div *ngFor="let detail of item.opportunityDetail" class="card p-3 mb-0">
+            <div *ngIf="openCollapse === i" class="mt-2 mb-2">
+              <div *ngFor="let detail of item.byteDetail" class="card p-3 mb-3">
                 <!-- ใช้ d-flex กับ flex-wrap เพื่อจัดการแบบ responsive -->
                 <div class="d-flex flex-wrap justify-content-between align-items-center">
                   
                   <!-- คอลัมน์ที่ 1 -->
                   <div class="col-12 col-md-6 col-lg-1 d-flex justify-content-between align-items-center ps-3 mb-0">
-                    <p class="mb-0"><strong>1</strong></p>
+                    <p class="mb-0"><strong>{{ detail.byte_code }}</strong></p>
                     <!-- <p class="fw-bold mb-0">คำอธิบายภาษาไทย: {{ detail.opportunityName }}</p> -->
                   </div>
 
                   <div class="col-12 col-md-6 col-lg-3 d-flex justify-content-start align-items-center text-start mb-0">
-                    <p class="fw-bold mb-0">คำอธิบายภาษาไทย: {{ detail.opportunityName }}</p>
+                    <p class="fw-bold mb-0">คำอธิบายภาษาไทย: {{ detail.byte_desc_th }}</p>
                     <!-- <p class="mb-0 me-0"><strong>วันที่สร้าง:</strong> {{ detail.closeDate }}</p> -->
                   </div>
                   
                   <!-- คอลัมน์ที่ 2 -->
                   <div class="col-12 col-md-6 col-lg-3 d-flex justify-content-start align-items-center text-start mb-0">
-                    <p class="mb-0 me-0"><strong>คำอธิบายภาษาอังกฤษ:</strong> {{ detail.stage }}</p>
+                    <p class="mb-0 me-0"><strong>คำอธิบายภาษาอังกฤษ:</strong> {{ detail.byte_desc_en }}</p>
                     <!-- <p class="mb-0 me-0"><strong>วันที่สร้าง:</strong> {{ detail.closeDate }}</p> -->
                   </div>
 
                   <div class="d-flex flex-row col-12 col-md-6 col-lg-2" > 
                     <p class="mb-0 me-0">
-                    <strong>วันที่สร้าง:</strong> {{ detail.closeDate }}
+                    <strong>วันที่สร้าง:</strong> {{ detail.create_date }}
                     </p>
                   </div>
                   
                   <!-- คอลัมน์ที่ 3 -->
                    
                   <div class="col-12 col-md-6 col-lg-2 d-flex justify-content-between align-items-center text-start mb-0">
-                    <p class="mb-0 me-2"><strong>สถานะการใช้งาน:</strong> {{ detail.staffname }}</p>
+                    <p class="mb-0 me-2"><strong>สถานะการใช้งาน:</strong> {{ detail.active_satus }}</p>
                     <!-- <a>
                       <i class="bi bi-pencil-square" style="color: #0d00ff; font-size: 1.2rem;"></i>
                     </a> -->
@@ -95,7 +95,7 @@
                       <button
                       type="button"
                       class="btn btn-text-blue min-w-1.25rem p-0"
-                      (click)="openModal()"
+                      (click)="openEditModal()"
                     >
                       <i class="bi bi-pencil-square" style="color: #0d00ff; font-size: 1.2rem;"></i>
                     </button>
@@ -112,8 +112,12 @@
   </div>
 </div>
 
+<app-modal-masterdata-add
+  [show]="showAddModal" 
+  (showChange)="onAddModalChange($event)">
+</app-modal-masterdata-add>
 
 <app-modal-masterdata-edit 
-  [show]="showModal" 
-  (showChange)="onShowChange($event)">
+  [show]="showEditModal" 
+  (showChange)="onEditModalChange($event)">
 </app-modal-masterdata-edit>

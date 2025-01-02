@@ -1,36 +1,3 @@
-// import { Component } from '@angular/core';
-
-// @Component({
-//   selector: 'app-master-data',
-//   standalone: false,
-  
-//   templateUrl: './master-data.component.html',
-//   styleUrl: './master-data.component.css'
-// })
-// export class MasterDataComponents {
-//   majors = [
-//     {
-//       id: 1,
-//       descriptionThai: 'วิทยาการคอมพิวเตอร์',
-//       descriptionEng: 'Computer Science',
-//       createdDate: '2025-03-28',
-//       status: 'active',
-//     },
-//     {
-//       id: 2,
-//       descriptionThai: 'เทคโนโลยีสารสนเทศ',
-//       descriptionEng: 'Information Technology',
-//       createdDate: '2025-03-28',
-//       status: 'active',
-//     },
-//   ];
-
-//   editMajor(id: number) {
-//     console.log('Edit major with id:', id);
-//     // Implement editing logic here
-//   }
-// }
-
 import { Modal } from 'bootstrap';
 import { Component, OnInit, Input } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
@@ -57,26 +24,49 @@ export class MasterDataComponents implements OnInit {
   modalElement: any;
   modalInstance: any;
   showModal = false;
+  showAddModal = false;
+  showEditModal = false;
   isModalVisible = false;
 
   data = {
-    dataOpportunity: [
+    masterData: [
       {
-        productGroup: 'Product Group 1',
-        opportunityDetail: [
+        byte_reference: 'major_code',
+        byteDetail: [
           {
-            opportunityName: 'Opportunity 1',
-            stage: 'Closed Won',
-            closeDate: '2025-01-01',
-            staffname: 'John Doe',
-            teamStatus: 'TEAM',
-            opportunityId: '1'
+            byte_code: '1',
+            byte_desc_th: 'วิทยาการคอมพิวเตอร์',
+            byte_desc_en: 'Computer science',
+            create_date: '2025-01-01',
+            active_satus: 'active',
+          },
+          {
+            byte_code: '2',
+            byte_desc_th: 'สาขาฟิสิกส์',
+            byte_desc_en: 'Physics',
+            create_date: '2025-01-02',
+            active_satus: 'active',
           }
         ]
       },
       {
-        productGroup: 'Product Group 2',
-        opportunityDetail: []
+        byte_reference: 'role',
+        byteDetail: [
+          {
+            byte_code: '1',
+            byte_desc_th: 'ผู้ดูแลระบบ',
+            byte_desc_en: 'Admin',
+            create_date: '2025-01-02',
+            active_satus: 'active',
+          },
+          {
+            byte_code: '2',
+            byte_desc_th: 'อาจารย์',
+            byte_desc_en: 'Teacher',
+            create_date: '2025-01-02',
+            active_satus: 'active',
+          },
+        ]
       }
     ]
   };
@@ -94,22 +84,46 @@ export class MasterDataComponents implements OnInit {
     this.openCollapse = this.openCollapse === index ? null : index;
   }
 
-  onShowChange(show: boolean) {
-    this.showModal = show;
-  }
+  // onShowChange(show: boolean) {
+  //   this.showModal = show;
+  // }
 
   onSubmit(): void {
     const values = this.form.value;
     console.log('Form Submitted', values);
   }
 
-  openModal() {
-    this.showModal = true; // อัปเดตสถานะ
+  onAddModalChange = (show: boolean) => {
+    this.showAddModal = show;
   }
+
+  onEditModalChange = (show: boolean) => {
+    this.showEditModal = show;
+  }
+
+  openAddModal = () => {
+    this.showAddModal = true;
+  }
+
+  openEditModal = () => {
+    this.showEditModal = true;
+  }
+
+  closeEditModal = () => {
+    this.showEditModal = false;
+  }
+
+  closeAddModal = () => {
+    this.showAddModal = false;
+  }
+
+  // openModal() {
+  //   this.showModal = true; 
+  // }
   
-  closeModal() {
-    this.showModal = false; // อัปเดตสถานะ
-  }
+  // closeModal() {
+  //   this.showModal = false; 
+  // }
   
     ngAfterViewInit() {
       this.modalElement = document.querySelector('.modal');
